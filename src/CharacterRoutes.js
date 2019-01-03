@@ -11,7 +11,6 @@ import ThisWeek from './views/ThisWeek';
 import Vendors from './views/Vendors';
 
 import Tooltip from './components/Tooltip';
-import Loading from './components/Loading';
 
 import { fetchAndWhatever } from './utils/getProfile';
 
@@ -52,7 +51,7 @@ export default class CharacterRoutes extends Component {
     const userLoaded = user && user.characterId; // TODO: do we need character ID?
 
     if (!userLoaded) {
-      return <Loading state='fetchingProfile' />;
+      return null;
     }
 
     return (

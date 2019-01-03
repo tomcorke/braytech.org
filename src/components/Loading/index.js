@@ -3,12 +3,12 @@ import { withNamespaces } from 'react-i18next';
 import packageJSON from '../../../package.json';
 
 const LOADING_STATE = {
-  error: 'Error',
-  version: 'Checking data',
-  fetching: 'Downloading manifest data',
-  almost: 'So close',
-  fetchingProfile: 'Fetching profile',
-  else: 'Preparing'
+  error: 'Error. Please tweet justrealmilk!',
+  version: 'Checking manifest',
+  fetching: 'Downloading manifest',
+  almost: 'Storing manifest',
+  fetchingProfile: 'Fetching Guardian',
+  else: 'Booting up'
 };
 
 function Loading({ t, state }) {

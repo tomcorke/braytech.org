@@ -38,7 +38,8 @@ class App extends Component {
         membershipType: user ? user.membershipType : false,
         membershipId: user ? user.membershipId : false,
         characterId: false,
-        response: false
+        response: false,
+        queuedFetch: false
       },
       manifest: {
         state: false,
@@ -76,7 +77,7 @@ class App extends Component {
     });
   };
 
-  setUserReponse = (membershipType, membershipId, characterId, response) => {
+  setUserReponse = (membershipType, membershipId, characterId, response, queuedFetch = false) => {
     ls.set('setting.user', {
       membershipType: membershipType,
       membershipId: membershipId,
@@ -89,6 +90,7 @@ class App extends Component {
         membershipId: membershipId,
         characterId: characterId,
         response: response,
+        queuedFetch: queuedFetch,
         urlPrefix: `/u/${membershipType}/${membershipId}/${characterId}`
       }
     });
@@ -251,8 +253,14 @@ class App extends Component {
       GoogleAnalytics.init();
     }
 
+    console.log(this.state);
+
     if (this.state.manifest.state !== 'ready') {
       return <Loading state={this.state.manifest.state} />;
+    }
+
+    if (this.state.user.queuedFetch) {
+      return <Loading state='fetchingProfile' />;
     }
 
     return (
