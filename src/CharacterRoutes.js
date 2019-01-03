@@ -18,7 +18,6 @@ import { fetchAndWhatever } from './utils/getProfile';
 export default class CharacterRoutes extends Component {
   fetchProfile = () => {
     const { membershipType, membershipId } = this.props.route.match.params;
-    console.log(this.props);
     // Check if the membership ID in the route matches the membership id in the current user response
     // If it does, we've already loaded the user.
     if (this.props.user.response && this.props.user.membershipId === membershipId) {
