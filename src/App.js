@@ -19,6 +19,8 @@ import Notifications from './components/Notifications';
 
 import CharacterRoutes from './CharacterRoutes';
 
+import { fetchAndWhatever } from './utils/getProfile';
+
 import Index from './views/Index';
 import CharacterSelect, { CharacterSelectRedirect } from './views/CharacterSelect';
 import Settings from './views/Settings';
@@ -48,17 +50,35 @@ class App extends Component {
       },
       pageDefaut: false
     };
-
-    this.setPageDefault = this.setPageDefault.bind(this);
-    this.updateViewport = this.updateViewport.bind(this);
-    this.setUserReponse = this.setUserReponse.bind(this);
-    this.viewCharacters = this.viewCharacters.bind(this);
-    this.getVersionAndSettings = this.getVersionAndSettings.bind(this);
-    this.getManifest = this.getManifest.bind(this);
+    
     this.manifest = {};
     this.bungieSettings = {};
     this.currentLanguage = props.i18n.getCurrentLanguage();
   }
+
+  fetchProfile = (membershipType, membershipId, characterId = false, queuedFetch = false) => {
+    // Check if the membership ID in the route matches the membership id in the current user response
+    // If it does, we've already loaded the user.
+    if (this.state.user.response && this.state.user.membershipId === membershipId) {
+      console.log('already loaded profile');
+      return;
+    }
+
+    let stateCallback = (response, queuedFetch, loading, error) => {
+      console.log(response, queuedFetch, loading, error);
+      if (response) {
+        this.setUserReponse(membershipType, membershipId, characterId, response);
+      } else {
+        let temp = this.state.user;
+        temp.queuedFetch = queuedFetch;
+        this.setState({
+          user: temp
+        });
+      }
+    };
+
+    fetchAndWhatever(membershipType, membershipId, stateCallback, queuedFetch);
+  };  
 
   setPageDefault = className => {
     this.setState({
@@ -77,7 +97,7 @@ class App extends Component {
     });
   };
 
-  setUserReponse = (membershipType, membershipId, characterId, response, queuedFetch = false) => {
+  setUserReponse = (membershipType, membershipId, characterId, response) => {
     ls.set('setting.user', {
       membershipType: membershipType,
       membershipId: membershipId,
@@ -90,7 +110,7 @@ class App extends Component {
         membershipId: membershipId,
         characterId: characterId,
         response: response,
-        queuedFetch: queuedFetch,
+        queuedFetch: false,
         urlPrefix: `/u/${membershipType}/${membershipId}/${characterId}`
       }
     });
@@ -273,7 +293,7 @@ class App extends Component {
               <Route path='/' render={route => <Header route={route} {...this.state} manifest={this.manifest} />} />
 
               <Route path='/' exact render={() => <Index setPageDefault={this.setPageDefault} />} />
-              <Route path='/character-select' render={route => <CharacterSelect route={route} setPageDefault={this.setPageDefault} setUserReponse={this.setUserReponse} user={this.state.user} viewport={this.state.viewport} manifest={this.manifest} />} />
+              <Route path='/character-select' render={route => <CharacterSelect route={route} setPageDefault={this.setPageDefault} fetchProfile={this.fetchProfile} user={this.state.user} viewport={this.state.viewport} manifest={this.manifest} />} />
               <Route path='/settings' exact render={() => <Settings {...this.state.user} manifest={this.manifest} availableLanguages={this.availableLanguages} setPageDefault={this.setPageDefault} />} />
               <Route path='/pride' exact render={() => <Pride setPageDefault={this.setPageDefault} />} />
               <Route path='/credits' exact render={() => <Credits setPageDefault={this.setPageDefault} />} />
@@ -289,7 +309,7 @@ class App extends Component {
               <Route path='/this-week' component={CharacterSelectRedirect} />
               <Route path='/vendors/:hash?' component={CharacterSelectRedirect} />
 
-              <Route path='/u/:membershipType/:membershipId/:characterId' render={route => <CharacterRoutes route={route} user={this.state.user} setUserReponse={this.setUserReponse} viewport={this.state.viewport} manifest={this.manifest} />} />
+              <Route path='/u/:membershipType/:membershipId/:characterId' render={route => <CharacterRoutes route={route} user={this.state.user} fetchProfile={this.fetchProfile} viewport={this.state.viewport} manifest={this.manifest} />} />
             </div>
 
             <Route path='/' render={route => <Footer route={route} />} />

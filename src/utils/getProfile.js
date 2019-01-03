@@ -40,25 +40,42 @@ export async function fetchProfile(membershipType, membershipId) {
 }
 
 // TODO lol, this needs a better name
-export async function fetchAndWhatever(membershipType, membershipId, stateCb, userCb) {
-  stateCb({ loading: true });
+export async function fetchAndWhatever(membershipType, membershipId, stateCallback, queuedFetch) {
+  stateCallback({
+    response: false,
+    queuedFetch: queuedFetch,
+    loading: true,
+    error: false
+  });
   let response = await fetchProfile(membershipType, membershipId);
 
   if (response.profile.ErrorCode !== 1) {
-    stateCb({ loading: false, error: response.profile.ErrorCode });
+    stateCallback({
+      response: false,
+      queuedFetch: false,
+      loading: false,
+      error: response.profile.ErrorCode
+    });
     return;
   }
 
   if (!response.profile.Response.characterProgressions.data) {
-    stateCb({ loading: false, error: 'privacy' });
+    stateCallback({
+      response: false,
+      queuedFetch: false,
+      loading: false,
+      error: 'privacy'
+    });
     return;
   }
 
   response = responseUtils.profileScrubber(response);
+  
+  console.log(response)
 
-  userCb(response);
-
-  stateCb({
+  stateCallback({
+    response: response,
+    queuedFetch: false,
     loading: false,
     error: false
   });
