@@ -4,7 +4,6 @@ import cx from 'classnames';
 import { withNamespaces } from 'react-i18next';
 
 import ObservedImage from '../../components/ObservedImage';
-
 import * as utils from '../../utils/destinyUtils';
 
 import './styles.css';

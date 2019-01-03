@@ -12,6 +12,7 @@ import sleeperNodes from './lists/sleeperNodes';
 import ghostScans from './lists/ghostScans';
 import latentMemories from './lists/latentMemories';
 import caydesJournals from './lists/caydesJournals';
+
 import './styles.css';
 
 class Checklists extends React.Component {

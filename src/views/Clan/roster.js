@@ -1,10 +1,12 @@
 import React from 'react';
 import cx from 'classnames';
-import globals from '../../utils/globals';
 import assign from 'lodash/assign';
+import { withNamespaces } from 'react-i18next';
+
+import globals from '../../utils/globals';
 import Roster from '../../components/Roster';
 import Spinner from '../../components/Spinner';
-import { withNamespaces } from 'react-i18next';
+
 import ClanNav from './ClanNav';
 
 import './roster.css';

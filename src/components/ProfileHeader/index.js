@@ -2,9 +2,9 @@ import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import cx from 'classnames';
 import packageJSON from '../../../package.json';
+
 import ObservedImage from '../../components/ObservedImage';
 import ProgressBar from '../../components/ProgressBar';
-
 import { classHashToString } from '../../utils/destinyUtils';
 
 import './styles.css';

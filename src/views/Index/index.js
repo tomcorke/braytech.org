@@ -1,8 +1,10 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import Moment from 'react-moment';
+
 import ObservedImage from '../../components/ObservedImage';
-import captainsLog from '../../data/captainsLog'
+
+import captainsLog from '../../data/captainsLog';
 
 import './styles.css';
 

@@ -3,6 +3,7 @@ import { withNamespaces } from 'react-i18next';
 
 import Records from '../../components/Records';
 import Collectibles from '../../components/Collectibles';
+
 import './styles.css';
 
 class ThisWeek extends React.Component {

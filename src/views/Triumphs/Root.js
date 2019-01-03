@@ -1,13 +1,12 @@
 import React from 'react';
 import cx from 'classnames';
+import { withNamespaces } from 'react-i18next';
 
 import ObservedImage from '../../components/ObservedImage';
+import { ProfileLink } from '../../components/ProfileLink';
 
 import { enumerateRecordState } from '../../utils/destinyEnums';
-
 import RecordsAlmost from '../../components/RecordsAlmost';
-import { ProfileLink } from '../../components/ProfileLink';
-import { withNamespaces } from 'react-i18next';
 
 class Root extends React.Component {
   render() {

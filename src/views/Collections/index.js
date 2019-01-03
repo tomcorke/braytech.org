@@ -1,11 +1,11 @@
 import React from 'react';
-
 import { withNamespaces } from 'react-i18next';
+
+import { ProfileLink } from '../../components/ProfileLink';
 
 import Root from './Root';
 import BadgeNode from './BadgeNode';
 import PresentationNode from './PresentationNode';
-import { ProfileLink } from '../../components/ProfileLink';
 
 import './styles.css';
 

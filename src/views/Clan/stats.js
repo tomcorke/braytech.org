@@ -1,15 +1,17 @@
 import React from 'react';
 import cx from 'classnames';
 import moment from 'moment';
-import globals from '../../utils/globals';
 import assign from 'lodash/assign';
 import orderBy from 'lodash/orderBy';
+import {withNamespaces} from "react-i18next";
+
+import globals from '../../utils/globals';
 import ObservedImage from '../../components/ObservedImage';
 import Spinner from '../../components/Spinner';
+
 import ClanNav from './ClanNav';
 
 import './stats.css';
-import {withNamespaces} from "react-i18next";
 
 class StatsView extends React.Component {
   constructor(props) {

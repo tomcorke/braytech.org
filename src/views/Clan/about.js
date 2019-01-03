@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
-import globals from '../../utils/globals';
 import assign from 'lodash/assign';
+import { withNamespaces } from 'react-i18next';
+
+import globals from '../../utils/globals';
 import ClanBanner from '../../components/ClanBanner';
 import Roster from '../../components/Roster';
 import Spinner from '../../components/Spinner';
@@ -9,8 +11,8 @@ import ProgressBar from '../../components/ProgressBar';
 import ProgressCheckbox from '../../components/ProgressCheckbox';
 
 import ClanNav from './ClanNav';
+
 import './about.css';
-import { withNamespaces } from 'react-i18next';
 
 class AboutView extends React.Component {
   constructor(props) {

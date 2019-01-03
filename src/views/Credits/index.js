@@ -1,7 +1,7 @@
 import React from 'react';
+import {withNamespaces} from "react-i18next";
 
 import './styles.css';
-import {withNamespaces} from "react-i18next";
 
 class Credits extends React.Component {
   constructor(props) {

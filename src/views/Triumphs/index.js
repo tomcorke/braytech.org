@@ -1,13 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { withNamespaces } from 'react-i18next';
+
 import * as ls from '../../utils/localStorage';
+import { ProfileLink } from '../../components/ProfileLink';
+
 import Root from './Root';
 import SealNode from './SealNode';
 import PresentationNode from './PresentationNode';
-import { ProfileLink } from '../../components/ProfileLink';
 
 import './styles.css';
-import { withNamespaces } from 'react-i18next';
 
 class Triumphs extends React.Component {
   constructor(props) {

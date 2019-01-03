@@ -1,10 +1,10 @@
 import React from 'react';
+import { withNamespaces } from 'react-i18next';
 
 import './styles.css';
 
 import StandardHeader from '../StandardHeader';
 import ProfileHeader from '../ProfileHeader';
-import { withNamespaces } from 'react-i18next';
 
 function makeUrl(path, user) {
   return user && user.response ? `${user.urlPrefix}${path}` : { pathname: '/character-select', state: { next: path } };

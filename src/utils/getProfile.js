@@ -1,5 +1,6 @@
 import assign from 'lodash/assign';
 import globals from './globals';
+
 import * as responseUtils from './responseUtils';
 
 export async function fetchProfile(membershipType, membershipId) {

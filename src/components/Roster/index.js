@@ -4,6 +4,8 @@ import assign from 'lodash/assign';
 import cx from 'classnames';
 import Moment from 'react-moment';
 import orderBy from 'lodash/orderBy';
+import { withNamespaces } from 'react-i18next';
+
 import globals from '../../utils/globals';
 import Spinner from '../../components/Spinner';
 import ObservedImage from '../../components/ObservedImage';
@@ -11,7 +13,6 @@ import ObservedImage from '../../components/ObservedImage';
 import { classTypeToString } from '../../utils/destinyUtils';
 
 import './styles.css';
-import { withNamespaces } from 'react-i18next';
 
 class Roster extends React.Component {
   constructor(props) {

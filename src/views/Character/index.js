@@ -1,9 +1,9 @@
 import React from 'react';
+import { withNamespaces } from 'react-i18next';
 
 import InventoryItems from '../../components/InventoryItems';
 
 import './styles.css';
-import { withNamespaces } from 'react-i18next';
 
 class Character extends React.Component {
   constructor(props) {
