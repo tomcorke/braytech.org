@@ -71,8 +71,6 @@ export async function fetchAndWhatever(membershipType, membershipId, stateCallba
 
   response = responseUtils.profileScrubber(response);
   
-  console.log(response)
-
   stateCallback({
     response: response,
     queuedFetch: false,

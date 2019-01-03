@@ -64,13 +64,13 @@ class App extends Component {
       return;
     }
 
-    let stateCallback = (response, queuedFetch, loading, error) => {
-      console.log(response, queuedFetch, loading, error);
-      if (response) {
-        this.setUserReponse(membershipType, membershipId, characterId, response);
+    let stateCallback = (callback) => {
+      //console.log(response, queuedFetch, loading, error);
+      if (callback.response) {
+        this.setUserReponse(membershipType, membershipId, characterId, callback.response);
       } else {
         let temp = this.state.user;
-        temp.queuedFetch = queuedFetch;
+        temp.queuedFetch = callback.queuedFetch;
         this.setState({
           user: temp
         });
@@ -275,13 +275,19 @@ class App extends Component {
 
     console.log(this.state);
 
-    if (this.state.manifest.state !== 'ready') {
-      return <Loading state={this.state.manifest.state} />;
+    if (this.state.manifest.state !== 'ready' || this.state.user.queuedFetch) {
+
+      let state = this.state.manifest.state;
+      if (this.state.manifest.state === 'ready' && this.state.user.queuedFetch ) {
+        state = 'fetchingProfile';
+      }
+
+      return <Loading state={state} />;
     }
 
-    if (this.state.user.queuedFetch) {
-      return <Loading state='fetchingProfile' />;
-    }
+    // if (this.state.user.queuedFetch) {
+    //   return <Loading state='fetchingProfile' />;
+    // }
 
     return (
       <UserContext.Provider value={this.state.user}>

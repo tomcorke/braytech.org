@@ -12,28 +12,7 @@ import Vendors from './views/Vendors';
 
 import Tooltip from './components/Tooltip';
 
-import { fetchAndWhatever } from './utils/getProfile';
-
 export default class CharacterRoutes extends Component {
-  fetchProfile = () => {
-    const { membershipType, membershipId } = this.props.route.match.params;
-    // Check if the membership ID in the route matches the membership id in the current user response
-    // If it does, we've already loaded the user.
-    if (this.props.user.response && this.props.user.membershipId === membershipId) {
-      console.log('already loaded profile');
-      return;
-    }
-
-    fetchAndWhatever(membershipType, membershipId, this.stateCb, this.recieveUserCb);
-  };
-
-  stateCb = newState => {
-    this.setState({ newState });
-  };
-
-  recieveUserCb = userResponse => {
-    this.props.setUserReponse(this.props.route.match.params.membershipType, this.props.route.match.params.membershipId, this.props.route.match.params.characterId, userResponse);
-  };
 
   componentDidMount() {
     const { membershipType, membershipId, characterId } = this.props.route.match.params;
@@ -43,8 +22,8 @@ export default class CharacterRoutes extends Component {
   componentDidUpdate(oldProps) {
     if (this.props.route.match.params.membershipId !== oldProps.route.match.params.membershipId) {
       // membership ID has changed, fetch the new user.
-      const { membershipType, membershipId, characterId } = this.props.route.match.params;
-      this.props.fetchProfile(membershipType, membershipId, characterId);
+      // const { membershipType, membershipId, characterId } = this.props.route.match.params;
+      // this.props.fetchProfile(membershipType, membershipId, characterId);
     }
   }
 
