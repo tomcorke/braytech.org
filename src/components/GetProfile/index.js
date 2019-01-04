@@ -3,7 +3,7 @@ import React from 'react';
 import assign from 'lodash/assign';
 import Characters from '../Characters';
 
-import globals from '../../utils/globals';
+import Globals from '../../utils/globals';
 import * as responseUtils from '../../utils/responseUtils';
 import * as destinyEnums from '../../utils/destinyEnums';
 import * as ls from '../../utils/localStorage';
@@ -34,7 +34,7 @@ class GetProfile extends React.Component {
     this.inputTimeout = setTimeout(() => {
       fetch(`https://www.bungie.net/Platform/Destiny2/SearchDestinyPlayer/${membershipType}/${encodeURIComponent(displayName)}/`, {
         headers: {
-          'X-API-Key': globals.key.bungie
+          'X-API-Key': Globals.key.bungie
         }
       })
         .then(response => {
@@ -66,7 +66,7 @@ class GetProfile extends React.Component {
     let fetches = requests.map(async request => {
       const get = await fetch(request.path, {
         headers: {
-          'X-API-Key': globals.key.bungie
+          'X-API-Key': Globals.key.bungie
         }
       });
       const response = await get.json();

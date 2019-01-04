@@ -66,7 +66,8 @@
 .presentation-node .header .name {
   font-size: 30px;
   font-weight: 500;
-  text-transform: uppercase;
+  text-transform: uppercase;  
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .presentation-node .header .name span {

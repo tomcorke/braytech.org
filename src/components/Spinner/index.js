@@ -1,5 +1,4 @@
 import React from 'react';
-import cx from 'classnames';
 
 import './styles.css';
 
@@ -12,7 +11,7 @@ class Spinner extends React.Component {
 
   render() {
     return (
-      <div className={cx('spinner', { dark: this.props.dark })}>
+      <div className='spinner'>
         <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 62.08 71.68'>
           <polygon className='a' points='30.04 59.7 10.87 48.64 1 54.34 30.04 71.1 30.04 59.7' />
           <polygon className='e' points='1 17.34 10.87 23.04 30.04 11.97 30.04 0.58 1 17.34' />

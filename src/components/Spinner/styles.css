@@ -15,11 +15,11 @@
   height: 100%;
 }
 
-.spinner svg polygon {
+.wrapper .spinner svg polygon {
   fill: #fff;
 }
 
-.spinner.dark svg polygon {
+.wrapper.light-mode:not(.profile-route) .spinner svg polygon {
   fill: #000;
 }
 

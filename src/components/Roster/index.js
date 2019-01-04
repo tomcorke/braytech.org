@@ -4,7 +4,7 @@ import assign from 'lodash/assign';
 import cx from 'classnames';
 import Moment from 'react-moment';
 import orderBy from 'lodash/orderBy';
-import globals from '../../utils/globals';
+import Globals from '../../utils/globals';
 import rgbToHsl from '../../utils/rgbToHsl';
 import Spinner from '../../components/Spinner';
 import ObservedImage from '../../components/ObservedImage';
@@ -53,7 +53,7 @@ class Roster extends React.Component {
     let fetches = requests.map(async request => {
       const get = await fetch(request.path, {
         headers: {
-          'X-API-Key': globals.key.bungie
+          'X-API-Key': Globals.key.bungie
         }
       });
       const response = await get.json();
@@ -160,7 +160,7 @@ class Roster extends React.Component {
     let fetches = requests.map(request => {
       return fetch(request.path, {
         headers: {
-          'X-API-Key': globals.key.bungie
+          'X-API-Key': Globals.key.bungie
         }
       })
         .then(response => {

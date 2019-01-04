@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import cx from 'classnames';
 import { withNamespaces } from 'react-i18next';
 
-import ObservedImage from '../../components/ObservedImage';
+import BraytechContext from '../../BraytechContext';
 
+import ObservedImage from '../../components/ObservedImage';
 import * as utils from '../../utils/destinyUtils';
 
 import './styles.css';
@@ -63,9 +64,13 @@ class Characters extends React.Component {
     });
 
     return (
-      <div className='characters-list'>
-        <ul className='list'>{charactersRender}</ul>
-      </div>
+      <BraytechContext.Consumer>
+        {theme => (
+          <div className={cx('characters-list', theme.selected)}>
+            <ul className='list'>{charactersRender}</ul>
+          </div>
+        )}
+      </BraytechContext.Consumer>
     );
   }
 }

@@ -246,7 +246,7 @@ class Records extends React.Component {
           return;
         }
 
-        if (enumerateRecordState(state).recordRedeemed && this.props.collectibleDisplayState.hideTriumphRecords) {
+        if (enumerateRecordState(state).recordRedeemed && this.props.collectibleDisplayState && this.props.collectibleDisplayState.hideTriumphRecords) {
           return;
         }
 

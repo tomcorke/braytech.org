@@ -4,8 +4,10 @@ import cx from 'classnames';
 import assign from 'lodash/assign';
 import { withNamespaces } from 'react-i18next';
 
+import BraytechContext from '../../BraytechContext';
+
 import Characters from '../../components/Characters';
-import globals from '../../utils/globals';
+import Globals from '../../utils/globals';
 import * as responseUtils from '../../utils/responseUtils';
 import * as destinyEnums from '../../utils/destinyEnums';
 import * as ls from '../../utils/localStorage';
@@ -24,10 +26,6 @@ class CharacterSelect extends React.Component {
       loading: true,
       error: false
     };
-
-    this.SearchDestinyPlayer = this.SearchDestinyPlayer.bind(this);
-    this.CharacterSelectHandler = this.CharacterSelectHandler.bind(this);
-    this.ProfileResponse = this.ProfileResponse.bind(this);
   }
 
   SearchDestinyPlayer = e => {
@@ -38,7 +36,7 @@ class CharacterSelect extends React.Component {
     this.inputTimeout = setTimeout(() => {
       fetch(`https://www.bungie.net/Platform/Destiny2/SearchDestinyPlayer/${membershipType}/${encodeURIComponent(displayName)}/`, {
         headers: {
-          'X-API-Key': globals.key.bungie
+          'X-API-Key': Globals.key.bungie
         }
       })
         .then(response => {
@@ -80,7 +78,7 @@ class CharacterSelect extends React.Component {
     let fetches = requests.map(async request => {
       const get = await fetch(request.path, {
         headers: {
-          'X-API-Key': globals.key.bungie
+          'X-API-Key': Globals.key.bungie
         }
       });
       const response = await get.json();
@@ -147,7 +145,7 @@ class CharacterSelect extends React.Component {
   }
 
   render() {
-    const {t} = this.props;
+    const { t } = this.props;
     let profileHistory = ls.get('history.profiles') ? ls.get('history.profiles') : [];
     let resultsElement = null;
     let profileElement = null;
@@ -193,7 +191,8 @@ class CharacterSelect extends React.Component {
             Object.keys(this.state.profile.profile.characters.data).reduce((sum, key) => {
               return sum + parseInt(this.state.profile.profile.characters.data[key].minutesPlayedTotal);
             }, 0) / 1440
-          )} {t('days on the grind')}
+          )}{' '}
+          {t('days on the grind')}
         </div>
       );
 
@@ -222,55 +221,59 @@ class CharacterSelect extends React.Component {
     }
 
     return (
-      <div className={cx('view', { loading: this.state.loading })} id='get-profile'>
-        {reverse ? (
-          <div className='profile'>
-            {this.state.loading ? <Spinner dark /> : null}
-            {profileElement}
-          </div>
-        ) : null}
-        <div className='search'>
-          {errorNotices}
-          <div className='sub-header sub'>
-            <div>{t('Search for player')}</div>
-          </div>
-          <div className='form'>
-            <div className='field'>
-              <input onInput={this.SearchDestinyPlayer} type='text' placeholder={t('insert gamertag')} spellCheck='false' />
-            </div>
-          </div>
-          <div className='results'>{resultsElement}</div>
-          {profileHistory.length > 0 ? (
-            <>
+      <BraytechContext.Consumer>
+        {theme => (
+          <div className={cx('view', theme.selected, { loading: this.state.loading })} id='get-profile'>
+            {reverse ? (
+              <div className='profile'>
+                {this.state.loading ? <Spinner dark /> : null}
+                {profileElement}
+              </div>
+            ) : null}
+            <div className='search'>
+              {errorNotices}
               <div className='sub-header sub'>
-                <div>{t('Previous')}</div>
+                <div>{t('Search for player')}</div>
               </div>
-              <div className='results'>
-                <ul className='list'>
-                  {profileHistory.map(result => (
-                    <li className='linked' key={result.membershipId}>
-                      <a
-                        onClick={e => {
-                          this.ResultHandler(result.membershipType, result.membershipId, false, result.displayName);
-                        }}
-                      >
-                        <span className={`destiny-platform_${destinyEnums.PLATFORMS[result.membershipType].toLowerCase()}`} />
-                        {result.displayName}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
+              <div className='form'>
+                <div className='field'>
+                  <input onInput={this.SearchDestinyPlayer} type='text' placeholder={t('insert gamertag')} spellCheck='false' />
+                </div>
               </div>
-            </>
-          ) : null}
-        </div>
-        {!reverse ? (
-          <div className='profile'>
-            {this.state.loading ? <Spinner dark /> : null}
-            {profileElement}
+              <div className='results'>{resultsElement}</div>
+              {profileHistory.length > 0 ? (
+                <>
+                  <div className='sub-header sub'>
+                    <div>{t('Previous')}</div>
+                  </div>
+                  <div className='results'>
+                    <ul className='list'>
+                      {profileHistory.map(result => (
+                        <li className='linked' key={result.membershipId}>
+                          <a
+                            onClick={e => {
+                              this.ResultHandler(result.membershipType, result.membershipId, false, result.displayName);
+                            }}
+                          >
+                            <span className={`destiny-platform_${destinyEnums.PLATFORMS[result.membershipType].toLowerCase()}`} />
+                            {result.displayName}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </>
+              ) : null}
+            </div>
+            {!reverse ? (
+              <div className='profile'>
+                {this.state.loading ? <Spinner dark /> : null}
+                {profileElement}
+              </div>
+            ) : null}
           </div>
-        ) : null}
-      </div>
+        )}
+      </BraytechContext.Consumer>
     );
   }
 }

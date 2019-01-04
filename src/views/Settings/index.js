@@ -6,7 +6,6 @@ import BraytechContext from '../../BraytechContext';
 
 import ProgressCheckbox from '../../components/ProgressCheckbox';
 import { getLanguageInfo } from '../../utils/languageInfo';
-import * as braytech from '../../utils/braytechEnums';
 import * as ls from '../../utils/localStorage';
 
 import './styles.css';

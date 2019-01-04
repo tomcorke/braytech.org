@@ -1,5 +1,5 @@
 import React from 'react';
-import globals from '../../utils/globals';
+import Globals from '../../utils/globals';
 import cx from 'classnames';
 
 import InventoryItems from '../../components/InventoryItems';

@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import cx from 'classnames';
 import moment from 'moment';
-import globals from '../../utils/globals';
+import Globals from '../../utils/globals';
 import assign from 'lodash/assign';
 import orderBy from 'lodash/orderBy';
 import merge from 'lodash/merge';
@@ -42,7 +42,7 @@ class StatsView extends React.Component {
     let fetches = requests.map(async request => {
       const get = await fetch(request.path, {
         headers: {
-          'X-API-Key': globals.key.bungie
+          'X-API-Key': Globals.key.bungie
         }
       });
       const response = await get.json();
@@ -76,7 +76,7 @@ class StatsView extends React.Component {
     let fetches = requests.map(request => {
       return fetch(request.path, {
         headers: {
-          'X-API-Key': globals.key.bungie
+          'X-API-Key': Globals.key.bungie
         }
       })
         .then(response => {

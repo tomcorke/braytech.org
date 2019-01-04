@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import cx from 'classnames';
 import Moment from 'react-moment';
-import globals from '../../utils/globals';
+import Globals from '../../utils/globals';
 import assign from 'lodash/assign';
 import ClanBanner from '../../components/ClanBanner';
 import Roster from '../../components/Roster';
@@ -47,7 +47,7 @@ class RosterView extends React.Component {
     let fetches = requests.map(request => {
       return fetch(request.path, {
         headers: {
-          'X-API-Key': globals.key.bungie
+          'X-API-Key': Globals.key.bungie
         }
       })
         .then(response => {
