@@ -73,3 +73,26 @@
     margin: 0 0 3rem;
   }
 }
+
+
+#loading.dark-mode {
+  color: rgba(255, 255, 255, 0.8);
+  background-color: #0f0f0f;
+}
+
+#loading.dark-mode h4 {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+#loading.dark-mode .download {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+#loading.dark-mode .logo-feature .device::before,
+#loading.dark-mode .logo-feature .device::after {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+}
+
+#loading.dark-mode .logo-feature .device::after {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+}

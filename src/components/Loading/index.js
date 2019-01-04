@@ -1,5 +1,6 @@
 import React from 'react';
 import { withNamespaces } from 'react-i18next';
+import cx from 'classnames';
 import packageJSON from '../../../package.json';
 
 import './styles.css';
@@ -12,11 +13,11 @@ const LOADING_STATE = {
   else: 'Booting up'
 };
 
-function Loading({ t, state }) {
+function Loading({ t, state, theme }) {
   const message = LOADING_STATE[state.code] || LOADING_STATE.else;
 
   return (
-    <div className='view' id='loading'>
+    <div className={cx('view', theme)} id='loading'>
       <div className='logo-feature'>
         <div className='device'>
           <span className='destiny-clovis_bray_device' />

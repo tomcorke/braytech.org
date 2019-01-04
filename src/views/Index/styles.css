@@ -1,5 +1,5 @@
 #index {
-  
+  height: 100vh;
 }
 
 #index .image.bg {
@@ -122,6 +122,7 @@
     padding: 2rem;
     grid-gap: 2rem;
     grid-template-columns: 1fr;
+    height: unset;
   }
 
   #index .logo-feature {
@@ -176,4 +177,18 @@
     font-size: 14px;
     line-height: 1.6;
   }
+}
+
+
+#index.dark-mode .changelog {
+  color: rgba(255, 255, 255, 0.8);
+  background-color: #131313;
+}
+
+#index.dark-mode .changelog .version {
+  color: rgb(255, 255, 255);
+}
+
+#index.dark-mode .changelog time {
+  color: rgba(255, 255, 255, 0.4);
 }

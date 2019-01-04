@@ -39,6 +39,8 @@ import Credits from './views/Credits';
 import Tools from './views/Tools';
 import ClanBannerBuilder from './views/Tools/ClanBannerBuilder';
 
+import BraytechContext from './BraytechContext';
+
 class App extends Component {
   constructor(props) {
     super();
@@ -58,7 +60,10 @@ class App extends Component {
         version: false,
         settings: false
       },
-      pageDefaut: false
+      theme: {
+        selected: 'dark-mode',
+        setFn: this.setTheme
+      }
     };
 
     this.manifest = {};
@@ -71,6 +76,12 @@ class App extends Component {
       pageDefaut: className
     });
   };
+
+  setTheme = (theme) => {
+    this.setState(state => ({
+      theme: { ...state.theme, selected: theme }
+    }));
+  }
 
   updateViewport = () => {
     let width = window.innerWidth;
@@ -106,7 +117,6 @@ class App extends Component {
   };
 
   getVersionAndSettings = () => {
-    
     let state = this.state;
     state.status.code = 'checkManifest';
     this.setState(state);
@@ -152,7 +162,7 @@ class App extends Component {
         }
 
         this.availableLanguages = availableLanguages;
-        
+
         return response.manifest.jsonWorldContentPaths[this.currentLanguage];
       })
       .catch(error => {
@@ -237,7 +247,7 @@ class App extends Component {
                   } else {
                     let state = this.state;
                     state.status.code = 'error';
-                    state.status.detail = 'Failure to access IndexedDB manifest'
+                    state.status.detail = 'Failure to access IndexedDB manifest';
                     this.setState(state);
                   }
                 });
@@ -246,7 +256,7 @@ class App extends Component {
           .catch(error => {
             let state = this.state;
             state.status.code = 'error';
-            state.status.detail = error
+            state.status.detail = error;
             this.setState(state);
           });
       });
@@ -263,168 +273,178 @@ class App extends Component {
     }
 
     if (this.state.status.code !== 'ready') {
-      return <Loading state={this.state.status} />;
+      return <Loading state={this.state.status} theme={this.state.theme.selected} />;
     } else {
+      
+      console.log(this.state);
+
+      let standard = ['character-select', 'pride', 'credits', 'settings', 'tools'];
+      let isProfileRoute = window.location.pathname !== '/' && !standard.includes(window.location.pathname.split('/')[1]) ? true : false;
+
       if (this.state.user.response && this.state.user.characterId) {
         return (
-          <Router>
-            <div className={cx('wrapper', this.state.pageDefaut ? this.state.pageDefaut : null)}>
-              <Route path='/' render={route => <Notifications updateAvailable={this.props.updateAvailable} />} />
-              <GoogleAnalytics.RouteTracker />
-              <div className='main'>
-                <Route path='/' render={route => <Header route={route} {...this.state} manifest={this.manifest} />} />
-                <Switch>
-                  <Route path='/character-select' render={route => <CharacterSelect location={route.location} setPageDefault={this.setPageDefault} setUserReponse={this.setUserReponse} user={this.state.user} viewport={this.state.viewport} manifest={this.manifest} />} />
-                  <Route
-                    path='/account'
-                    exact
-                    render={() => (
-                      <>
-                        <Account {...this.state.user} manifest={this.manifest} />
-                        <Tooltip manifest={this.manifest} />
-                      </>
-                    )}
-                  />
-                  <Route path='/clan/:view?/:subView?' exact render={route => <Clan {...this.state.user} manifest={this.manifest} view={route.match.params.view} subView={route.match.params.subView} />} />
-                  <Route path='/character' exact render={() => <Character {...this.state.user} viewport={this.state.viewport} manifest={this.manifest} />} />
-                  <Route path='/checklists' exact render={() => <Checklists {...this.state.user} viewport={this.state.viewport} manifest={this.manifest} />} />
-                  <Route
-                    path='/collections/:primary?/:secondary?/:tertiary?/:quaternary?'
-                    render={route => (
-                      <>
-                        <Collections {...route} {...this.state.user} manifest={this.manifest} />
-                        <Tooltip manifest={this.manifest} />
-                      </>
-                    )}
-                  />
-                  <Route path='/triumphs/:primary?/:secondary?/:tertiary?/:quaternary?' render={route => <Triumphs {...route} {...this.state.user} manifest={this.manifest} />} />
-                  <Route
-                    path='/this-week'
-                    exact
-                    render={() => (
-                      <>
-                        <ThisWeek {...this.state.user} manifest={this.manifest} />
-                        <Tooltip manifest={this.manifest} />
-                      </>
-                    )}
-                  />
-                  <Route path='/vendors/:hash?' exact render={route => <Vendors vendorHash={route.match.params.hash} {...this.state.user} setPageDefault={this.setPageDefault} manifest={this.manifest} />} />
-                  <Route path='/settings' exact render={() => <Settings {...this.state.user} manifest={this.manifest} availableLanguages={this.availableLanguages} setPageDefault={this.setPageDefault} />} />
-                  <Route path='/pride' exact render={() => <Pride setPageDefault={this.setPageDefault} />} />
-                  <Route path='/credits' exact render={() => <Credits setPageDefault={this.setPageDefault} />} />
-                  <Route path='/tools' exact render={() => <Tools setPageDefault={this.setPageDefault} />} />
-                  <Route path='/tools/clan-banner-builder/:decalBackgroundColorId?/:decalColorId?/:decalId?/:gonfalonColorId?/:gonfalonDetailColorId?/:gonfalonDetailId?/:gonfalonId?/' exact render={route => <ClanBannerBuilder {...route} setPageDefault={this.setPageDefault} />} />
-                  <Route path='/' exact render={() => <Index setPageDefault={this.setPageDefault} />} />
-                </Switch>
+          <BraytechContext.Provider value={this.state.theme}>
+            <Router>
+              <div className={cx('wrapper', this.state.theme.selected, { 'profile-route': isProfileRoute } )}>
+                <Route path='/' render={route => <Notifications updateAvailable={this.props.updateAvailable} />} />
+                <GoogleAnalytics.RouteTracker />
+                <div className='main'>
+                  <Route path='/' render={route => <Header route={route} {...this.state} manifest={this.manifest} />} />
+                  <Switch>
+                    <Route path='/character-select' render={route => <CharacterSelect location={route.location} setPageDefault={this.setPageDefault} setUserReponse={this.setUserReponse} user={this.state.user} viewport={this.state.viewport} manifest={this.manifest} />} />
+                    <Route
+                      path='/account'
+                      exact
+                      render={() => (
+                        <>
+                          <Account {...this.state.user} manifest={this.manifest} />
+                          <Tooltip manifest={this.manifest} />
+                        </>
+                      )}
+                    />
+                    <Route path='/clan/:view?/:subView?' exact render={route => <Clan {...this.state.user} manifest={this.manifest} view={route.match.params.view} subView={route.match.params.subView} />} />
+                    <Route path='/character' exact render={() => <Character {...this.state.user} viewport={this.state.viewport} manifest={this.manifest} />} />
+                    <Route path='/checklists' exact render={() => <Checklists {...this.state.user} viewport={this.state.viewport} manifest={this.manifest} />} />
+                    <Route
+                      path='/collections/:primary?/:secondary?/:tertiary?/:quaternary?'
+                      render={route => (
+                        <>
+                          <Collections {...route} {...this.state.user} manifest={this.manifest} />
+                          <Tooltip manifest={this.manifest} />
+                        </>
+                      )}
+                    />
+                    <Route path='/triumphs/:primary?/:secondary?/:tertiary?/:quaternary?' render={route => <Triumphs {...route} {...this.state.user} manifest={this.manifest} />} />
+                    <Route
+                      path='/this-week'
+                      exact
+                      render={() => (
+                        <>
+                          <ThisWeek {...this.state.user} manifest={this.manifest} />
+                          <Tooltip manifest={this.manifest} />
+                        </>
+                      )}
+                    />
+                    <Route path='/vendors/:hash?' exact render={route => <Vendors vendorHash={route.match.params.hash} {...this.state.user} setPageDefault={this.setPageDefault} manifest={this.manifest} />} />
+                    <Route path='/settings' exact render={() => <Settings {...this.state.user} manifest={this.manifest} availableLanguages={this.availableLanguages} setPageDefault={this.setPageDefault} />} />
+                    <Route path='/pride' exact render={() => <Pride setPageDefault={this.setPageDefault} />} />
+                    <Route path='/credits' exact render={() => <Credits setPageDefault={this.setPageDefault} />} />
+                    <Route path='/tools' exact render={() => <Tools setPageDefault={this.setPageDefault} />} />
+                    <Route path='/tools/clan-banner-builder/:decalBackgroundColorId?/:decalColorId?/:decalId?/:gonfalonColorId?/:gonfalonDetailColorId?/:gonfalonDetailId?/:gonfalonId?/' exact render={route => <ClanBannerBuilder {...route} setPageDefault={this.setPageDefault} />} />
+                    <Route path='/' exact render={() => <Index setPageDefault={this.setPageDefault} />} />
+                  </Switch>
+                </div>
+                <Route path='/' render={route => <Footer route={route} />} />
               </div>
-              <Route path='/' render={route => <Footer route={route} />} />
-            </div>
-          </Router>
+            </Router>
+          </BraytechContext.Provider>
         );
       } else {
         return (
-          <Router>
-            <div className={cx('wrapper', this.state.pageDefaut ? this.state.pageDefaut : null)}>
-              <Route path='/' render={route => <Notifications updateAvailable={this.props.updateAvailable} />} />
-              <GoogleAnalytics.RouteTracker />
-              <div className='main'>
-                <Route path='/' render={route => <Header route={route} {...this.state} manifest={this.manifest} />} />
-                <Switch>
-                  <Route path='/character-select' render={route => <CharacterSelect location={route.location} setPageDefault={this.setPageDefault} setUserReponse={this.setUserReponse} user={this.state.user} viewport={this.state.viewport} manifest={this.manifest} />} />
-                  <Route
-                    path='/account'
-                    exact
-                    render={route => (
-                      <Redirect
-                        to={{
-                          pathname: '/character-select',
-                          state: { from: route.location }
-                        }}
-                      />
-                    )}
-                  />
-                  <Route
-                    path='/clan/:view?/:subView?'
-                    exact
-                    render={route => (
-                      <Redirect
-                        to={{
-                          pathname: '/character-select',
-                          state: { from: route.location }
-                        }}
-                      />
-                    )}
-                  />
-                  <Route
-                    path='/character'
-                    exact
-                    render={route => (
-                      <Redirect
-                        to={{
-                          pathname: '/character-select',
-                          state: { from: route.location }
-                        }}
-                      />
-                    )}
-                  />
-                  <Route
-                    path='/checklists'
-                    exact
-                    render={route => (
-                      <Redirect
-                        to={{
-                          pathname: '/character-select',
-                          state: { from: route.location }
-                        }}
-                      />
-                    )}
-                  />
-                  <Route
-                    path='/collections/:primary?/:secondary?/:tertiary?/:quaternary?'
-                    render={route => (
-                      <Redirect
-                        to={{
-                          pathname: '/character-select',
-                          state: { from: route.location }
-                        }}
-                      />
-                    )}
-                  />
-                  <Route
-                    path='/triumphs/:primary?/:secondary?/:tertiary?/:quaternary?'
-                    render={route => (
-                      <Redirect
-                        to={{
-                          pathname: '/character-select',
-                          state: { from: route.location }
-                        }}
-                      />
-                    )}
-                  />
-                  <Route
-                    path='/this-week'
-                    exact
-                    render={route => (
-                      <Redirect
-                        to={{
-                          pathname: '/character-select',
-                          state: { from: route.location }
-                        }}
-                      />
-                    )}
-                  />
-                  <Route path='/vendors/:hash?' exact render={route => <Vendors vendorHash={route.match.params.hash} setPageDefault={this.setPageDefault} manifest={this.manifest} />} />
-                  <Route path='/settings' exact render={() => <Settings {...this.state.user} manifest={this.manifest} availableLanguages={this.availableLanguages} setPageDefault={this.setPageDefault} />} />
-                  <Route path='/pride' exact render={() => <Pride setPageDefault={this.setPageDefault} />} />
-                  <Route path='/credits' exact render={() => <Credits setPageDefault={this.setPageDefault} />} />
-                  <Route path='/tools' exact render={() => <Tools setPageDefault={this.setPageDefault} />} />
-                  <Route path='/tools/clan-banner-builder/:decalBackgroundColorId?/:decalColorId?/:decalId?/:gonfalonColorId?/:gonfalonDetailColorId?/:gonfalonDetailId?/:gonfalonId?/' exact render={route => <ClanBannerBuilder {...route} setPageDefault={this.setPageDefault} />} />
-                  <Route path='/' render={() => <Index setPageDefault={this.setPageDefault} />} />
-                </Switch>
+          <BraytechContext.Provider value={this.state.theme}>
+            <Router>
+              <div className={cx('wrapper', this.state.theme.selected)}>
+                <Route path='/' render={route => <Notifications updateAvailable={this.props.updateAvailable} />} />
+                <GoogleAnalytics.RouteTracker />
+                <div className='main'>
+                  <Route path='/' render={route => <Header route={route} {...this.state} manifest={this.manifest} />} />
+                  <Switch>
+                    <Route path='/character-select' render={route => <CharacterSelect location={route.location} setPageDefault={this.setPageDefault} setUserReponse={this.setUserReponse} user={this.state.user} viewport={this.state.viewport} manifest={this.manifest} />} />
+                    <Route
+                      path='/account'
+                      exact
+                      render={route => (
+                        <Redirect
+                          to={{
+                            pathname: '/character-select',
+                            state: { from: route.location }
+                          }}
+                        />
+                      )}
+                    />
+                    <Route
+                      path='/clan/:view?/:subView?'
+                      exact
+                      render={route => (
+                        <Redirect
+                          to={{
+                            pathname: '/character-select',
+                            state: { from: route.location }
+                          }}
+                        />
+                      )}
+                    />
+                    <Route
+                      path='/character'
+                      exact
+                      render={route => (
+                        <Redirect
+                          to={{
+                            pathname: '/character-select',
+                            state: { from: route.location }
+                          }}
+                        />
+                      )}
+                    />
+                    <Route
+                      path='/checklists'
+                      exact
+                      render={route => (
+                        <Redirect
+                          to={{
+                            pathname: '/character-select',
+                            state: { from: route.location }
+                          }}
+                        />
+                      )}
+                    />
+                    <Route
+                      path='/collections/:primary?/:secondary?/:tertiary?/:quaternary?'
+                      render={route => (
+                        <Redirect
+                          to={{
+                            pathname: '/character-select',
+                            state: { from: route.location }
+                          }}
+                        />
+                      )}
+                    />
+                    <Route
+                      path='/triumphs/:primary?/:secondary?/:tertiary?/:quaternary?'
+                      render={route => (
+                        <Redirect
+                          to={{
+                            pathname: '/character-select',
+                            state: { from: route.location }
+                          }}
+                        />
+                      )}
+                    />
+                    <Route
+                      path='/this-week'
+                      exact
+                      render={route => (
+                        <Redirect
+                          to={{
+                            pathname: '/character-select',
+                            state: { from: route.location }
+                          }}
+                        />
+                      )}
+                    />
+                    <Route path='/vendors/:hash?' exact render={route => <Vendors vendorHash={route.match.params.hash} setPageDefault={this.setPageDefault} manifest={this.manifest} />} />
+                    <Route path='/settings' exact render={() => <Settings {...this.state.user} manifest={this.manifest} availableLanguages={this.availableLanguages} setPageDefault={this.setPageDefault} />} />
+                    <Route path='/pride' exact render={() => <Pride setPageDefault={this.setPageDefault} />} />
+                    <Route path='/credits' exact render={() => <Credits setPageDefault={this.setPageDefault} />} />
+                    <Route path='/tools' exact render={() => <Tools setPageDefault={this.setPageDefault} />} />
+                    <Route path='/tools/clan-banner-builder/:decalBackgroundColorId?/:decalColorId?/:decalId?/:gonfalonColorId?/:gonfalonDetailColorId?/:gonfalonDetailId?/:gonfalonId?/' exact render={route => <ClanBannerBuilder {...route} setPageDefault={this.setPageDefault} />} />
+                    <Route path='/' render={() => <Index setPageDefault={this.setPageDefault} />} />
+                  </Switch>
+                </div>
+                <Route path='/' render={route => <Footer route={route} />} />
               </div>
-              <Route path='/' render={route => <Footer route={route} />} />
-            </div>
-          </Router>
+            </Router>
+          </BraytechContext.Provider>
         );
       }
     }

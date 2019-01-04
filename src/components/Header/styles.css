@@ -208,3 +208,24 @@
     height: calc(100% - 40px);
   }
 }
+
+
+#header.dark-mode .nav {
+  background-color: #131313;
+}
+
+#header.dark-mode .nav ul li a {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+#header.dark-mode .nav ul li a::before {
+  background-color: rgb(255, 255, 255);
+}
+
+#header.dark-mode .nav ul li a.active {
+  color: rgb(255, 255, 255);
+}
+
+#header.dark-mode .nav ul li .description {
+  color: rgba(255, 255, 255, 0.5);
+}

@@ -1,12 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { withNamespaces } from 'react-i18next';
+
 import * as ls from '../../utils/localStorage';
 import Root from './Root';
 import SealNode from './SealNode';
 import PresentationNode from './PresentationNode';
 
 import './styles.css';
-import { withNamespaces } from 'react-i18next';
 
 class Triumphs extends React.Component {
   constructor(props) {
@@ -51,7 +52,7 @@ class Triumphs extends React.Component {
     let toggleCompletedLink = (
       // eslint-disable-next-line jsx-a11y/anchor-is-valid
       <a onClick={this.toggleCompleted}>
-        {this.state.hideCompleted ? (
+        {this.state.collectibleDisplayState.hideTriumphRecords ? (
           <>
             <i className='uniE0522' />
             {t('Show acquired')}

@@ -1,5 +1,8 @@
 import React from 'react';
+import cx from 'classnames';
 import { withNamespaces } from 'react-i18next';
+
+import BraytechContext from '../../BraytechContext';
 
 import ProgressCheckbox from '../../components/ProgressCheckbox';
 import { getLanguageInfo } from '../../utils/languageInfo';
@@ -22,7 +25,6 @@ class Settings extends React.Component {
   }
 
   selectCollectibleDisplayState(state) {
-
     let currentState = this.state.collectibleDisplayState;
     let newState = currentState;
 
@@ -30,12 +32,12 @@ class Settings extends React.Component {
       newState = {
         hideTriumphRecords: false,
         hideChecklistItems: false
-      }
+      };
     } else {
       newState = {
         hideTriumphRecords: state === 'hideTriumphRecords' ? !currentState.hideTriumphRecords : currentState.hideTriumphRecords,
         hideChecklistItems: state === 'hideChecklistItems' ? !currentState.hideChecklistItems : currentState.hideChecklistItems
-      }
+      };
     }
 
     this.setState({
@@ -86,45 +88,89 @@ class Settings extends React.Component {
 
     let collectiblesButtons = (
       <>
-        <li key='showAll' onClick={() => { this.selectCollectibleDisplayState('showAll') }}>
+        <li
+          key='showAll'
+          onClick={() => {
+            this.selectCollectibleDisplayState('showAll');
+          }}
+        >
           <ProgressCheckbox checked={!this.state.collectibleDisplayState.hideTriumphRecords && !this.state.collectibleDisplayState.hideChecklistItems} text='Show everything' />
         </li>
-        <li key='hideTriumphRecords' onClick={() => { this.selectCollectibleDisplayState('hideTriumphRecords') }}>
+        <li
+          key='hideTriumphRecords'
+          onClick={() => {
+            this.selectCollectibleDisplayState('hideTriumphRecords');
+          }}
+        >
           <ProgressCheckbox checked={this.state.collectibleDisplayState.hideTriumphRecords} text='Hide completed triumphs' />
         </li>
-        <li key='hideChecklistItems' onClick={() => { this.selectCollectibleDisplayState('hideChecklistItems') }}>
+        <li
+          key='hideChecklistItems'
+          onClick={() => {
+            this.selectCollectibleDisplayState('hideChecklistItems');
+          }}
+        >
           <ProgressCheckbox checked={this.state.collectibleDisplayState.hideChecklistItems} text='Hide discovered checklist items' />
         </li>
       </>
     );
 
+    console.log(this)
+
     return (
-      <div className='view' id='settings'>
-        <div className='module language'>
-          <div className='sub-header sub'>
-            <div>{t('Language')}</div>
+      <BraytechContext.Consumer>
+        {(theme) => (
+          <div className={cx('view', theme.selected)} id='settings'>
+            <div className='module theme'>
+              <div className='sub-header sub'>
+                <div>{t('Theme')}</div>
+              </div>
+              <ul className='list settings'>
+                <li
+                  key='light'
+                  onClick={() => {
+                    theme.setFn('light-mode');
+                  }}
+                >
+                  <ProgressCheckbox checked={theme.selected === 'light-mode'} text='Lights on' />
+                </li>
+                <li
+                  key='dark'
+                  onClick={() => {
+                    theme.setFn('dark-mode');
+                  }}
+                >
+                  <ProgressCheckbox checked={theme.selected === 'dark-mode'} text='Lights off' />
+                </li>
+              </ul>
+            </div>
+            <div className='module language'>
+              <div className='sub-header sub'>
+                <div>{t('Language')}</div>
+              </div>
+              <ul className='list settings'>{languageButtons}</ul>
+              {this.state.language.current !== this.state.language.selected ? (
+                <ul className='list'>
+                  <li
+                    className='linked'
+                    onClick={() => {
+                      this.saveAndRestart();
+                    }}
+                  >
+                    <div className='name'>{t('Save and restart')}</div>
+                  </li>
+                </ul>
+              ) : null}
+            </div>
+            <div className='module collectibles'>
+              <div className='sub-header sub'>
+                <div>{t('Collectibles')}</div>
+              </div>
+              <ul className='list settings'>{collectiblesButtons}</ul>
+            </div>
           </div>
-          <ul className='list settings'>{languageButtons}</ul>
-          {this.state.language.current !== this.state.language.selected ? (
-            <ul className='list'>
-              <li
-                className='linked'
-                onClick={() => {
-                  this.saveAndRestart();
-                }}
-              >
-                <div className='name'>{t('Save and restart')}</div>
-              </li>
-            </ul>
-          ) : null}
-        </div>
-        <div className='module collectibles'>
-          <div className='sub-header sub'>
-            <div>{t('Collectibles')}</div>
-          </div>
-          <ul className='list settings'>{collectiblesButtons}</ul>
-        </div>
-      </div>
+        )}
+      </BraytechContext.Consumer>
     );
   }
 }

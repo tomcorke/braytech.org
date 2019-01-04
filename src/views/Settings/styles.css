@@ -10,61 +10,6 @@
   color: #6d6d6d;
 }
 
-#settings .list li.linked {
-  background-color: rgba(0, 0, 0, 0.05);
-  color: #555;
-}
-
-#settings .list li::before {
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0);
-}
-
-#settings .list li::after {
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0);
-}
-
-#settings .list li.linked:hover {
-  background-color: rgba(0, 0, 0, 0.1);
-  z-index: 2;
-}
-
-#settings .list li.linked:hover a {
-  color: #222;
-}
-
-#settings .list li.linked:hover::before {
-  box-shadow: inset 0 0 0 1px #848484;
-}
-
-#settings .list li.linked:hover::after {
-  box-shadow: 0 0 0 2px #848484;
-}
-
-#settings .list li .name {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  padding: 0 1rem;
-  display: flex;
-  align-items: center;
-  font-size: 16px;
-}
-
-#settings .list li.selected .name::before {
-  content: ' ';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 13px 13px 0 0;
-  border-color: #555 transparent transparent transparent;
-  pointer-events: none;
-}
-
 #settings .module.language .list:nth-child(3) {
   margin: 2rem 0 0;
 }
@@ -111,4 +56,25 @@
 
 #settings .module .list.settings li .check-box .text {
   color: rgba(0, 0, 0, 0.8);
+}
+
+
+
+
+
+
+
+
+#settings.dark-mode .sub-header {
+  border-bottom: 2px solid #888888;
+  color: #afafaf;
+}
+
+#settings .module .list.settings li .check-box .check {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+#settings .module .list.settings li .check-box .text {
+  color: rgba(255, 255, 255, 0.8);
 }
