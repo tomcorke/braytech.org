@@ -16,7 +16,7 @@ export default class CharacterRoutes extends Component {
 
   componentDidMount() {
     const { membershipType, membershipId, characterId } = this.props.route.match.params;
-    this.props.fetchProfile(membershipType, membershipId, characterId, true);
+    this.props.fetchProfile(membershipType, membershipId, characterId, true, false);
   }
 
   componentDidUpdate(oldProps) {
@@ -30,6 +30,17 @@ export default class CharacterRoutes extends Component {
   render() {
     const { route, user, manifest, viewport } = this.props;
     const userLoaded = user && user.characterId; // TODO: do we need character ID?
+
+    if (this.props.user.queuedFetchError) {
+      return (
+        <Redirect
+          to={{
+            pathname: '/character-select',
+            state: { error: this.props.user.queuedFetchError }
+          }}
+        />
+      );
+    }
 
     if (!userLoaded) {
       return null;

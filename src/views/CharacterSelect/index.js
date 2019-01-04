@@ -154,12 +154,33 @@ class CharacterSelect extends React.Component {
   componentDidMount() {
     window.scrollTo(0, 0);
     this.props.setPageDefault('light');
-    if (this.props.user.response) {
+    if (this.props.route.location.state && this.props.route.location.state.error) {
+
+      // handles redirect from CharacterRoutes if fetchProfile fails for any reason
+
+      let temp = this.state;
+      temp.error = this.props.route.location.state.error;
+      temp.loading = false;
+      this.setState(temp);
+
+    } else if (this.props.user.response) {
+
+      // this is probably a character change
+
       this.setState({ profile: this.props.user.response, loading: false });
+
     } else if (this.props.user.membershipId && !this.state.profile) {
+
+      // have stored membershipId but no fetchProfile
+
       this.ResultHandler(this.props.user.membershipType, this.props.user.membershipId, this.props.user.characterId);
+
     } else {
+
+      // fresh-est state - do nothing
+
       this.setState({ loading: false });
+      
     }
   }
 
@@ -172,6 +193,8 @@ class CharacterSelect extends React.Component {
     let profileHistory = ls.get('history.profiles') ? ls.get('history.profiles') : [];
     let resultsElement = null;
     let profileElement = null;
+
+    console.log(this)
 
     const qs = this.props.route.location.state;
 

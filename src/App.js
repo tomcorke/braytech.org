@@ -41,7 +41,8 @@ class App extends Component {
         membershipId: user ? user.membershipId : false,
         characterId: false,
         response: false,
-        queuedFetch: false
+        queuedFetch: false,
+        queuedFetchError: false
       },
       manifest: {
         state: false,
@@ -50,13 +51,13 @@ class App extends Component {
       },
       pageDefaut: false
     };
-    
+
     this.manifest = {};
     this.bungieSettings = {};
     this.currentLanguage = props.i18n.getCurrentLanguage();
   }
 
-  fetchProfile = (membershipType, membershipId, characterId = false, queuedFetch = false) => {
+  fetchProfile = (membershipType, membershipId, characterId = false, queuedFetch = false, saveAsDefault = false) => {
     // Check if the membership ID in the route matches the membership id in the current user response
     // If it does, we've already loaded the user.
     if (this.state.user.response && this.state.user.membershipId === membershipId) {
@@ -64,10 +65,17 @@ class App extends Component {
       return;
     }
 
-    let stateCallback = (callback) => {
+    let stateCallback = callback => {
       //console.log(response, queuedFetch, loading, error);
       if (callback.response) {
-        this.setUserReponse(membershipType, membershipId, characterId, callback.response);
+        this.setUserReponse(membershipType, membershipId, characterId, callback.response, saveAsDefault);
+      } else if (callback.error) {
+        let temp = this.state.user;
+        temp.queuedFetch = false;
+        temp.queuedFetchError = callback.error;
+        this.setState({
+          user: temp
+        });
       } else {
         let temp = this.state.user;
         temp.queuedFetch = callback.queuedFetch;
@@ -78,7 +86,7 @@ class App extends Component {
     };
 
     fetchAndWhatever(membershipType, membershipId, stateCallback, queuedFetch);
-  };  
+  };
 
   setPageDefault = className => {
     this.setState({
@@ -97,12 +105,15 @@ class App extends Component {
     });
   };
 
-  setUserReponse = (membershipType, membershipId, characterId, response) => {
-    ls.set('setting.user', {
-      membershipType: membershipType,
-      membershipId: membershipId,
-      characterId: characterId
-    });
+  setUserReponse = (membershipType, membershipId, characterId, response, saveAsDefault) => {
+    
+    if (saveAsDefault) {
+      ls.set('setting.user', {
+        membershipType: membershipType,
+        membershipId: membershipId,
+        characterId: characterId
+      });
+    }
 
     this.setState({
       user: {
@@ -276,9 +287,8 @@ class App extends Component {
     console.log(this.state);
 
     if (this.state.manifest.state !== 'ready' || this.state.user.queuedFetch) {
-
       let state = this.state.manifest.state;
-      if (this.state.manifest.state === 'ready' && this.state.user.queuedFetch ) {
+      if (this.state.manifest.state === 'ready' && this.state.user.queuedFetch) {
         state = 'fetchingProfile';
       }
 
