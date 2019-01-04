@@ -2,17 +2,20 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 import cx from 'classnames';
 import assign from 'lodash/assign';
-import GoogleAnalytics from './components/GoogleAnalytics';
 import packageJSON from '../package.json';
-import globals from './utils/globals';
-import dexie from './utils/dexie';
-import * as ls from './utils/localStorage';
-import i18n from './utils/i18n';
 import { withNamespaces } from 'react-i18next';
+
+import './utils/i18n';
 
 import './Core.css';
 import './App.css';
 
+import globals from './utils/globals';
+import dexie from './utils/dexie';
+import * as ls from './utils/localStorage';
+import GoogleAnalytics from './components/GoogleAnalytics';
+
+import Loading from './components/Loading';
 import Header from './components/Header';
 import Tooltip from './components/Tooltip';
 import Footer from './components/Footer';
@@ -39,6 +42,10 @@ class App extends Component {
     super();
     let user = ls.get('setting.user') ? ls.get('setting.user') : false;
     this.state = {
+      status: {
+        code: false,
+        detail: false
+      },
       user: {
         membershipType: user ? user.membershipType : false,
         membershipId: user ? user.membershipId : false,
@@ -46,18 +53,12 @@ class App extends Component {
         response: false
       },
       manifest: {
-        state: false,
         version: false,
         settings: false
       },
       pageDefaut: false
     };
-    this.setPageDefault = this.setPageDefault.bind(this);
-    this.updateViewport = this.updateViewport.bind(this);
-    this.setUserReponse = this.setUserReponse.bind(this);
-    this.viewCharacters = this.viewCharacters.bind(this);
-    this.getVersionAndSettings = this.getVersionAndSettings.bind(this);
-    this.getManifest = this.getManifest.bind(this);
+
     this.manifest = {};
     this.bungieSettings = {};
     this.currentLanguage = props.i18n.getCurrentLanguage();
@@ -103,6 +104,11 @@ class App extends Component {
   };
 
   getVersionAndSettings = () => {
+    
+    let state = this.state;
+    state.status.code = 'checkManifest';
+    this.setState(state);
+
     const paths = [
       {
         name: 'manifest',
@@ -136,29 +142,26 @@ class App extends Component {
       .then(responses => {
         const response = assign(...responses);
 
-        // console.log(response)
-
-        // let state = this.state;
-        // state.manifest.settings = response.settings;
-        // this.setState(state);
         this.bungieSettings = response.settings;
 
         let availableLanguages = [];
         for (var i in response.manifest.jsonWorldContentPaths) {
           availableLanguages.push(i);
         }
+
         this.availableLanguages = availableLanguages;
+        
         return response.manifest.jsonWorldContentPaths[this.currentLanguage];
       })
       .catch(error => {
-        console.log(error);
+        return error;
       });
   };
 
   getManifest = version => {
     let state = this.state;
+    state.status.code = 'fetchManifest';
     state.manifest.version = version;
-    state.manifest.state = 'fetching';
     this.setState(state);
 
     let manifest = async () => {
@@ -170,7 +173,7 @@ class App extends Component {
     manifest()
       .then(manifest => {
         let state = this.state;
-        state.manifest.state = 'almost';
+        state.status.code = 'setManifest';
         this.setState(state);
         dexie
           .table('manifest')
@@ -189,7 +192,7 @@ class App extends Component {
                 this.manifest = manifest[0].value;
                 this.manifest.settings = this.bungieSettings;
                 let state = this.state;
-                state.manifest.state = 'ready';
+                state.status.code = 'ready';
                 this.setState(state);
               });
           });
@@ -227,21 +230,21 @@ class App extends Component {
                     this.manifest = manifest[0].value;
                     this.manifest.settings = this.bungieSettings;
                     let state = this.state;
-                    state.manifest.state = 'ready';
+                    state.status.code = 'ready';
                     this.setState(state);
                   } else {
-                    console.log('something is wrong');
                     let state = this.state;
-                    state.manifest.state = 'error';
+                    state.status.code = 'error';
+                    state.status.detail = 'Failure to access IndexedDB manifest'
                     this.setState(state);
                   }
                 });
             }
           })
           .catch(error => {
-            console.log(error);
             let state = this.state;
-            state.manifest.state = 'error';
+            state.status.code = 'error';
+            state.status.detail = error
             this.setState(state);
           });
       });
@@ -257,68 +260,8 @@ class App extends Component {
       GoogleAnalytics.init();
     }
 
-    if (this.state.manifest.state !== 'ready') {
-      if (this.state.manifest.state === 'error') {
-        return (
-          <div className='view' id='loading'>
-            <div className='logo-feature'>
-              <div className='device'>
-                <span className='destiny-clovis_bray_device' />
-              </div>
-            </div>
-            <h4>Braytech {packageJSON.version}</h4>
-            <div className='download'>{t('Error')}</div>
-          </div>
-        );
-      } else if (this.state.manifest.state === 'version') {
-        return (
-          <div className='view' id='loading'>
-            <div className='logo-feature'>
-              <div className='device'>
-                <span className='destiny-clovis_bray_device' />
-              </div>
-            </div>
-            <h4>Braytech {packageJSON.version}</h4>
-            <div className='download'>{t('Checking data')}</div>
-          </div>
-        );
-      } else if (this.state.manifest.state === 'fetching') {
-        return (
-          <div className='view' id='loading'>
-            <div className='logo-feature'>
-              <div className='device'>
-                <span className='destiny-clovis_bray_device' />
-              </div>
-            </div>
-            <h4>Braytech {packageJSON.version}</h4>
-            <div className='download'>{t('Downloading manifest data')}</div>
-          </div>
-        );
-      } else if (this.state.manifest.state === 'almost') {
-        return (
-          <div className='view' id='loading'>
-            <div className='logo-feature'>
-              <div className='device'>
-                <span className='destiny-clovis_bray_device' />
-              </div>
-            </div>
-            <h4>Braytech {packageJSON.version}</h4>
-            <div className='download'>{t('So close')}</div>
-          </div>
-        );
-      } else {
-        return (
-          <div className='view' id='loading'>
-            <div className='logo-feature'>
-              <div className='device'>
-                <span className='destiny-clovis_bray_device' />
-              </div>
-            </div>
-            <h4>Braytech {packageJSON.version}</h4>
-            <div className='download'>{t('Preparing')}</div>
-          </div>
-        );
-      }
+    if (this.state.status.code !== 'ready') {
+      return <Loading state={this.state.status} />;
     } else {
       if (this.state.user.response && this.state.user.characterId) {
         return (

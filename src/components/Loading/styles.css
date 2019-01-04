@@ -1,0 +1,75 @@
+#loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  align-content: center;
+  text-align: center;
+  color: #000000;
+  background-color: #ffffff;
+}
+
+#loading h4,
+#loading .download {
+  flex-basis: 100%;
+}
+
+#loading h4 {
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.6);
+  margin: 0 0 0.6rem;
+}
+
+#loading .download {
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: rgba(0, 0, 0, 0.2);
+  text-transform: uppercase;
+}
+
+#loading .logo-feature {
+  flex-basis: 100%;
+  font-size: 96px;
+  font-weight: 500;
+  margin: 0 0 3rem;
+  display: flex;
+  justify-content: center;
+}
+
+#loading .logo-feature .device {
+  position: relative;
+  margin: 7rem 0 0;
+  width: 196px;
+  font-size: 196px;
+  line-height: 170px;
+}
+
+#loading .logo-feature .device::before,
+#loading .logo-feature .device::after {
+  content: ' ';
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  width: 236px;
+  height: 236px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.8);
+  animation: fade-in-logo-feature 7s linear forwards, rotate-logo-feature 21s linear infinite;
+}
+
+#loading .logo-feature .device::after {
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.4);
+  animation: fade-in-logo-feature 7s linear forwards, rotate-logo-feature 10s linear infinite;
+}
+
+@media screen and (max-width: 500px) {
+  #loading .download {
+    margin: 0 0 3rem;
+  }
+}
