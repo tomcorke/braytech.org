@@ -37,9 +37,6 @@ class CharacterSelect extends React.Component {
       error: false
     };
 
-    this.SearchDestinyPlayer = this.SearchDestinyPlayer.bind(this);
-    this.CharacterSelectHandler = this.CharacterSelectHandler.bind(this);
-    this.ProfileResponse = this.ProfileResponse.bind(this);
   }
 
   SearchDestinyPlayer = e => {
@@ -147,13 +144,10 @@ class CharacterSelect extends React.Component {
     });
   };
 
-  CharacterSelectHandler = characterId => {
-    this.props.setUserReponse(this.state.profile.profile.profile.data.userInfo.membershipType, this.state.profile.profile.profile.data.userInfo.membershipId, characterId, this.state.profile);
-  };
-
   componentDidMount() {
     window.scrollTo(0, 0);
     this.props.setPageDefault('light');
+
     if (this.props.route.location.state && this.props.route.location.state.error) {
 
       // handles redirect from CharacterRoutes if fetchProfile fails for any reason
@@ -165,7 +159,7 @@ class CharacterSelect extends React.Component {
 
     } else if (this.props.user.response) {
 
-      // this is probably a character change
+      // this is probably to do a character change
 
       this.setState({ profile: this.props.user.response, loading: false });
 
@@ -180,11 +174,12 @@ class CharacterSelect extends React.Component {
       // fresh-est state - do nothing
 
       this.setState({ loading: false });
-      
+
     }
   }
 
   componentWillUnmount() {
+    console.log('CharacterSelect willUnmount')
     this.props.setPageDefault(false);
   }
 
@@ -252,7 +247,7 @@ class CharacterSelect extends React.Component {
               {clan}
               {timePlayed}
             </div>
-            <Characters response={this.state.profile} manifest={this.props.manifest} nextPath={nextPath} onCharacterSelect={this.CharacterSelectHandler} />
+            <Characters response={this.state.profile} manifest={this.props.manifest} next={{path: nextPath, pageDefault: false}} />
           </div>
         </>
       );

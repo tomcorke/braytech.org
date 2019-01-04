@@ -58,10 +58,15 @@ class App extends Component {
   }
 
   fetchProfile = (membershipType, membershipId, characterId = false, queuedFetch = false, saveAsDefault = false) => {
-    // Check if the membership ID in the route matches the membership id in the current user response
+
+    // Check if the membershipId in the route matches the membershipId in the current user response
     // If it does, we've already loaded the user.
     if (this.state.user.response && this.state.user.membershipId === membershipId) {
-      console.log('already loaded profile');
+      console.log('App.js: already loaded profile');
+      if (this.state.user.characterId !== characterId) {
+        console.log('App.js: changed characterId');
+        this.setCharacterId(characterId);
+      }
       return;
     }
 
@@ -125,6 +130,12 @@ class App extends Component {
         urlPrefix: `/u/${membershipType}/${membershipId}/${characterId}`
       }
     });
+  };
+
+  setCharacterId = characterId => {
+    let state = this.state;
+    state.user.characterId = characterId;
+    this.setState(state);
   };
 
   viewCharacters = () => {

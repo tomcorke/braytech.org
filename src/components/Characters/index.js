@@ -16,7 +16,7 @@ class Characters extends React.Component {
   }
 
   render() {
-    const { t, nextPath } = this.props;
+    const { t, next } = this.props;
     let characters = this.props.response.profile.characters.data;
     const { membershipId, membershipType } = this.props.response.profile.profile.data.userInfo;
     let characterProgressions = this.props.response.profile.characterProgressions.data;
@@ -53,9 +53,11 @@ class Characters extends React.Component {
             />
           </div>
           <Link
-            to={`/u/${membershipType}/${membershipId}/${character.characterId}${nextPath}`}
-            onClick={e => {
-              this.props.onCharacterSelect(character.characterId);
+            to={{
+              pathname: `/u/${membershipType}/${membershipId}/${character.characterId}${next.path}`,
+              state: {
+                pageDefault: next.pageDefault
+              }
             }}
           />
         </li>

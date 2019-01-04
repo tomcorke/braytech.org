@@ -19,14 +19,6 @@ export default class CharacterRoutes extends Component {
     this.props.fetchProfile(membershipType, membershipId, characterId, true, false);
   }
 
-  componentDidUpdate(oldProps) {
-    if (this.props.route.match.params.membershipId !== oldProps.route.match.params.membershipId) {
-      // membership ID has changed, fetch the new user.
-      // const { membershipType, membershipId, characterId } = this.props.route.match.params;
-      // this.props.fetchProfile(membershipType, membershipId, characterId);
-    }
-  }
-
   render() {
     const { route, user, manifest, viewport } = this.props;
     const userLoaded = user && user.characterId; // TODO: do we need character ID?
