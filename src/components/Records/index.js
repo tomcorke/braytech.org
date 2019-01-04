@@ -88,7 +88,7 @@ class Records extends React.Component {
           return;
         }
 
-        if (enumerateRecordState(state).recordRedeemed && this.props.hideCompleted) {
+        if (enumerateRecordState(state).recordRedeemed && this.props.collectibleDisplayState.hideTriumphRecords) {
           return;
         }
 
@@ -246,7 +246,7 @@ class Records extends React.Component {
           return;
         }
 
-        if (enumerateRecordState(state).recordRedeemed && this.props.hideCompleted) {
+        if (enumerateRecordState(state).recordRedeemed && this.props.collectibleDisplayState.hideTriumphRecords) {
           return;
         }
 
@@ -320,7 +320,7 @@ class Records extends React.Component {
       });
     }
 
-    if (records.length === 0 && this.props.hideCompleted) {
+    if (records.length === 0 && this.props.collectibleDisplayState.hideTriumphRecords) {
       records.push(
         <li key='lol'>
           <div className='properties'>

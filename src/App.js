@@ -10,6 +10,8 @@ import './utils/i18n';
 import './Core.css';
 import './App.css';
 
+import init from './utils/init';
+
 import globals from './utils/globals';
 import dexie from './utils/dexie';
 import * as ls from './utils/localStorage';

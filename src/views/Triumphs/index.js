@@ -13,21 +13,26 @@ class Triumphs extends React.Component {
     super(props);
 
     this.state = {
-      hideCompleted: ls.get('setting.hideCompletedRecords') ? ls.get('setting.hideCompletedRecords') : false
+      collectibleDisplayState: ls.get('setting.collectibleDisplayState')
     };
 
     this.toggleCompleted = this.toggleCompleted.bind(this);
   }
 
   toggleCompleted = () => {
-    let currentSetting = ls.get('setting.hideCompletedRecords') ? ls.get('setting.hideCompletedRecords') : false;
-
-    ls.set('setting.hideCompletedRecords', currentSetting ? false : true);
+    let currentState = this.state.collectibleDisplayState;
+    let newState = {
+      hideTriumphRecords: !currentState.hideTriumphRecords,
+      hideChecklistItems: currentState.hideChecklistItems
+    }
 
     this.setState({
-      hideCompleted: ls.get('setting.hideCompletedRecords')
+      collectibleDisplayState: newState
     });
+
+    ls.set('setting.collectibleDisplayState', newState);
   };
+
 
   componentDidMount() {
     
@@ -71,7 +76,7 @@ class Triumphs extends React.Component {
       return (
         <>
           <div className='view presentation-node' id='triumphs'>
-            <SealNode {...this.props} hideCompleted />
+            <SealNode {...this.props} collectibleDisplayState={this.state.collectibleDisplayState} />
           </div>
           <div className='sticky-nav'>
             <div />
@@ -90,7 +95,7 @@ class Triumphs extends React.Component {
       return (
         <>
           <div className='view presentation-node' id='triumphs'>
-            <PresentationNode {...this.props} hideCompleted={this.state.hideCompleted} primaryHash={primaryHash} />
+            <PresentationNode {...this.props} collectibleDisplayState={this.state.collectibleDisplayState} primaryHash={primaryHash} />
           </div>
           <div className='sticky-nav'>
             <div />

@@ -13,21 +13,9 @@ class SealNode extends React.Component {
     super(props);
 
     this.state = {
-      hideCompleted: ls.get('setting.hideCompletedRecords') ? ls.get('setting.hideCompletedRecords') : false
+      
     };
-
-    this.toggleCompleted = this.toggleCompleted.bind(this);
   }
-
-  toggleCompleted = () => {
-    let currentSetting = ls.get('setting.hideCompletedRecords') ? ls.get('setting.hideCompletedRecords') : false;
-
-    ls.set('setting.hideCompletedRecords', currentSetting ? false : true);
-
-    this.setState({
-      hideCompleted: ls.get('setting.hideCompletedRecords')
-    });
-  };
 
   render() {
     const { t } = this.props;
