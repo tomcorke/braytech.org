@@ -45,6 +45,7 @@ class App extends Component {
   constructor(props) {
     super();
     let user = ls.get('setting.user') ? ls.get('setting.user') : false;
+    let theme = ls.get('setting.theme') ? ls.get('setting.theme') : 'light-mode';
     this.state = {
       status: {
         code: false,
@@ -61,7 +62,7 @@ class App extends Component {
         settings: false
       },
       theme: {
-        selected: 'dark-mode',
+        selected: theme,
         setFn: this.setTheme
       }
     };
@@ -81,6 +82,7 @@ class App extends Component {
     this.setState(state => ({
       theme: { ...state.theme, selected: theme }
     }));
+    ls.set('setting.theme', theme);
   };
 
   updateViewport = () => {
