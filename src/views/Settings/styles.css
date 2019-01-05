@@ -5,8 +5,9 @@
   grid-template-columns: repeat(5, 1fr);
 }
 
-#settings .module.language .list:nth-child(3) {
+#settings .module.language button {
   margin: 2rem 0 0;
+  font-size: 16px;
 }
 
 @media screen and (max-width: 1500px) {

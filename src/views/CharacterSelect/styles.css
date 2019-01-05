@@ -164,7 +164,7 @@
 }
 
 #get-profile.light-mode .form .field:hover input {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.15);
   color: #222;
   box-shadow: inset 0 0 0 1px #000;
 }
@@ -195,7 +195,7 @@
 }
 
 #get-profile.light-mode .results .list li.linked:hover {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.15);
 }
 
 #get-profile.light-mode .results .list li.linked:hover a {

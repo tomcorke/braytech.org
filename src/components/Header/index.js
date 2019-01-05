@@ -1,6 +1,8 @@
 import React from 'react';
 import { withNamespaces } from 'react-i18next';
 
+import { isProfileRoute } from '../../utils/globals';
+
 import './styles.css';
 
 import StandardHeader from '../StandardHeader';
@@ -80,9 +82,7 @@ class Header extends React.Component {
 
     views = process.env.NODE_ENV !== 'development' ? views.filter(view => !view.dev) : views;
 
-    let standard = ['character-select', 'pride', 'credits', 'settings', 'tools'];
-
-    if (this.props.user.response && this.props.user.characterId && this.props.route.location.pathname !== '/' && !standard.includes(this.props.route.location.pathname.split('/')[1])) {
+    if (this.props.user.response && this.props.user.characterId && isProfileRoute(this.props.route.location.pathname)) {
       return <ProfileHeader {...this.props.route} {...this.props.user} viewport={this.props.viewport} manifest={this.props.manifest} views={views} />;
     } else {
       return <StandardHeader {...this.props.user} viewport={this.props.viewport} views={views} isIndex={this.props.route.location.pathname === '/' ? true : false} />;

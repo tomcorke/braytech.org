@@ -275,8 +275,6 @@ class App extends Component {
     if (this.state.status.code !== 'ready') {
       return <Loading state={this.state.status} theme={this.state.theme.selected} />;
     } else {
-      console.log(this.state);
-
       if (this.state.user.response && this.state.user.characterId) {
         return (
           <BraytechContext.Provider value={this.state.theme}>

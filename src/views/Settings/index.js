@@ -5,6 +5,7 @@ import { withNamespaces } from 'react-i18next';
 import BraytechContext from '../../BraytechContext';
 
 import ProgressCheckbox from '../../components/ProgressCheckbox';
+import Button from '../../components/Button';
 import { getLanguageInfo } from '../../utils/languageInfo';
 import * as ls from '../../utils/localStorage';
 
@@ -21,6 +22,8 @@ class Settings extends React.Component {
       },
       collectibleDisplayState: ls.get('setting.collectibleDisplayState') ? ls.get('setting.collectibleDisplayState') : false
     };
+
+    this.saveAndRestart = this.saveAndRestart.bind(this);
   }
 
   selectCollectibleDisplayState(state) {
@@ -52,6 +55,7 @@ class Settings extends React.Component {
   }
 
   saveAndRestart() {
+    console.log(this)
     const { i18n } = this.props;
     i18n.setCurrentLanguage(this.state.language.selected);
     setTimeout(() => {
@@ -114,11 +118,11 @@ class Settings extends React.Component {
       </>
     );
 
-    console.log(this)
+    console.log(this);
 
     return (
       <BraytechContext.Consumer>
-        {(theme) => (
+        {theme => (
           <div className={cx('view', theme.selected)} id='settings'>
             <div className='module theme'>
               <div className='sub-header sub'>
@@ -148,18 +152,7 @@ class Settings extends React.Component {
                 <div>{t('Language')}</div>
               </div>
               <ul className='list settings'>{languageButtons}</ul>
-              {this.state.language.current !== this.state.language.selected ? (
-                <ul className='list'>
-                  <li
-                    className='linked'
-                    onClick={() => {
-                      this.saveAndRestart();
-                    }}
-                  >
-                    <div className='name'>{t('Save and restart')}</div>
-                  </li>
-                </ul>
-              ) : null}
+              <Button text={t('Save and restart')} invisible={this.state.language.current === this.state.language.selected} action={this.saveAndRestart} />
             </div>
             <div className='module collectibles'>
               <div className='sub-header sub'>
