@@ -3,6 +3,7 @@ import cx from 'classnames';
 import { withNamespaces } from 'react-i18next';
 
 import ProgressBar from '../../components/ProgressBar';
+import * as ls from '../../utils/localStorage';
 
 import regionChests from './lists/regionChests';
 import lostSectors from './lists/lostSectors';
@@ -23,7 +24,7 @@ class Checklists extends React.Component {
 
     this.state = {
       page: 0,
-      lowlidev: false
+      collectibleDisplayState: ls.get('setting.collectibleDisplayState') ? ls.get('setting.collectibleDisplayState') : false
     };
 
     this.changeSkip = this.changeSkip.bind(this);
@@ -43,7 +44,8 @@ class Checklists extends React.Component {
 
   render() {
     const { t, characterId } = this.props;
-    const characterProgressions = this.props.response.profile.characterProgressions.data;
+    const characterProgressions = this.props.response.profile.characterProgressions.data[characterId];
+    const profileProgressions = this.props.response.profile.profileProgression.data;
 
     if (this.props.viewport.width >= 2000) {
       this.itemsPerPage = 5;
@@ -66,7 +68,7 @@ class Checklists extends React.Component {
         id: 1697465175,
         scope: characterProgressions,
         name: t('Region Chests'),
-        description: (
+        binding: (
           <>
             Profile bound with the exception of <em>Curse of Osiris</em> and <em>Warmind</em> chests
           </>
@@ -74,56 +76,92 @@ class Checklists extends React.Component {
         progressDescription: t('Region chests opened'),
         icon: 'destiny-region_chests',
         items: regionChests(this)
+      },
+      {
+        id: 3142056444,
+        scope: characterProgressions,
+        name: t('Lost Sectors'),
+        binding: t('Character bound'),
+        progressDescription: t('Lost Sectors discovered'),
+        icon: 'destiny-lost_sectors',
+        items: lostSectors(this.props)
+      },
+      {
+        id: 4178338182,
+        scope: characterProgressions,
+        name: t('Adventures'),
+        binding: t('Character bound'),
+        progressDescription: t('Adventures undertaken'),
+        icon: 'destiny-adventure',
+        items: adventures(this.props)
+      },
+      {
+        id: 2609997025,
+        scope: profileProgressions,
+        name: t('Corrupted Eggs'),
+        binding: t('Profile bound'),
+        progressDescription: t('Eggs scrambled'),
+        icon: 'destiny-corrupted_eggs',
+        items: corruptedEggs(this.props)
+      },
+      {
+        id: 1297424116,
+        scope: profileProgressions,
+        name: t('Ahamkara Bones'),
+        binding: t('Profile bound'),
+        progressDescription: t('Bones found'),
+        icon: 'destiny-ahamkara_bones',
+        items: ahamkaraBones(this.props)
+      },
+      {
+        id: 2726513366,
+        scope: profileProgressions,
+        name: t('Cat Statues'),
+        binding: t('Profile bound'),
+        progressDescription: t('Feline friends satisfied'),
+        icon: 'destiny-cat_statues',
+        items: catStatues(this.props)
+      },
+      {
+        id: 365218222,
+        scope: profileProgressions,
+        name: t('Sleeper Nodes'),
+        binding: t('Profile bound'),
+        progressDescription: t('Sleeper nodes hacked'),
+        icon: 'destiny-sleeper_nodes',
+        items: sleeperNodes(this.props)
+      },
+      {
+        id: 2360931290,
+        scope: profileProgressions,
+        name: t('Ghost Scans'),
+        binding: t('Profile bound'),
+        progressDescription: t('Ghost scans performed'),
+        icon: 'destiny-ghost',
+        items: ghostScans(this.props)
+      },
+      {
+        id: 2955980198,
+        scope: profileProgressions,
+        name: t('Lost Memory Fragments'),
+        binding: t('Profile bound'),
+        progressDescription: t('Memories destroyed'),
+        icon: 'destiny-lost_memory_fragments',
+        items: latentMemories(this.props)
       }
-      // {
-      //   name: t('Lost Sectors'),
-      //   icon: 'destiny-lost_sectors',
-      //   list: lostSectors(this.props)
-      // },
-      // {
-      //   name: t('Adventures'),
-      //   icon: 'destiny-adventure',
-      //   list: adventures(this.props)
-      // },
-      // {
-      //   name: t('Corrupted Eggs'),
-      //   icon: 'destiny-corrupted_eggs',
-      //   list: corruptedEggs(this.props)
-      // },
-      // {
-      //   name: t('Ahamkara Bones '),
-      //   icon: 'destiny-ahamkara_bones',
-      //   list: ahamkaraBones(this.props)
-      // },
-      // {
-      //   name: t('Cat Statues'),
-      //   icon: 'destiny-cat_statues',
-      //   list: catStatues(this.props)
-      // },
-      // {
-      //   name: t('Sleeper Nodes'),
-      //   icon: 'destiny-sleeper_nodes',
-      //   list: sleeperNodes(this.props)
-      // },
-      // {
-      //   name: t('Ghost Scans'),
-      //   icon: 'destiny-ghost',
-      //   list: ghostScans(this.props)
-      // },
-      // {
-      //   name: t('Lost Memory Fragments'),
-      //   icon: 'destiny-lost_memory_fragments',
-      //   list: latentMemories(this.props)
-      // }
     ];
 
-    // if (Object.values(this.props.response.profile.profileProgression.data.checklists[2448912219]).filter(value => value === true).length === 4) {
-    //   lists.push({
-    //     name: t("Cayde's Journals"),
-    //     icon: 'destiny-ace_of_spades',
-    //     list: caydesJournals(this.props)
-    //   });
-    // }
+    if (Object.values(this.props.response.profile.profileProgression.data.checklists[2448912219]).filter(value => value === true).length === 4) {
+      lists.push({
+        id: 2448912219,
+        scope: profileProgressions,
+        name: t("Cayde's Journals"),
+        binding: t('Profile bound'),
+        progressDescription: t('Journals recovered'),
+        icon: 'destiny-ace_of_spades',
+        items: caydesJournals(this.props)
+      });
+    }
 
     let sliceStart = parseInt(this.state.page, 10) * this.itemsPerPage;
     let sliceEnd = sliceStart + this.itemsPerPage;
@@ -167,21 +205,29 @@ class Checklists extends React.Component {
                 <div className='head'>
                   <h4>{list.name}</h4>
                   <div className='binding'>
-                    <p>{list.description}</p>
+                    <p>{list.binding}</p>
                   </div>
                   <ProgressBar
                     objectiveDefinition={{
                       progressDescription: list.progressDescription,
-                      completionValue: Object.keys(list.scope[characterId].checklists[list.id]).length
+                      completionValue: list.id === 2448912219 ? 4 : Object.keys(list.scope.checklists[list.id]).length
                     }}
                     playerProgress={{
-                      progress: Object.values(list.scope[characterId].checklists[list.id]).filter(value => value === true).length
+                      progress: Object.values(list.scope.checklists[list.id]).filter(value => value === true).length
                     }}
                     hideCheck
                     chunky
                   />
                 </div>
-                <ul className='list no-interaction'>{list.items.map(obj => obj.element)}</ul>
+                <ul className='list no-interaction'>
+                  {list.items.map(obj => {
+                    if (this.state.collectibleDisplayState.hideChecklistItems && obj.completed) {
+                      return null;
+                    } else {
+                      return obj.element;
+                    }
+                  })}
+                </ul>
               </div>
             );
           })}

@@ -1,17 +1,15 @@
 import React from 'react';
-import cx from 'classnames'
+import cx from 'classnames';
+import orderBy from 'lodash/orderBy';
 
-import ProgressBar from '../../../components/ProgressBar';
-
-const latentMemories = (props) => {
-
+const latentMemories = props => {
   let profileProgressions = props.response.profile.profileProgression.data;
 
   let manifest = props.manifest;
 
   const { t } = props;
 
-  let list = []
+  let list = [];
 
   Object.entries(profileProgressions.checklists[2955980198]).forEach(([key, value]) => {
     let hash = parseInt(key, 10);
@@ -27,58 +25,35 @@ const latentMemories = (props) => {
     });
 
     let number = checklist.displayProperties.name.match(/([0-9]+)/)[0];
-    
-    list.push(
-      <li key={checklist.hash} data-state={ completed ? `complete` : `incomplete` } data-sort={ number }>
-        <div className={cx(
-            "state",
-            {
-              "completed": completed
-            }
-          )}></div>
-        <div className="text">
-          <p>{t('Memory')} {number}</p>
-        </div>
-        <div className="lowlines">
-          <a href={`https://lowlidev.com.au/destiny/maps/mars/${checklist.hash}?origin=BRAYTECH`} target="_blank" rel="noopener noreferrer">
-            <i className="uniE1C4" />
-          </a>
-        </div>
-      </li>
-    )
+
+    list.push({
+      completed: completed ? 1 : 0,
+      number: parseInt(number),
+      element: (
+        <li key={checklist.hash} data-state={completed ? `complete` : `incomplete`} data-sort={number}>
+          <div
+            className={cx('state', {
+              completed: completed
+            })}
+          />
+          <div className='text'>
+            <p>
+              {t('Memory')} {number}
+            </p>
+          </div>
+          <div className='lowlines'>
+            <a href={`https://lowlidev.com.au/destiny/maps/mars/${checklist.hash}?origin=BRAYTECH`} target='_blank' rel='noopener noreferrer'>
+              <i className='uniE1C4' />
+            </a>
+          </div>
+        </li>
+      )
+    });
   });
 
-  list.sort(function(a, b) {
-    let intA = a.props['data-sort'];
-    let intB = b.props['data-sort'];
-    return intA - intB;
-  });
+  list = orderBy(list, [item => item.number], ['asc']);
 
-  return (
-    <>
-      <div className="head">
-        <h4>{t('Lost Memory Fragments')}</h4>
-        <div className="binding">
-          <p>{t('Profile bound')}</p>
-        </div>
-        <ProgressBar
-          objectiveDefinition={{
-            progressDescription: t('Memories destroyed'),
-            completionValue: Object.keys(profileProgressions.checklists[2955980198]).length
-          }}
-          playerProgress={{
-            progress: Object.values(profileProgressions.checklists[2955980198]).filter(value => value === true).length
-          }}
-          hideCheck
-          chunky
-        />
-      </div>
-      <ul className="list no-interaction">
-        {list}
-      </ul>
-    </>
-  )
-
-}
+  return list;
+};
 
 export default latentMemories;

@@ -28,5 +28,10 @@
     "date": "2019-01-01T08:54:18.867Z",
     "version": "1.2.2",
     "content": "## Changes\n- Added some codes to improve the Character Select view UX\n- Added strike high-scores to Account view\n- Rearranged Account view"
+  },
+  {
+    "date": "2019-01-05T15:43:52.508Z",
+    "version": "1.2.3",
+    "content": "## Changes\n- Significant modifications under the hood to make way for new things\n- Added a dark mode (beta)\n- Consolidated more styles\n- Added more UI components\n- Added settings to hide completed checklist items (beta)\n- Added more descriptive loading screen messages"
   }
 ]

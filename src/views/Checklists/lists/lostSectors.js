@@ -2,15 +2,11 @@ import React from 'react';
 import cx from 'classnames';
 import orderBy from 'lodash/orderBy';
 
-import ProgressBar from '../../../components/ProgressBar';
-
 const lostSectors = props => {
   let characterProgressions = props.response.profile.characterProgressions.data;
   let characterId = props.characterId;
 
   let manifest = props.manifest;
-
-  const { t } = props;
 
   let list = [];
 
@@ -78,28 +74,7 @@ const lostSectors = props => {
 
   list = orderBy(list, [item => item.completed, item => item.place, item => item.name], ['asc', 'asc', 'asc']);
 
-  return (
-    <>
-      <div className='head'>
-        <h4>{t('Lost Sectors')}</h4>
-        <div className='binding'>
-          <p>{t('Character bound')}</p>
-        </div>
-        <ProgressBar
-          objectiveDefinition={{
-            progressDescription: t('Lost Sectors discovered'),
-            completionValue: Object.keys(characterProgressions[characterId].checklists[3142056444]).length
-          }}
-          playerProgress={{
-            progress: Object.values(characterProgressions[characterId].checklists[3142056444]).filter(value => value === true).length
-          }}
-          hideCheck
-          chunky
-        />
-      </div>
-      <ul className='list no-interaction'>{list.map(obj => obj.element)}</ul>
-    </>
-  );
+  return list;
 };
 
 export default lostSectors;

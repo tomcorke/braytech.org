@@ -1,7 +1,6 @@
 import React from 'react';
 import cx from 'classnames';
-
-import ProgressBar from '../../../components/ProgressBar';
+import orderBy from 'lodash/orderBy';
 
 const ghostScans = props => {
   let profileProgressions = props.response.profile.profileProgression.data;
@@ -61,56 +60,37 @@ const ghostScans = props => {
 
     let number = checklist.displayProperties.name.match(/([0-9]+)/)[0];
 
-    list.push(
-      <li key={checklist.hash} data-state={completed ? `complete` : `incomplete`} data-sort={number}>
-        <div
-          className={cx('state', {
-            completed: completed
-          })}
-        />
-        <div className='text'>
-          <p>{t('Scan')} {number}</p>
-          <p>
-            {scan ? scan.displayProperties.name : `???`}, {place.displayProperties.name}
-          </p>
-        </div>
-        <div className='lowlines'>
-          <a href={`https://lowlidev.com.au/destiny/maps/${checklist.destinationHash}/${checklist.hash}?origin=BRAYTECH`} target='_blank' rel='noopener noreferrer'>
-            <i className='uniE1C4' />
-          </a>
-        </div>
-      </li>
-    );
+    list.push({
+      completed: completed ? 1 : 0,
+      number: parseInt(number),
+      element: (
+        <li key={checklist.hash} data-state={completed ? `complete` : `incomplete`}>
+          <div
+            className={cx('state', {
+              completed: completed
+            })}
+          />
+          <div className='text'>
+            <p>
+              {t('Scan')} {number}
+            </p>
+            <p>
+              {scan ? scan.displayProperties.name : `???`}, {place.displayProperties.name}
+            </p>
+          </div>
+          <div className='lowlines'>
+            <a href={`https://lowlidev.com.au/destiny/maps/${checklist.destinationHash}/${checklist.hash}?origin=BRAYTECH`} target='_blank' rel='noopener noreferrer'>
+              <i className='uniE1C4' />
+            </a>
+          </div>
+        </li>
+      )
+    });
   });
 
-  list.sort(function(a, b) {
-    let intA = a.props['data-sort'];
-    let intB = b.props['data-sort'];
-    return intA - intB;
-  });
+  list = orderBy(list, [item => item.number], ['asc']);
 
-  return (
-    <>
-      <div className='head'>
-        <h4>{t('Ghost scans')}</h4>
-        <div className='binding'>
-          <p>{t('Profile bound')}</p>
-        </div>
-        <ProgressBar
-          objectiveDefinition={{
-            progressDescription: t('Ghost scans performed'),
-            completionValue: Object.keys(profileProgressions.checklists[2360931290]).length
-          }}
-          playerProgress={{
-            progress: Object.values(profileProgressions.checklists[2360931290]).filter(value => value === true).length
-          }}
-          hideCheck
-          chunky
-        />
-      </div>
-      <ul className='list no-interaction'>{list}</ul>
-    </>
-  );
+  return list;
 };
 
 export default ghostScans;

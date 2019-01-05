@@ -1,15 +1,12 @@
 import React from 'react';
 import cx from 'classnames';
+import orderBy from 'lodash/orderBy';
 import ReactMarkdown from 'react-markdown';
-
-import ProgressBar from '../../../components/ProgressBar';
 
 const caydesJournals = props => {
   let profileProgressions = props.response.profile.profileProgression.data;
 
   let manifest = props.manifest;
-
-  const { t } = props;
 
   let list = [];
 
@@ -27,47 +24,25 @@ const caydesJournals = props => {
         }
       });
 
-      list.push(
-        <li key={item.hash} data-state={completed ? `complete` : `incomplete`} data-sort={item.hash}>
-          <div
-            className={cx('state', {
-              completed: completed
-            })}
-          />
-          <ReactMarkdown className='text' source={item.displayProperties.description} />
-        </li>
-      );
+      list.push({
+        completed: completed ? 1 : 0,
+        element: (
+          <li key={item.hash} data-state={completed ? `complete` : `incomplete`}>
+            <div
+              className={cx('state', {
+                completed: completed
+              })}
+            />
+            <ReactMarkdown className='text' source={item.displayProperties.description} />
+          </li>
+        )
+      });
     }
   });
 
-  list.sort(function(a, b) {
-    let textA = a.props['data-sort'];
-    let textB = b.props['data-sort'];
-    return textA < textB ? -1 : textA > textB ? 1 : 0;
-  });
+  list = orderBy(list, [item => item.completed], ['asc']);
 
-  return (
-    <>
-      <div className='head'>
-        <h4>{t("Cayde's Journals")}</h4>
-        <div className='binding'>
-          <p>{t('Profile bound')}</p>
-        </div>
-        <ProgressBar
-          objectiveDefinition={{
-            progressDescription: t('Journals recovered'),
-            completionValue: Object.keys(profileProgressions.checklists[2448912219]).length
-          }}
-          playerProgress={{
-            progress: Object.values(profileProgressions.checklists[2448912219]).filter(value => value === true).length
-          }}
-          hideCheck
-          chunky
-        />
-      </div>
-      <ul className='list no-interaction'>{list}</ul>
-    </>
-  );
+  return list;
 };
 
 export default caydesJournals;
