@@ -2,9 +2,11 @@ import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import cx from 'classnames';
 import packageJSON from '../../../package.json';
+
+import BraytechContext from '../../BraytechContext';
+
 import ObservedImage from '../../components/ObservedImage';
 import ProgressBar from '../../components/ProgressBar';
-
 import { classHashToString } from '../../utils/destinyUtils';
 
 import './styles.css';
@@ -93,77 +95,81 @@ class ProfileHeader extends React.Component {
     );
 
     return (
-      <div id='header' className={cx('profile-header', { navOpen: this.state.mobileNavOpen })}>
-        <div className='braytech'>
-          <div className='logo'>
-            <Link to='/'>
-              <span className='destiny-clovis_bray_device' />
-              Braytech {packageJSON.version}
-            </Link>
-          </div>
-          {!viewsInline ? (
-            this.state.mobileNavOpen ? (
-              <div className='trigger' onClick={this.TriggerClickHandler}>
-                <i className='uniE106' />
-                Exit
+      <BraytechContext.Consumer>
+        {theme => (
+          <div id='header' className={cx('profile-header', theme.selected, { navOpen: this.state.mobileNavOpen })}>
+            <div className='braytech'>
+              <div className='logo'>
+                <Link to='/'>
+                  <span className='destiny-clovis_bray_device' />
+                  Braytech {packageJSON.version}
+                </Link>
               </div>
-            ) : (
-              <div className='trigger' onClick={this.TriggerClickHandler}>
-                <i className='uniEA55' />
-                Views
-              </div>
-            )
-          ) : null}
-        </div>
-        <div className='profile'>
-          <div className='background'>
-            <ObservedImage
-              className={cx('image', 'emblem', {
-                missing: emblemDefinition.redacted
-              })}
-              src={`https://www.bungie.net${emblemDefinition.secondarySpecial ? emblemDefinition.secondarySpecial : `/img/misc/missing_icon_d2.png`}`}
-            />
-          </div>
-          <div className='ui'>
-            <div className='characters'>
-              <ul className='list'>
-                <li>
-                  <ObservedImage
-                    className={cx('image', 'secondaryOverlay', {
-                      missing: emblemDefinition.redacted
-                    })}
-                    src={`https://www.bungie.net${!emblemDefinition.redacted ? emblemDefinition.secondaryOverlay : `/img/misc/missing_icon_d2.png`}`}
-                  />
-                  <div className='displayName'>{profile.userInfo.displayName}</div>
-                  <div className='basics'>
-                    {character.baseCharacterLevel} / {classHashToString(character.classHash, this.manifest, character.genderType)} / <span className='light'>{character.light}</span>
+              {!viewsInline ? (
+                this.state.mobileNavOpen ? (
+                  <div className='trigger' onClick={this.TriggerClickHandler}>
+                    <i className='uniE106' />
+                    Exit
                   </div>
-                  <ProgressBar
-                    classNames={{
-                      capped: capped
-                    }}
-                    objectiveDefinition={{
-                      completionValue: 1
-                    }}
-                    playerProgress={{
-                      progress: progress
-                    }}
-                    hideCheck
-                  />
-                  <Link
-                    to={{
-                      pathname: '/character-select',
-                      state: { from: this.props.location }
-                    }}
-                  />
-                </li>
-              </ul>
+                ) : (
+                  <div className='trigger' onClick={this.TriggerClickHandler}>
+                    <i className='uniEA55' />
+                    Views
+                  </div>
+                )
+              ) : null}
             </div>
-            {viewsInline ? viewsRender : null}
+            <div className='profile'>
+              <div className='background'>
+                <ObservedImage
+                  className={cx('image', 'emblem', {
+                    missing: emblemDefinition.redacted
+                  })}
+                  src={`https://www.bungie.net${emblemDefinition.secondarySpecial ? emblemDefinition.secondarySpecial : `/img/misc/missing_icon_d2.png`}`}
+                />
+              </div>
+              <div className='ui'>
+                <div className='characters'>
+                  <ul className='list'>
+                    <li>
+                      <ObservedImage
+                        className={cx('image', 'secondaryOverlay', {
+                          missing: emblemDefinition.redacted
+                        })}
+                        src={`https://www.bungie.net${!emblemDefinition.redacted ? emblemDefinition.secondaryOverlay : `/img/misc/missing_icon_d2.png`}`}
+                      />
+                      <div className='displayName'>{profile.userInfo.displayName}</div>
+                      <div className='basics'>
+                        {character.baseCharacterLevel} / {classHashToString(character.classHash, this.manifest, character.genderType)} / <span className='light'>{character.light}</span>
+                      </div>
+                      <ProgressBar
+                        classNames={{
+                          capped: capped
+                        }}
+                        objectiveDefinition={{
+                          completionValue: 1
+                        }}
+                        playerProgress={{
+                          progress: progress
+                        }}
+                        hideCheck
+                      />
+                      <Link
+                        to={{
+                          pathname: '/character-select',
+                          state: { from: this.props.location }
+                        }}
+                      />
+                    </li>
+                  </ul>
+                </div>
+                {viewsInline ? viewsRender : null}
+              </div>
+            </div>
+            {this.state.mobileNavOpen ? mobileNav : null}
           </div>
-        </div>
-        {this.state.mobileNavOpen ? mobileNav : null}
-      </div>
+        )}
+      </BraytechContext.Consumer>
     );
   }
 }
