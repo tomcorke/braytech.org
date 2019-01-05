@@ -44,8 +44,10 @@ import BraytechContext from './BraytechContext';
 class App extends Component {
   constructor(props) {
     super();
+    
     let user = ls.get('setting.user') ? ls.get('setting.user') : false;
     let theme = ls.get('setting.theme') ? ls.get('setting.theme') : 'light-mode';
+
     this.state = {
       status: {
         code: false,

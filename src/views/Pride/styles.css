@@ -34,3 +34,9 @@
     margin: 0 0 3rem;
   }
 }
+
+
+
+#pride.dark-mode .message {
+  color: rgba(255, 255, 255, 0.8);
+}

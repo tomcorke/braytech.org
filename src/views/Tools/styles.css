@@ -4,6 +4,10 @@
   grid-template-columns: repeat(5, 1fr);
 }
 
+#tools .tool .name {
+  font-weight: 500;
+}
+
 #tools .tool .description {
   font-size: 14px;
   margin: 1rem 0 0;

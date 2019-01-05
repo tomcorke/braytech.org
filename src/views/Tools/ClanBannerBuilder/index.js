@@ -5,6 +5,8 @@ import cx from 'classnames';
 import mapValues from 'lodash/mapValues';
 import { withNamespaces } from 'react-i18next';
 
+import BraytechContext from '../../../BraytechContext';
+
 import ObservedImage from '../../../components/ObservedImage';
 import Spinner from '../../../components/Spinner';
 import ClanBanner from '../../../components/ClanBanner';
@@ -245,20 +247,24 @@ class ClanBannerBuilder extends React.Component {
     }
 
     return (
-      <div className='view' id='banner-builder'>
-        <div className='banner'>
-          <ClanBanner bannerData={bannerData} dark />
-        </div>
-        <div className='options'>
-          <div className='header'>
-            <div className='name'>{t('Clan Banner Builder')}</div>
-            <div className='description'>
-              <p>{t("Collaborate with clan members on a new clan banner. Selecting different options instantly updates the page's URL, which allows you to easily share your customisations.")}</p>
+      <BraytechContext.Consumer>
+        {theme => (
+          <div className={cx('view', theme.selected)} id='banner-builder'>
+            <div className='banner'>
+              <ClanBanner bannerData={bannerData} dark />
+            </div>
+            <div className='options'>
+              <div className='header'>
+                <div className='name'>{t('Clan Banner Builder')}</div>
+                <div className='description'>
+                  <p>{t("Collaborate with clan members on a new clan banner. Selecting different options instantly updates the page's URL, which allows you to easily share your customisations.")}</p>
+                </div>
+              </div>
+              <div className='config'>{this.state.clanBannerManifest ? configOptions : <Spinner dark />}</div>
             </div>
           </div>
-          <div className='config'>{this.state.clanBannerManifest ? configOptions : <Spinner dark />}</div>
-        </div>
-      </div>
+        )}
+      </BraytechContext.Consumer>
     );
   }
 }

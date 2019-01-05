@@ -2,8 +2,6 @@ import React from 'react';
 import cx from 'classnames';
 import orderBy from 'lodash/orderBy';
 
-import ProgressBar from '../../../components/ProgressBar';
-
 const regionChests = parent => {
   let props = parent.props;
 
@@ -11,8 +9,6 @@ const regionChests = parent => {
   let characterId = props.characterId;
 
   let manifest = props.manifest;
-
-  const { t } = props;
 
   let list = [];
 
@@ -80,30 +76,7 @@ const regionChests = parent => {
 
   list = orderBy(list, [item => item.completed, item => item.place, item => item.name], ['asc', 'asc', 'asc']);
 
-  return (
-    <>
-      <div className='head'>
-        <h4>{t('Region Chests')}</h4>
-        <div className='binding'>
-          <p>
-        Profile bound with the exception of <em>Curse of Osiris</em> and <em>Warmind</em> chests
-          </p>
-        </div>
-        <ProgressBar
-          objectiveDefinition={{
-            progressDescription: t('Region chests opened'),
-            completionValue: Object.keys(characterProgressions[characterId].checklists[1697465175]).length
-          }}
-          playerProgress={{
-            progress: Object.values(characterProgressions[characterId].checklists[1697465175]).filter(value => value === true).length
-          }}
-          hideCheck
-          chunky
-        />
-      </div>
-      <ul className='list no-interaction'>{list.map(obj => obj.element)}</ul>
-    </>
-  );
+  return list;
 };
 
 export default regionChests;

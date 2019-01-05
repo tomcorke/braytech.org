@@ -2,6 +2,8 @@ import React from 'react';
 import cx from 'classnames';
 import { withNamespaces } from 'react-i18next';
 
+import ProgressBar from '../../components/ProgressBar';
+
 import regionChests from './lists/regionChests';
 import lostSectors from './lists/lostSectors';
 import adventures from './lists/adventures';
@@ -12,6 +14,7 @@ import sleeperNodes from './lists/sleeperNodes';
 import ghostScans from './lists/ghostScans';
 import latentMemories from './lists/latentMemories';
 import caydesJournals from './lists/caydesJournals';
+
 import './styles.css';
 
 class Checklists extends React.Component {
@@ -39,7 +42,9 @@ class Checklists extends React.Component {
   };
 
   render() {
-    const {t} = this.props;
+    const { t, characterId } = this.props;
+    const characterProgressions = this.props.response.profile.characterProgressions.data;
+
     if (this.props.viewport.width >= 2000) {
       this.itemsPerPage = 5;
     }
@@ -58,59 +63,67 @@ class Checklists extends React.Component {
 
     const lists = [
       {
+        id: 1697465175,
+        scope: characterProgressions,
         name: t('Region Chests'),
+        description: (
+          <>
+            Profile bound with the exception of <em>Curse of Osiris</em> and <em>Warmind</em> chests
+          </>
+        ),
+        progressDescription: t('Region chests opened'),
         icon: 'destiny-region_chests',
-        list: regionChests(this)
-      },
-      {
-        name: t('Lost Sectors'),
-        icon: 'destiny-lost_sectors',
-        list: lostSectors(this.props)
-      },
-      {
-        name: t('Adventures'),
-        icon: 'destiny-adventure',
-        list: adventures(this.props)
-      },
-      {
-        name: t('Corrupted Eggs'),
-        icon: 'destiny-corrupted_eggs',
-        list: corruptedEggs(this.props)
-      },
-      {
-        name: t('Ahamkara Bones '),
-        icon: 'destiny-ahamkara_bones',
-        list: ahamkaraBones(this.props)
-      },
-      {
-        name: t('Cat Statues'),
-        icon: 'destiny-cat_statues',
-        list: catStatues(this.props)
-      },
-      {
-        name: t('Sleeper Nodes'),
-        icon: 'destiny-sleeper_nodes',
-        list: sleeperNodes(this.props)
-      },
-      {
-        name: t('Ghost Scans'),
-        icon: 'destiny-ghost',
-        list: ghostScans(this.props)
-      },
-      {
-        name: t('Lost Memory Fragments'),
-        icon: 'destiny-lost_memory_fragments',
-        list: latentMemories(this.props)
+        items: regionChests(this)
       }
+      // {
+      //   name: t('Lost Sectors'),
+      //   icon: 'destiny-lost_sectors',
+      //   list: lostSectors(this.props)
+      // },
+      // {
+      //   name: t('Adventures'),
+      //   icon: 'destiny-adventure',
+      //   list: adventures(this.props)
+      // },
+      // {
+      //   name: t('Corrupted Eggs'),
+      //   icon: 'destiny-corrupted_eggs',
+      //   list: corruptedEggs(this.props)
+      // },
+      // {
+      //   name: t('Ahamkara Bones '),
+      //   icon: 'destiny-ahamkara_bones',
+      //   list: ahamkaraBones(this.props)
+      // },
+      // {
+      //   name: t('Cat Statues'),
+      //   icon: 'destiny-cat_statues',
+      //   list: catStatues(this.props)
+      // },
+      // {
+      //   name: t('Sleeper Nodes'),
+      //   icon: 'destiny-sleeper_nodes',
+      //   list: sleeperNodes(this.props)
+      // },
+      // {
+      //   name: t('Ghost Scans'),
+      //   icon: 'destiny-ghost',
+      //   list: ghostScans(this.props)
+      // },
+      // {
+      //   name: t('Lost Memory Fragments'),
+      //   icon: 'destiny-lost_memory_fragments',
+      //   list: latentMemories(this.props)
+      // }
     ];
 
-    if (Object.values(this.props.response.profile.profileProgression.data.checklists[2448912219]).filter(value => value === true).length === 4) {
-      lists.push({
-        name: t("Cayde's Journals"),
-        icon: 'destiny-ace_of_spades',
-        list: caydesJournals(this.props)
-      });
-    }
+    // if (Object.values(this.props.response.profile.profileProgression.data.checklists[2448912219]).filter(value => value === true).length === 4) {
+    //   lists.push({
+    //     name: t("Cayde's Journals"),
+    //     icon: 'destiny-ace_of_spades',
+    //     list: caydesJournals(this.props)
+    //   });
+    // }
 
     let sliceStart = parseInt(this.state.page, 10) * this.itemsPerPage;
     let sliceEnd = sliceStart + this.itemsPerPage;
@@ -151,7 +164,24 @@ class Checklists extends React.Component {
           {lists.slice(sliceStart, sliceEnd).map(list => {
             return (
               <div className='col' key={list.name}>
-                {list.list}
+                <div className='head'>
+                  <h4>{list.name}</h4>
+                  <div className='binding'>
+                    <p>{list.description}</p>
+                  </div>
+                  <ProgressBar
+                    objectiveDefinition={{
+                      progressDescription: list.progressDescription,
+                      completionValue: Object.keys(list.scope[characterId].checklists[list.id]).length
+                    }}
+                    playerProgress={{
+                      progress: Object.values(list.scope[characterId].checklists[list.id]).filter(value => value === true).length
+                    }}
+                    hideCheck
+                    chunky
+                  />
+                </div>
+                <ul className='list no-interaction'>{list.items.map(obj => obj.element)}</ul>
               </div>
             );
           })}

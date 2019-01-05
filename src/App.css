@@ -22,12 +22,12 @@
   color: #fff;
 }
 
-.wrapper.light-mode #footer {
+.wrapper.light-mode:not(.profile-route) #footer {
   border-top: 1px solid rgba(0, 0, 0, 0.2);
   color: rgba(0, 0, 0, 0.6);
 }
 
-.wrapper.light-mode #footer ul li:last-child a {
+.wrapper.light-mode:not(.profile-route) #footer ul li:last-child a {
   color: rgba(0, 0, 0, 0.8);
 }
 

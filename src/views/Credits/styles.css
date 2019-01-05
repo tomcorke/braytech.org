@@ -55,3 +55,8 @@
     grid-gap: 2rem;
   }
 }
+
+
+#credits.dark-mode .content {
+  color: rgba(255, 255, 255, 0.8);
+}
