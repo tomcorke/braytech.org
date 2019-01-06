@@ -74,6 +74,18 @@
   height: 3rem;
 }
 
+#checklists .lists .col .info {
+  display: flex;
+  justify-content: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+  padding: 1rem 0 0;
+}
+
+#checklists .lists .col .info .text {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
 #checklists .lists .list li {
   position: relative;
   padding: 0;
@@ -206,4 +218,14 @@
     height: initial;
     margin: 0 0 1rem;
   }
+}
+
+
+
+#checklists.dark-mode .lists .col .info {
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+#checklists.dark-mode .lists .col .info .text {
+  color: rgba(255, 255, 255, 0.15);
 }

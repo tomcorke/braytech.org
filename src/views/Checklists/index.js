@@ -2,6 +2,8 @@ import React from 'react';
 import cx from 'classnames';
 import { withNamespaces } from 'react-i18next';
 
+import BraytechContext from '../../BraytechContext';
+
 import * as ls from '../../utils/localStorage';
 
 import './styles.css';
@@ -27,6 +29,12 @@ class Checklists extends React.Component {
         : false,
       itemsPerPage: getItemsPerPage(props.viewport.width)
     };
+  }
+
+  componentDidUpdate(prev) {
+    if (prev.viewport.width !== this.props.viewport.width) {
+      this.setState({ itemsPerPage: getItemsPerPage(this.props.viewport.width) });
+    }
   }
 
   changeSkip = e => {
@@ -75,37 +83,41 @@ class Checklists extends React.Component {
     const visible = this.props.showAllItems ? lists : lists.slice(sliceStart, sliceEnd);
 
     return (
-      <div className='view' id='checklists'>
-        <div className='views'>
-          <div className='sub-header sub'>
-            <div>Checklists</div>
-          </div>
-          <ul className='list'>
-            {lists.map((list, index) => (
-              <li key={list.name} className='linked'>
-                <a
-                  href='/'
-                  className={cx({
-                    active: visible.includes(list)
-                  })}
-                  data-index={index}
-                  onClick={this.changeSkip}
-                >
-                  <div className={list.icon} />
-                  <div className='name'>{list.name}</div>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className={cx('lists', 'col-' + this.state.itemsPerPage)}>
-          {visible.map(list => (
-            <div className='col' key={list.name}>
-              {list.checklist}
+      <BraytechContext.Consumer>
+        {theme => (
+          <div className={cx('view', theme.selected)} id='checklists'>
+            <div className='views'>
+              <div className='sub-header sub'>
+                <div>Checklists</div>
+              </div>
+              <ul className='list'>
+                {lists.map((list, index) => (
+                  <li key={list.name} className='linked'>
+                    <a
+                      href='/'
+                      className={cx({
+                        active: visible.includes(list)
+                      })}
+                      data-index={index}
+                      onClick={this.changeSkip}
+                    >
+                      <div className={list.icon} />
+                      <div className='name'>{list.name}</div>
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </div>
-          ))}
-        </div>
-      </div>
+            <div className={cx('lists', 'col-' + this.state.itemsPerPage)}>
+              {visible.map(list => (
+                <div className='col' key={list.name}>
+                  {list.checklist}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </BraytechContext.Consumer>
     );
   }
 }

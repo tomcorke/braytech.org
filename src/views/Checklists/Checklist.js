@@ -22,10 +22,17 @@ const Checklist = props => {
           chunky
         />
       </div>
-      <ul className='list no-interaction'>{props.children}</ul>
+      {props.children.length > 0 ? (
+        <ul className='list no-interaction'>{props.children}</ul>
+      ) : (
+        <div className='info'>
+          <div className='text'>You've completed this list.</div>
+        </div>
+      )}
     </>
   );
 };
+
 Checklist.propTypes = {
   name: PropTypes.node.isRequired,
   binding: PropTypes.node.isRequired,
@@ -33,4 +40,5 @@ Checklist.propTypes = {
   totalItems: PropTypes.number.isRequired,
   completedItems: PropTypes.number.isRequired
 };
+
 export default Checklist;
