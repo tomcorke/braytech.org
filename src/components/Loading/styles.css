@@ -36,8 +36,6 @@
 
 #loading .logo-feature {
   flex-basis: 100%;
-  font-size: 96px;
-  font-weight: 500;
   margin: 0 0 3rem;
   display: flex;
   justify-content: center;
@@ -69,8 +67,23 @@
 }
 
 @media screen and (max-width: 500px) {
+
+  
+
+#loading .logo-feature .device {
+  width: 96px;
+  font-size: 96px;
+  line-height: 74px;
+}
+
+#loading .logo-feature .device::before,
+#loading .logo-feature .device::after {
+  width: 136px;
+  height: 136px;
+}
+
   #loading .download {
-    margin: 0 0 3rem;
+    padding: 0 0 3rem;
   }
 }
 

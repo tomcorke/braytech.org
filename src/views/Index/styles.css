@@ -142,10 +142,10 @@
 
   #index .logo-feature .device::before,
   #index .logo-feature .device::after {
-    top: -20px;
-    left: -20px;
-    width: 90px;
-    height: 90px;
+    top: -10px;
+    left: -10px;
+    width: 70px;
+    height: 70px;
   }
 
   #index .changelog {

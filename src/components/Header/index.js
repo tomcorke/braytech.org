@@ -74,7 +74,7 @@ class Header extends React.Component {
       },
       {
         name: <span className='destiny-settings' />,
-        desc: 'Select a different language',
+        desc: 'Theme, language, collectible display state',
         slug: '/settings',
         exact: true
       }

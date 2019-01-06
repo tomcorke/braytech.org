@@ -33,5 +33,10 @@
     "date": "2019-01-05T15:43:52.508Z",
     "version": "1.2.3",
     "content": "## Changes\n- Significant modifications under the hood to make way for new things\n- Added a dark mode (beta)\n- Consolidated more styles\n- Added more UI components\n- Added settings to hide completed checklist items (beta)\n- Added more descriptive loading screen messages"
+  },
+  {
+    "date": "2019-01-06T14:27:00.196Z",
+    "version": "1.2.4",
+    "content": "## Changes\n- Various minor style adjustments\n- Few UI additions"
   }
 ]
