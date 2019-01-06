@@ -7,8 +7,6 @@ import ChecklistFactoryHelpers from './ChecklistFactoryHelpers';
 
 import ReactMarkdown from 'react-markdown';
 
-const CAYDES_JOURNAL_IDS = [78905203, 1394016600, 1399126202, 4195138678];
-
 class ChecklistFactory {
   constructor(t, profile, manifest, characterId, hideCompletedItems) {
     this.t = t;
@@ -16,11 +14,11 @@ class ChecklistFactory {
   }
 
   adventures() {
-    return this.m.makeChecklist({
+    return this.m.checklist({
       name: this.t('Adventures'),
       icon: 'destiny-adventure',
       progressDescription: this.t('Adventures undertaken'),
-      items: this.m.checklistItems(4178338182, true),
+      items: this.m.items(4178338182, true),
       binding: this.t('Character bound'),
       sortBy: ['completed', 'place', 'bubble', 'activity'],
       itemTitle: i => i.activity,
@@ -29,11 +27,11 @@ class ChecklistFactory {
   }
 
   regionChests() {
-    return this.m.makeChecklist({
+    return this.m.checklist({
       name: this.t('Region Chests'),
       icon: 'destiny-region_chests',
       progressDescription: this.t('Region chests opened'),
-      items: this.m.checklistItems(1697465175, true),
+      items: this.m.items(1697465175, true),
       binding: (
         <>
           Profile bound with the exception of <em>Curse of Osiris</em> and <em>Warmind</em> chests
@@ -43,47 +41,47 @@ class ChecklistFactory {
   }
 
   lostSectors() {
-    return this.m.makeChecklist({
+    return this.m.checklist({
       name: this.t('Lost Sectors'),
       icon: 'destiny-lost_sectors',
       progressDescription: this.t('Lost Sectors discovered'),
       binding: this.t('Character bound'),
-      items: this.m.checklistItems(3142056444, true)
+      items: this.m.items(3142056444, true)
     });
   }
 
   amkaharaBones() {
-    return this.m.makeDreamingCityChecklist('Bones', {
+    return this.m.dreamingCityChecklist('Bones', {
       name: this.t('Ahamkara Bones'),
       icon: 'destiny-ahamkara_bones',
       progressDescription: this.t('Bones found'),
-      items: this.m.checklistItems(1297424116)
+      items: this.m.items(1297424116)
     });
   }
 
   corruptedEggs() {
-    return this.m.makeDreamingCityChecklist('Egg', {
+    return this.m.dreamingCityChecklist('Egg', {
       name: this.t('Corrupted Eggs'),
       icon: 'destiny-corrupted_eggs',
       progressDescription: this.t('Eggs destroyed'),
-      items: this.m.checklistItems(2609997025)
+      items: this.m.items(2609997025)
     });
   }
 
   catStatues() {
-    return this.m.makeDreamingCityChecklist('Feline friend', {
+    return this.m.dreamingCityChecklist('Feline friend', {
       name: this.t('Cat Statues'),
       icon: 'destiny-cat_statues',
       progressDescription: this.t('Feline friends satisfied'),
-      items: this.m.checklistItems(2726513366)
+      items: this.m.items(2726513366)
     });
   }
 
   sleeperNodes() {
-    return this.m.makeChecklist({
+    return this.m.checklist({
       name: this.t('Sleeper Nodes'),
       icon: 'destiny-sleeper_nodes',
-      items: this.m.checklistItems(365218222),
+      items: this.m.items(365218222),
       progressDescription: this.t('Sleeper nodes hacked'),
       itemTitle: i => i.inventoryItem.replace('CB.NAV/RUN.()', ''),
       itemMapPath: i => `destiny/maps/mars/${i.item.hash}`,
@@ -92,20 +90,20 @@ class ChecklistFactory {
   }
 
   ghostScans() {
-    return this.m.makeNumberedChecklist('Scan', {
+    return this.m.numberedChecklist('Scan', {
       name: this.t('Ghost Scans'),
       icon: 'destiny-ghost',
-      items: this.m.checklistItems(2360931290),
+      items: this.m.items(2360931290),
       progressDescription: this.t('Ghost scans performed'),
       itemSubtitle: i => `${i.bubble || 'The Farm'}, ${i.place}`
     });
   }
 
   latentMemories() {
-    return this.m.makeChecklist({
+    return this.m.checklist({
       name: this.t('Lost Memory Fragments'),
       icon: 'destiny-lost_memory_fragments',
-      items: this.m.checklistItems(2955980198),
+      items: this.m.items(2955980198),
       progressDescription: this.t('Memories destroyed'),
       itemTitle: i => `${this.t('Memory')} ${i.itemNumber}`,
       itemMapPath: i => `destiny/maps/mars/${i.item.hash}`,
@@ -114,7 +112,9 @@ class ChecklistFactory {
   }
 
   caydesJournals() {
-    let items = this.m.checklistItems(2448912219).filter(i => CAYDES_JOURNAL_IDS.includes(i.item.hash));
+    const caydesJournalIds = [78905203, 1394016600, 1399126202, 4195138678];
+
+    let items = this.m.items(2448912219).filter(i => caydesJournalIds.includes(i.item.hash));
     items = sortBy(items, i => [i.item.hash]);
 
     const checklist = (

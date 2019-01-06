@@ -17,7 +17,7 @@ class ChecklistFactoryHelpers {
     this.hideCompletedItems = hideCompletedItems;
   }
 
-  checklistItems(checklistId, isCharacterBound) {
+  items(checklistId, isCharacterBound) {
     const manifest = this.manifest;
     const profile = this.profile;
 
@@ -52,22 +52,22 @@ class ChecklistFactoryHelpers {
     });
   }
 
-  makeDreamingCityChecklist(name, options = {}) {
-    return this.makeNumberedChecklist(name, {
+  dreamingCityChecklist(name, options = {}) {
+    return this.numberedChecklist(name, {
       itemMapPath: i => `destiny/maps/2779202173/${i.item.hash}`,
       ...options
     });
   }
 
-  makeNumberedChecklist(name, options = {}) {
-    return this.makeChecklist({
+  numberedChecklist(name, options = {}) {
+    return this.checklist({
       sortBy: ['itemNumber'],
       itemTitle: i => `${this.t(name)} ${i.itemNumber}`,
       ...options
     });
   }
 
-  makeChecklist(options = {}) {
+  checklist(options = {}) {
     const defaultOptions = {
       sortBy: ['completed', 'place', 'bubble'],
       binding: this.t('Profile bound'),
@@ -80,7 +80,7 @@ class ChecklistFactoryHelpers {
 
     const items = sortBy(options.items, options.sortBy);
 
-    const displayItems = this.hideCompletedItems ? items.filter(i => !i.completed) : items;
+    const visible = this.hideCompletedItems ? items.filter(i => !i.completed) : items;
 
     const checklist = (
       <Checklist
@@ -90,7 +90,7 @@ class ChecklistFactoryHelpers {
         totalItems={items.length}
         completedItems={items.filter(i => i.completed).length}
       >
-        {displayItems.map(i => (
+        {visible.map(i => (
           <ChecklistItem key={i.item.hash} completed={i.completed} mapPath={options.itemMapPath(i)}>
             <div className='text'>
               <p>{options.itemTitle(i)}</p>

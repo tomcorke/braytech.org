@@ -81,35 +81,29 @@ class Checklists extends React.Component {
             <div>Checklists</div>
           </div>
           <ul className='list'>
-            {lists.map((list, index) => {
-              const active = visible.includes(list);
-
-              return (
-                <li key={list.name} className='linked'>
-                  <a
-                    href='/'
-                    className={cx({
-                      active: active
-                    })}
-                    data-index={index}
-                    onClick={this.changeSkip}
-                  >
-                    <div className={list.icon} />
-                    <div className='name'>{list.name}</div>
-                  </a>
-                </li>
-              );
-            })}
+            {lists.map((list, index) => (
+              <li key={list.name} className='linked'>
+                <a
+                  href='/'
+                  className={cx({
+                    active: visible.includes(list)
+                  })}
+                  data-index={index}
+                  onClick={this.changeSkip}
+                >
+                  <div className={list.icon} />
+                  <div className='name'>{list.name}</div>
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
         <div className={cx('lists', 'col-' + this.state.itemsPerPage)}>
-          {visible.map(list => {
-            return (
-              <div className='col' key={list.name}>
-                {list.checklist}
-              </div>
-            );
-          })}
+          {visible.map(list => (
+            <div className='col' key={list.name}>
+              {list.checklist}
+            </div>
+          ))}
         </div>
       </div>
     );
