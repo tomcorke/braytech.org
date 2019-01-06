@@ -9,11 +9,12 @@ function findByHash(haystack, needle) {
 }
 
 class ChecklistFactoryHelpers {
-  constructor(t, profile, manifest, characterId) {
+  constructor(t, profile, manifest, characterId, hideCompletedItems) {
     this.t = t;
     this.profile = profile;
     this.manifest = manifest;
     this.characterId = characterId;
+    this.hideCompletedItems = hideCompletedItems;
   }
 
   checklistItems(checklistId, isCharacterBound) {
@@ -79,6 +80,8 @@ class ChecklistFactoryHelpers {
 
     const items = sortBy(options.items, options.sortBy);
 
+    const displayItems = this.hideCompletedItems ? items.filter(i => !i.completed) : items;
+
     const checklist = (
       <Checklist
         name={options.name}
@@ -87,7 +90,7 @@ class ChecklistFactoryHelpers {
         totalItems={items.length}
         completedItems={items.filter(i => i.completed).length}
       >
-        {items.map(i => (
+        {displayItems.map(i => (
           <ChecklistItem key={i.item.hash} completed={i.completed} mapPath={options.itemMapPath(i)}>
             <div className='text'>
               <p>{options.itemTitle(i)}</p>

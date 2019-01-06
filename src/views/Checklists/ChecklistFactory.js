@@ -10,9 +10,9 @@ import ReactMarkdown from 'react-markdown';
 const CAYDES_JOURNAL_IDS = [78905203, 1394016600, 1399126202, 4195138678];
 
 class ChecklistFactory {
-  constructor(t, profile, manifest, characterId) {
+  constructor(t, profile, manifest, characterId, hideCompletedItems) {
     this.t = t;
-    this.m = new ChecklistFactoryHelpers(t, profile, manifest, characterId);
+    this.m = new ChecklistFactoryHelpers(t, profile, manifest, characterId, hideCompletedItems);
   }
 
   adventures() {

@@ -42,11 +42,13 @@ class Checklists extends React.Component {
   render() {
     const { t } = this.props;
 
-    const characterProgression = this.props.response.profile.characterProgressions.data[this.props.characterId]
-      .checklists;
-    const checklists = this.props.manifest.DestinyChecklistDefinition;
-
-    const f = new ChecklistFactory(t, this.props.response.profile, this.props.manifest, this.props.characterId);
+    const f = new ChecklistFactory(
+      t,
+      this.props.response.profile,
+      this.props.manifest,
+      this.props.characterId,
+      this.state.collectibleDisplayState.hideChecklistItems
+    );
 
     const lists = [
       f.regionChests(),
