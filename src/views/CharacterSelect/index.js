@@ -111,10 +111,6 @@ class CharacterSelect extends React.Component {
       return;
     }
 
-    if (displayName) {
-      ls.update('history.profiles', { membershipType: membershipType, membershipId: membershipId, displayName: displayName }, true, 6);
-    }
-
     response = responseUtils.profileScrubber(response);
 
     this.setState({
@@ -124,13 +120,23 @@ class CharacterSelect extends React.Component {
     });
   };
 
+  // if (displayName) {
+  //   ls.update('history.profiles', { membershipType: membershipType, membershipId: membershipId, displayName: displayName }, true, 6);
+  // }
+
   CharacterSelectHandler = characterId => {
     this.props.setUserReponse(this.state.profile.profile.profile.data.userInfo.membershipType, this.state.profile.profile.profile.data.userInfo.membershipId, characterId, this.state.profile);
   };
 
+  resultClick = (membershipType, membershipId, displayName) => {
+
+    let callback = (state) => { console.log(state) };
+
+    this.props.getProfile(membershipType, membershipId, callback);
+  };
+
   componentDidMount() {
     window.scrollTo(0, 0);
-    this.props.setPageDefault('light');
     if (this.props.user.response) {
       this.setState({ profile: this.props.user.response, loading: false });
     } else if (this.props.user.membershipId && !this.state.profile) {
@@ -138,10 +144,6 @@ class CharacterSelect extends React.Component {
     } else {
       this.setState({ loading: false });
     }
-  }
-
-  componentWillUnmount() {
-    this.props.setPageDefault(false);
   }
 
   render() {
@@ -252,7 +254,7 @@ class CharacterSelect extends React.Component {
                         <li className='linked' key={result.membershipId}>
                           <a
                             onClick={e => {
-                              this.ResultHandler(result.membershipType, result.membershipId, false, result.displayName);
+                              this.resultClick(result.membershipType, result.membershipId, result.displayName);
                             }}
                           >
                             <span className={`destiny-platform_${destinyEnums.PLATFORMS[result.membershipType].toLowerCase()}`} />

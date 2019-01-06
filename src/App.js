@@ -16,6 +16,7 @@ import { Globals, isProfileRoute } from './utils/globals';
 import dexie from './utils/dexie';
 import * as ls from './utils/localStorage';
 import GoogleAnalytics from './components/GoogleAnalytics';
+import { getProfile } from './utils/getProfile';
 
 import Loading from './components/Loading';
 import Header from './components/Header';
@@ -96,6 +97,10 @@ class App extends Component {
         height
       }
     });
+  };
+
+  setProfile = () => {
+
   };
 
   setUserReponse = (membershipType, membershipId, characterId, response) => {
@@ -353,7 +358,7 @@ class App extends Component {
                     <div className='main'>
                       <Route path='/' render={route => <Header route={route} {...this.state} manifest={this.manifest} />} />
                       <Switch>
-                        <Route path='/character-select' render={route => <CharacterSelect location={route.location} setPageDefault={this.setPageDefault} setUserReponse={this.setUserReponse} user={this.state.user} viewport={this.state.viewport} manifest={this.manifest} />} />
+                        <Route path='/character-select' render={route => <CharacterSelect getProfile={getProfile} location={route.location} setUserReponse={this.setUserReponse} user={this.state.user} viewport={this.state.viewport} manifest={this.manifest} />} />
                         <Route
                           path='/account'
                           exact
