@@ -24,8 +24,8 @@ class Vendors extends Component {
   }
 
   componentDidMount() {
-    if (!this.props.response) {
-      this.props.setPageDefault('light');
+    if (!this.props.data) {
+      
     }
     window.scrollTo(0, 0);
 
@@ -53,8 +53,8 @@ class Vendors extends Component {
   }
 
   componentWillUnmount() {
-    if (!this.props.response) {
-      this.props.setPageDefault(false);
+    if (!this.props.data) {
+      
     }
   }
 
@@ -65,7 +65,7 @@ class Vendors extends Component {
     if (this.state.vendors.length === 0) {
       return (
         <div className='view' id='vendors'>
-          <Spinner dark={!this.props.response ? true : false} />
+          <Spinner dark={!this.props.data ? true : false} />
         </div>
       );
     } else {
@@ -236,7 +236,7 @@ class Vendors extends Component {
 
       return (
         <>
-          <div className={cx('view', { dark: !this.props.response })} id='vendors'>
+          <div className={cx('view', { dark: !this.props.data })} id='vendors'>
             <div className='presentation-node vendors'>
               <div className='sub-header'>
                 <div>{t('Weekly')}</div>

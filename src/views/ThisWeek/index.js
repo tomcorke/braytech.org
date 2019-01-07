@@ -15,7 +15,7 @@ class ThisWeek extends React.Component {
   render() {
     const {t} = this.props;
     const manifest = this.props.manifest;
-    const milestones = this.props.response.milestones;
+    const milestones = this.props.data.milestones;
 
     const resetTime = '17:00 UTC';
 

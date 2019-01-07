@@ -192,7 +192,7 @@ class Roster extends React.Component {
 
   increaseFreshness = () => {
     // console.log(`Shibuya Roll Call: ${this.state.freshnessCycles + 1}`);
-    let groups = this.props.response.groups;
+    let groups = this.props.data.groups;
     let clan = groups.results.length > 0 ? groups.results[0].group : false;
     this.groupFetch(clan.groupId)
       .then(response => {

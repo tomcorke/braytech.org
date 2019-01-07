@@ -13,8 +13,8 @@ class Root extends React.Component {
     const manifest = this.props.manifest;
     const characterId = this.props.characterId;
 
-    const characterCollectibles = this.props.response.profile.characterCollectibles.data;
-    const profileCollectibles = this.props.response.profile.profileCollectibles.data;
+    const characterCollectibles = this.props.data.profile.characterCollectibles.data;
+    const profileCollectibles = this.props.data.profile.profileCollectibles.data;
 
     const parent = manifest.DestinyPresentationNodeDefinition[manifest.settings.destiny2CoreSettings.collectionRootNode];
     const parentBadges = manifest.DestinyPresentationNodeDefinition[manifest.settings.destiny2CoreSettings.badgesRootNode];

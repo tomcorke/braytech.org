@@ -28,8 +28,8 @@ class Records extends React.Component {
   render() {
     const manifest = this.props.manifest;
 
-    const characterRecords = this.props.response.profile.characterRecords.data;
-    const profileRecords = this.props.response.profile.profileRecords.data.records;
+    const characterRecords = this.props.data.profile.characterRecords.data;
+    const profileRecords = this.props.data.profile.profileRecords.data.records;
     const characterId = this.props.characterId;
 
     const highlight = this.props.highlight;

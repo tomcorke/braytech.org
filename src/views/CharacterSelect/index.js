@@ -21,10 +21,14 @@ class CharacterSelect extends React.Component {
     super(props);
 
     this.state = {
-      results: false,
-      profile: false,
-      loading: true,
-      error: false
+      search: {
+        results: false
+      },
+      profile: {
+        data: false
+      },
+      error: false,
+      loading: true
     };
   }
 
@@ -59,88 +63,38 @@ class CharacterSelect extends React.Component {
     }, 1000);
   };
 
-  ProfileResponse = async (membershipType, membershipId) => {
-    let requests = [
-      {
-        name: 'profile',
-        path: `https://www.bungie.net/Platform/Destiny2/${membershipType}/Profile/${membershipId}/?components=100,104,200,202,204,205,300,301,302,303,304,305,800,900`
-      },
-      {
-        name: 'milestones',
-        path: `https://www.bungie.net/Platform/Destiny2/Milestones/`
-      },
-      {
-        name: 'groups',
-        path: `https://www.bungie.net/Platform/GroupV2/User/${membershipType}/${membershipId}/0/1/`
-      }
-    ];
-
-    let fetches = requests.map(async request => {
-      const get = await fetch(request.path, {
-        headers: {
-          'X-API-Key': Globals.key.bungie
-        }
-      });
-      const response = await get.json();
-      let object = {};
-      object[request.name] = response;
-      return object;
-    });
-
-    try {
-      const promises = await Promise.all(fetches);
-      return assign(...promises);
-    } catch (error) {
-      console.log(error);
-    }
+  characterClick = characterId => {
+    this.props.setProfile(this.state.profile.data.profile.profile.data.userInfo.membershipType, this.state.profile.data.profile.profile.data.userInfo.membershipId, characterId, this.state.profile.data, true);
   };
 
-  ResultHandler = async (membershipType, membershipId, characterId, displayName) => {
-    this.setState({ loading: true });
-    window.scrollTo(0, 0);
-    let response = await this.ProfileResponse(membershipType, membershipId);
-
-    if (response.profile.ErrorCode !== 1) {
-      console.log(response.profile.ErrorCode);
-      this.setState({ loading: false, error: response.profile.ErrorCode });
-      return;
-    }
-    if (!response.profile.Response.characterProgressions.data) {
-      console.log('privacy');
-      this.setState({ loading: false, error: 'privacy' });
-      return;
-    }
-
-    response = responseUtils.profileScrubber(response);
-
-    this.setState({
-      profile: response,
-      loading: false,
-      error: false
-    });
-  };
-
-  // if (displayName) {
-  //   ls.update('history.profiles', { membershipType: membershipType, membershipId: membershipId, displayName: displayName }, true, 6);
-  // }
-
-  CharacterSelectHandler = characterId => {
-    this.props.setUserReponse(this.state.profile.profile.profile.data.userInfo.membershipType, this.state.profile.profile.profile.data.userInfo.membershipId, characterId, this.state.profile);
+  getProfileCallback = (state) => {
+    this.setState(prev => ({
+      search: { ...prev.search },
+      profile: {
+        data: state.data
+      },
+      error: state.error,
+      loading: state.loading
+    }));
   };
 
   resultClick = (membershipType, membershipId, displayName) => {
 
-    let callback = (state) => { console.log(state) };
+    window.scrollTo(0, 0);
+    
+    this.props.getProfile(membershipType, membershipId, this.getProfileCallback);
 
-    this.props.getProfile(membershipType, membershipId, callback);
+    if (displayName) {
+      ls.update('history.profiles', { membershipType: membershipType, membershipId: membershipId, displayName: displayName }, true, 6);
+    }
   };
 
   componentDidMount() {
     window.scrollTo(0, 0);
-    if (this.props.user.response) {
-      this.setState({ profile: this.props.user.response, loading: false });
-    } else if (this.props.user.membershipId && !this.state.profile) {
-      this.ResultHandler(this.props.user.membershipType, this.props.user.membershipId, this.props.user.characterId);
+    if (this.props.user.data) {
+      this.setState({ profile: { data: this.props.user.data }, loading: false });
+    } else if (this.props.user.membershipId && !this.state.profile.data) {
+      this.props.getProfile(this.props.user.membershipType, this.props.user.membershipId, this.getProfileCallback);
     } else {
       this.setState({ loading: false });
     }
@@ -152,12 +106,12 @@ class CharacterSelect extends React.Component {
     let resultsElement = null;
     let profileElement = null;
 
-    if (this.state.results) {
+    if (this.state.search.results) {
       resultsElement = (
         <div className='results'>
           <ul className='list'>
-            {this.state.results.length > 0 ? (
-              this.state.results.map(result => (
+            {this.state.search.results.length > 0 ? (
+              this.state.search.results.map(result => (
                 <li className='linked' key={result.membershipId}>
                   <a
                     onClick={e => {
@@ -181,17 +135,17 @@ class CharacterSelect extends React.Component {
 
     const { from } = this.props.location.state || { from: { pathname: '/' } };
 
-    if (this.state.profile) {
+    if (this.state.profile.data) {
       let clan = null;
-      if (this.state.profile.groups.results.length === 1) {
-        clan = <div className='clan'>{this.state.profile.groups.results[0].group.name}</div>;
+      if (this.state.profile.data.groups.results.length === 1) {
+        clan = <div className='clan'>{this.state.profile.data.groups.results[0].group.name}</div>;
       }
 
       let timePlayed = (
         <div className='timePlayed'>
           {Math.floor(
-            Object.keys(this.state.profile.profile.characters.data).reduce((sum, key) => {
-              return sum + parseInt(this.state.profile.profile.characters.data[key].minutesPlayedTotal);
+            Object.keys(this.state.profile.data.profile.characters.data).reduce((sum, key) => {
+              return sum + parseInt(this.state.profile.data.profile.characters.data[key].minutesPlayedTotal);
             }, 0) / 1440
           )}{' '}
           {t('days on the grind')}
@@ -202,11 +156,11 @@ class CharacterSelect extends React.Component {
         <>
           <div className='user'>
             <div className='info'>
-              <div className='displayName'>{this.state.profile.profile.profile.data.userInfo.displayName}</div>
+              <div className='displayName'>{this.state.profile.data.profile.profile.data.userInfo.displayName}</div>
               {clan}
               {timePlayed}
             </div>
-            <Characters response={this.state.profile} manifest={this.props.manifest} location={{ ...from }} onCharacterSelect={this.CharacterSelectHandler} />
+            <Characters data={this.state.profile.data} manifest={this.props.manifest} location={{ ...from }} characterClick={this.characterClick} />
           </div>
         </>
       );

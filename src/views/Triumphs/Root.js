@@ -15,10 +15,10 @@ class Root extends React.Component {
     const manifest = this.props.manifest;
     const characterId = this.props.characterId;
 
-    const characters = this.props.response.profile.characters.data;
+    const characters = this.props.data.profile.characters.data;
     const genderHash = characters.find(character => character.characterId === characterId).genderHash;
-    const profileRecords = this.props.response.profile.profileRecords.data.records;
-    const characterRecords = this.props.response.profile.characterRecords.data;
+    const profileRecords = this.props.data.profile.profileRecords.data.records;
+    const characterRecords = this.props.data.profile.characterRecords.data;
 
     const sealBars = {
       2588182977: {
@@ -171,7 +171,7 @@ class Root extends React.Component {
           <div className='sub-header'>
             <div>{t('Total score')}</div>
           </div>
-          <div className='total-score'>{this.props.response.profile.profileRecords.data.score}</div>
+          <div className='total-score'>{this.props.data.profile.profileRecords.data.score}</div>
           <div className='sub-header'>
             <div>{t('Almost complete - next 3')}</div>
           </div>

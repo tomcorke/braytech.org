@@ -47,7 +47,7 @@ class ClanBannerBuilder extends React.Component {
   };
 
   componentDidMount() {
-    this.props.setPageDefault('light');
+    
     window.scrollTo(0, 0);
 
     this.clanBannerManifestFetch().then(clanBannerManifest => {
@@ -60,7 +60,7 @@ class ClanBannerBuilder extends React.Component {
   }
 
   componentWillUnmount() {
-    this.props.setPageDefault(false);
+    
   }
 
   render() {

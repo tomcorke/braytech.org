@@ -42,35 +42,35 @@ async function apiRequest(membershipType, membershipId) {
 export async function getProfile(membershipType, membershipId, stateCallback) {
 
   stateCallback({
-    response: false,
+    data: false,
     loading: true,
     error: false
   });
 
-  let response = await apiRequest(membershipType, membershipId);
+  let data = await apiRequest(membershipType, membershipId);
 
-  if (response.profile.ErrorCode !== 1) {
+  if (data.profile.ErrorCode !== 1) {
     stateCallback({
-      response: false,
+      data: false,
       loading: false,
-      error: response.profile.ErrorCode
+      error: data.profile.ErrorCode
     });
     return;
   }
 
-  if (!response.profile.Response.characterProgressions.data) {
+  if (!data.profile.Response.characterProgressions.data) {
     stateCallback({
-      response: false,
+      data: false,
       loading: false,
       error: 'privacy'
     });
     return;
   }
 
-  response = responseUtils.profileScrubber(response);
+  data = responseUtils.profileScrubber(data);
   
   stateCallback({
-    response: response,
+    data: data,
     loading: false,
     error: false
   });
