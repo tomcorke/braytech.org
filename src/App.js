@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux'
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 import cx from 'classnames';
 import assign from 'lodash/assign';
@@ -12,11 +14,14 @@ import './App.css';
 
 import init from './utils/init';
 
+
 import { Globals, isProfileRoute } from './utils/globals';
 import dexie from './utils/dexie';
 import * as ls from './utils/localStorage';
 import GoogleAnalytics from './components/GoogleAnalytics';
 import { getProfile } from './utils/getProfile';
+
+import store from './utils/reduxStore';
 
 import Loading from './components/Loading';
 import Header from './components/Header';
@@ -46,19 +51,12 @@ class App extends Component {
   constructor(props) {
     super();
     
-    let user = ls.get('setting.user') ? ls.get('setting.user') : false;
     let theme = ls.get('setting.theme') ? ls.get('setting.theme') : 'light-mode';
 
     this.state = {
       status: {
         code: false,
         detail: false
-      },
-      user: {
-        membershipType: user ? user.membershipType : false,
-        membershipId: user ? user.membershipId : false,
-        characterId: false,
-        data: false
       },
       manifest: {
         version: false,
@@ -95,19 +93,18 @@ class App extends Component {
 
   setProfile = (membershipType, membershipId, characterId, data, setAsDefaultProfile = false) => {
     if (setAsDefaultProfile) {
-      ls.set('setting.user', {
+      ls.set('setting.profile', {
         membershipType: membershipType,
         membershipId: membershipId,
         characterId: characterId
       });
     }
-    this.setState({
-      user: {
-        membershipType: membershipType,
-        membershipId: membershipId,
-        characterId: characterId,
-        data: data
-      }
+
+    this.props.setProfile({
+      membershipType: membershipType,
+      membershipId: membershipId,
+      characterId: characterId,
+      data: data
     });
   };
 
@@ -268,15 +265,17 @@ class App extends Component {
   }
 
   render() {
-    const { t } = this.props;
+
     if (!window.ga) {
       GoogleAnalytics.init();
     }
 
+    console.log(this)
+
     if (this.state.status.code !== 'ready') {
       return <Loading state={this.state.status} theme={this.state.theme.selected} />;
     } else {
-      if (this.state.user.data && this.state.user.characterId) {
+      if (this.props.profile.data && this.props.profile.characterId) {
         return (
           <BraytechContext.Provider value={this.state.theme}>
             <Router>
@@ -286,44 +285,44 @@ class App extends Component {
                     <Route path='/' render={route => <Notifications updateAvailable={this.props.updateAvailable} />} />
                     <GoogleAnalytics.RouteTracker />
                     <div className='main'>
-                      <Route path='/' render={route => <Header route={route} {...this.state} manifest={this.manifest} />} />
+                      <Route path='/' render={route => <Header route={route} {...this.state} {...this.props} manifest={this.manifest} />} />
                       <Switch>
-                        <Route path='/character-select' render={route => <CharacterSelect getProfile={getProfile} setProfile={this.setProfile} location={route.location} user={this.state.user} viewport={this.state.viewport} manifest={this.manifest} />} />
+                        <Route path='/character-select' render={route => <CharacterSelect getProfile={getProfile} setProfile={this.setProfile} location={route.location} user={this.props.profile} viewport={this.state.viewport} manifest={this.manifest} />} />
                         <Route
                           path='/account'
                           exact
                           render={() => (
                             <>
-                              <Account {...this.state.user} manifest={this.manifest} />
+                              <Account {...this.props.profile} manifest={this.manifest} />
                               <Tooltip manifest={this.manifest} />
                             </>
                           )}
                         />
-                        <Route path='/clan/:view?/:subView?' exact render={route => <Clan {...this.state.user} manifest={this.manifest} view={route.match.params.view} subView={route.match.params.subView} />} />
-                        <Route path='/character' exact render={() => <Character {...this.state.user} viewport={this.state.viewport} manifest={this.manifest} />} />
-                        <Route path='/checklists' exact render={() => <Checklists {...this.state.user} viewport={this.state.viewport} manifest={this.manifest} />} />
+                        <Route path='/clan/:view?/:subView?' exact render={route => <Clan {...this.props.profile} manifest={this.manifest} view={route.match.params.view} subView={route.match.params.subView} />} />
+                        <Route path='/character' exact render={() => <Character {...this.props.profile} viewport={this.state.viewport} manifest={this.manifest} />} />
+                        <Route path='/checklists' exact render={() => <Checklists {...this.props.profile} viewport={this.state.viewport} manifest={this.manifest} />} />
                         <Route
                           path='/collections/:primary?/:secondary?/:tertiary?/:quaternary?'
                           render={route => (
                             <>
-                              <Collections {...route} {...this.state.user} manifest={this.manifest} />
+                              <Collections {...route} {...this.props.profile} manifest={this.manifest} />
                               <Tooltip manifest={this.manifest} />
                             </>
                           )}
                         />
-                        <Route path='/triumphs/:primary?/:secondary?/:tertiary?/:quaternary?' render={route => <Triumphs {...route} {...this.state.user} manifest={this.manifest} />} />
+                        <Route path='/triumphs/:primary?/:secondary?/:tertiary?/:quaternary?' render={route => <Triumphs {...route} {...this.props.profile} manifest={this.manifest} />} />
                         <Route
                           path='/this-week'
                           exact
                           render={() => (
                             <>
-                              <ThisWeek {...this.state.user} manifest={this.manifest} />
+                              <ThisWeek {...this.props.profile} manifest={this.manifest} />
                               <Tooltip manifest={this.manifest} />
                             </>
                           )}
                         />
-                        <Route path='/vendors/:hash?' exact render={route => <Vendors vendorHash={route.match.params.hash} {...this.state.user} manifest={this.manifest} />} />
-                        <Route path='/settings' exact render={() => <Settings {...this.state.user} manifest={this.manifest} availableLanguages={this.availableLanguages} />} />
+                        <Route path='/vendors/:hash?' exact render={route => <Vendors vendorHash={route.match.params.hash} {...this.props.profile} manifest={this.manifest} />} />
+                        <Route path='/settings' exact render={() => <Settings {...this.props.profile} manifest={this.manifest} availableLanguages={this.availableLanguages} />} />
                         <Route path='/pride' exact render={() => <Pride />} />
                         <Route path='/credits' exact render={() => <Credits />} />
                         <Route path='/tools' exact render={() => <Tools />} />
@@ -348,9 +347,9 @@ class App extends Component {
                     <Route path='/' render={route => <Notifications updateAvailable={this.props.updateAvailable} />} />
                     <GoogleAnalytics.RouteTracker />
                     <div className='main'>
-                      <Route path='/' render={route => <Header route={route} {...this.state} manifest={this.manifest} />} />
+                      <Route path='/' render={route => <Header route={route} {...this.state} {...this.props} manifest={this.manifest} />} />
                       <Switch>
-                        <Route path='/character-select' render={route => <CharacterSelect getProfile={getProfile} setProfile={this.setProfile} location={route.location} user={this.state.user} viewport={this.state.viewport} manifest={this.manifest} />} />
+                        <Route path='/character-select' render={route => <CharacterSelect getProfile={getProfile} setProfile={this.setProfile} location={route.location} user={this.props.profile} viewport={this.state.viewport} manifest={this.manifest} />} />
                         <Route
                           path='/account'
                           exact
@@ -434,7 +433,7 @@ class App extends Component {
                           )}
                         />
                         <Route path='/vendors/:hash?' exact render={route => <Vendors vendorHash={route.match.params.hash} manifest={this.manifest} />} />
-                        <Route path='/settings' exact render={() => <Settings {...this.state.user} manifest={this.manifest} availableLanguages={this.availableLanguages} />} />
+                        <Route path='/settings' exact render={() => <Settings {...this.props.profile} manifest={this.manifest} availableLanguages={this.availableLanguages} />} />
                         <Route path='/pride' exact render={() => <Pride />} />
                         <Route path='/credits' exact render={() => <Credits />} />
                         <Route path='/tools' exact render={() => <Tools />} />
@@ -454,4 +453,22 @@ class App extends Component {
   }
 }
 
-export default withNamespaces()(App);
+function mapStateToProps(state, ownProps) {
+  // console.log(state, ownProps)
+  return {
+    profile: state.profile,
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setProfile: (value) => {
+      dispatch({ type: 'SET_PROFILE', payload: value })
+    }
+  }
+}
+
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  withNamespaces()
+)(App);
