@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { withNamespaces } from 'react-i18next';
+
 import ProgressBar from '../../components/ProgressBar';
 
 const Checklist = props => {
@@ -26,7 +28,7 @@ const Checklist = props => {
         <ul className='list no-interaction'>{props.children}</ul>
       ) : (
         <div className='info'>
-          <div className='text'>You've completed this list.</div>
+          <div className='text'>{props.t("You've completed this list.")}</div>
         </div>
       )}
     </>
@@ -41,4 +43,4 @@ Checklist.propTypes = {
   completedItems: PropTypes.number.isRequired
 };
 
-export default Checklist;
+export default withNamespaces()(Checklist);

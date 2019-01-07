@@ -97,7 +97,7 @@ class Settings extends React.Component {
             this.selectCollectibleDisplayState('showAll');
           }}
         >
-          <ProgressCheckbox checked={!this.state.collectibleDisplayState.hideTriumphRecords && !this.state.collectibleDisplayState.hideChecklistItems} text='Show everything' />
+          <ProgressCheckbox checked={!this.state.collectibleDisplayState.hideTriumphRecords && !this.state.collectibleDisplayState.hideChecklistItems} text={t('Show all items')} />
         </li>
         <li
           key='hideTriumphRecords'
@@ -105,7 +105,7 @@ class Settings extends React.Component {
             this.selectCollectibleDisplayState('hideTriumphRecords');
           }}
         >
-          <ProgressCheckbox checked={this.state.collectibleDisplayState.hideTriumphRecords} text='Hide completed triumphs' />
+          <ProgressCheckbox checked={this.state.collectibleDisplayState.hideTriumphRecords} text={t('Hide completed triumphs')} />
         </li>
         <li
           key='hideChecklistItems'
@@ -113,7 +113,7 @@ class Settings extends React.Component {
             this.selectCollectibleDisplayState('hideChecklistItems');
           }}
         >
-          <ProgressCheckbox checked={this.state.collectibleDisplayState.hideChecklistItems} text='Hide discovered checklist items' />
+          <ProgressCheckbox checked={this.state.collectibleDisplayState.hideChecklistItems} text={t('Hide completed checklist items')} />
         </li>
       </>
     );
@@ -135,7 +135,7 @@ class Settings extends React.Component {
                     theme.setFn('light-mode');
                   }}
                 >
-                  <ProgressCheckbox checked={theme.selected === 'light-mode'} text='Lights on' />
+                  <ProgressCheckbox checked={theme.selected === 'light-mode'} text={t('Lights on')} />
                 </li>
                 <li
                   key='dark'
@@ -143,7 +143,7 @@ class Settings extends React.Component {
                     theme.setFn('dark-mode');
                   }}
                 >
-                  <ProgressCheckbox checked={theme.selected === 'dark-mode'} text='Lights off' />
+                  <ProgressCheckbox checked={theme.selected === 'dark-mode'} text={t('Lights off')} />
                 </li>
               </ul>
             </div>
