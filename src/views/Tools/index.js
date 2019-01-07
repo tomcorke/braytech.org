@@ -12,12 +12,12 @@ class Tools extends React.Component {
   }
 
   componentDidMount() {
-    this.props.setPageDefault('light');
+    
     window.scrollTo(0, 0);
   }
 
   componentWillUnmount() {
-    this.props.setPageDefault(false);
+    
   }
 
   render() {

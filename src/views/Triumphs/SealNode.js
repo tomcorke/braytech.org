@@ -22,9 +22,9 @@ class SealNode extends React.Component {
     const manifest = this.props.manifest;
     const characterId = this.props.characterId;
 
-    const characters = this.props.response.profile.characters.data;
+    const characters = this.props.data.profile.characters.data;
     const genderHash = characters.find(character => character.characterId === characterId).genderHash;
-    const profileRecords = this.props.response.profile.profileRecords.data.records;
+    const profileRecords = this.props.data.profile.profileRecords.data.records;
 
     const sealBars = {
       2588182977: {

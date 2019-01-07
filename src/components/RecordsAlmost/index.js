@@ -15,8 +15,8 @@ class RecordsAlmost extends React.Component {
     const manifest = this.props.manifest;
     const characterId = this.props.characterId;
 
-    const characterRecords = this.props.response.profile.characterRecords.data;
-    const profileRecords = this.props.response.profile.profileRecords.data.records;
+    const characterRecords = this.props.data.profile.characterRecords.data;
+    const profileRecords = this.props.data.profile.profileRecords.data.records;
 
     let almost = [];
     let ignores = [];

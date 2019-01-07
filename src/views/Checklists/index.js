@@ -52,7 +52,7 @@ class Checklists extends React.Component {
 
     const f = new ChecklistFactory(
       t,
-      this.props.response.profile,
+      this.props.data.profile,
       this.props.manifest,
       this.props.characterId,
       this.state.collectibleDisplayState.hideChecklistItems
@@ -71,7 +71,7 @@ class Checklists extends React.Component {
     ];
 
     if (
-      Object.values(this.props.response.profile.profileProgression.data.checklists[2448912219]).filter(i => i)
+      Object.values(this.props.data.profile.profileProgression.data.checklists[2448912219]).filter(i => i)
         .length === 4
     ) {
       lists.push(f.caydesJournals());

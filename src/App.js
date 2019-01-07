@@ -16,6 +16,7 @@ import { Globals, isProfileRoute } from './utils/globals';
 import dexie from './utils/dexie';
 import * as ls from './utils/localStorage';
 import GoogleAnalytics from './components/GoogleAnalytics';
+import { getProfile } from './utils/getProfile';
 
 import Loading from './components/Loading';
 import Header from './components/Header';
@@ -57,7 +58,7 @@ class App extends Component {
         membershipType: user ? user.membershipType : false,
         membershipId: user ? user.membershipId : false,
         characterId: false,
-        response: false
+        data: false
       },
       manifest: {
         version: false,
@@ -73,12 +74,6 @@ class App extends Component {
     this.bungieSettings = {};
     this.currentLanguage = props.i18n.getCurrentLanguage();
   }
-
-  setPageDefault = className => {
-    this.setState({
-      pageDefaut: className
-    });
-  };
 
   setTheme = theme => {
     this.setState(state => ({
@@ -98,18 +93,20 @@ class App extends Component {
     });
   };
 
-  setUserReponse = (membershipType, membershipId, characterId, response) => {
-    ls.set('setting.user', {
-      membershipType: membershipType,
-      membershipId: membershipId,
-      characterId: characterId
-    });
+  setProfile = (membershipType, membershipId, characterId, data, setAsDefaultProfile = false) => {
+    if (setAsDefaultProfile) {
+      ls.set('setting.user', {
+        membershipType: membershipType,
+        membershipId: membershipId,
+        characterId: characterId
+      });
+    }
     this.setState({
       user: {
         membershipType: membershipType,
         membershipId: membershipId,
         characterId: characterId,
-        response: response
+        data: data
       }
     });
   };
@@ -279,7 +276,7 @@ class App extends Component {
     if (this.state.status.code !== 'ready') {
       return <Loading state={this.state.status} theme={this.state.theme.selected} />;
     } else {
-      if (this.state.user.response && this.state.user.characterId) {
+      if (this.state.user.data && this.state.user.characterId) {
         return (
           <BraytechContext.Provider value={this.state.theme}>
             <Router>
@@ -291,7 +288,7 @@ class App extends Component {
                     <div className='main'>
                       <Route path='/' render={route => <Header route={route} {...this.state} manifest={this.manifest} />} />
                       <Switch>
-                        <Route path='/character-select' render={route => <CharacterSelect location={route.location} setPageDefault={this.setPageDefault} setUserReponse={this.setUserReponse} user={this.state.user} viewport={this.state.viewport} manifest={this.manifest} />} />
+                        <Route path='/character-select' render={route => <CharacterSelect getProfile={getProfile} setProfile={this.setProfile} location={route.location} user={this.state.user} viewport={this.state.viewport} manifest={this.manifest} />} />
                         <Route
                           path='/account'
                           exact
@@ -325,13 +322,13 @@ class App extends Component {
                             </>
                           )}
                         />
-                        <Route path='/vendors/:hash?' exact render={route => <Vendors vendorHash={route.match.params.hash} {...this.state.user} setPageDefault={this.setPageDefault} manifest={this.manifest} />} />
-                        <Route path='/settings' exact render={() => <Settings {...this.state.user} manifest={this.manifest} availableLanguages={this.availableLanguages} setPageDefault={this.setPageDefault} />} />
-                        <Route path='/pride' exact render={() => <Pride setPageDefault={this.setPageDefault} />} />
-                        <Route path='/credits' exact render={() => <Credits setPageDefault={this.setPageDefault} />} />
-                        <Route path='/tools' exact render={() => <Tools setPageDefault={this.setPageDefault} />} />
-                        <Route path='/tools/clan-banner-builder/:decalBackgroundColorId?/:decalColorId?/:decalId?/:gonfalonColorId?/:gonfalonDetailColorId?/:gonfalonDetailId?/:gonfalonId?/' exact render={route => <ClanBannerBuilder {...route} setPageDefault={this.setPageDefault} />} />
-                        <Route path='/' exact render={() => <Index setPageDefault={this.setPageDefault} />} />
+                        <Route path='/vendors/:hash?' exact render={route => <Vendors vendorHash={route.match.params.hash} {...this.state.user} manifest={this.manifest} />} />
+                        <Route path='/settings' exact render={() => <Settings {...this.state.user} manifest={this.manifest} availableLanguages={this.availableLanguages} />} />
+                        <Route path='/pride' exact render={() => <Pride />} />
+                        <Route path='/credits' exact render={() => <Credits />} />
+                        <Route path='/tools' exact render={() => <Tools />} />
+                        <Route path='/tools/clan-banner-builder/:decalBackgroundColorId?/:decalColorId?/:decalId?/:gonfalonColorId?/:gonfalonDetailColorId?/:gonfalonDetailId?/:gonfalonId?/' exact render={route => <ClanBannerBuilder {...route} />} />
+                        <Route path='/' exact render={() => <Index />} />
                       </Switch>
                     </div>
                     <Route path='/' render={route => <Footer route={route} />} />
@@ -353,7 +350,7 @@ class App extends Component {
                     <div className='main'>
                       <Route path='/' render={route => <Header route={route} {...this.state} manifest={this.manifest} />} />
                       <Switch>
-                        <Route path='/character-select' render={route => <CharacterSelect location={route.location} setPageDefault={this.setPageDefault} setUserReponse={this.setUserReponse} user={this.state.user} viewport={this.state.viewport} manifest={this.manifest} />} />
+                        <Route path='/character-select' render={route => <CharacterSelect getProfile={getProfile} setProfile={this.setProfile} location={route.location} user={this.state.user} viewport={this.state.viewport} manifest={this.manifest} />} />
                         <Route
                           path='/account'
                           exact
@@ -436,13 +433,13 @@ class App extends Component {
                             />
                           )}
                         />
-                        <Route path='/vendors/:hash?' exact render={route => <Vendors vendorHash={route.match.params.hash} setPageDefault={this.setPageDefault} manifest={this.manifest} />} />
-                        <Route path='/settings' exact render={() => <Settings {...this.state.user} manifest={this.manifest} availableLanguages={this.availableLanguages} setPageDefault={this.setPageDefault} />} />
-                        <Route path='/pride' exact render={() => <Pride setPageDefault={this.setPageDefault} />} />
-                        <Route path='/credits' exact render={() => <Credits setPageDefault={this.setPageDefault} />} />
-                        <Route path='/tools' exact render={() => <Tools setPageDefault={this.setPageDefault} />} />
-                        <Route path='/tools/clan-banner-builder/:decalBackgroundColorId?/:decalColorId?/:decalId?/:gonfalonColorId?/:gonfalonDetailColorId?/:gonfalonDetailId?/:gonfalonId?/' exact render={route => <ClanBannerBuilder {...route} setPageDefault={this.setPageDefault} />} />
-                        <Route path='/' render={() => <Index setPageDefault={this.setPageDefault} />} />
+                        <Route path='/vendors/:hash?' exact render={route => <Vendors vendorHash={route.match.params.hash} manifest={this.manifest} />} />
+                        <Route path='/settings' exact render={() => <Settings {...this.state.user} manifest={this.manifest} availableLanguages={this.availableLanguages} />} />
+                        <Route path='/pride' exact render={() => <Pride />} />
+                        <Route path='/credits' exact render={() => <Credits />} />
+                        <Route path='/tools' exact render={() => <Tools />} />
+                        <Route path='/tools/clan-banner-builder/:decalBackgroundColorId?/:decalColorId?/:decalId?/:gonfalonColorId?/:gonfalonDetailColorId?/:gonfalonDetailId?/:gonfalonId?/' exact render={route => <ClanBannerBuilder {...route} />} />
+                        <Route path='/' render={() => <Index />} />
                       </Switch>
                     </div>
                     <Route path='/' render={route => <Footer route={route} />} />

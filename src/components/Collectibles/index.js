@@ -27,8 +27,8 @@ class Collectibles extends React.Component {
     const manifest = this.props.manifest;
     const characterId = this.props.characterId;
 
-    const characterCollectibles = this.props.response.profile.characterCollectibles.data;
-    const profileCollectibles = this.props.response.profile.profileCollectibles.data;
+    const characterCollectibles = this.props.data.profile.characterCollectibles.data;
+    const profileCollectibles = this.props.data.profile.profileCollectibles.data;
 
     const highlight = this.props.highlight;
 

@@ -25,10 +25,10 @@ class Account extends React.Component {
     const manifest = this.props.manifest;
     const characterId = this.props.characterId;
 
-    const characters = this.props.response.profile.characters.data;
-    const characterProgressions = this.props.response.profile.characterProgressions.data;
-    const profileRecords = this.props.response.profile.profileRecords.data.records;
-    const characterRecords = this.props.response.profile.characterRecords.data;
+    const characters = this.props.data.profile.characters.data;
+    const characterProgressions = this.props.data.profile.characterProgressions.data;
+    const profileRecords = this.props.data.profile.profileRecords.data.records;
+    const characterRecords = this.props.data.profile.characterRecords.data;
     const genderHash = characters.filter(character => character.characterId == characterId)[0].genderHash;
 
     const Characters = () => {

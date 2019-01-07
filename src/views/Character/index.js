@@ -21,7 +21,7 @@ class Character extends React.Component {
 
     console.log(this);
 
-    const equipment = this.props.response.profile.characterEquipment.data[characterId].items;
+    const equipment = this.props.data.profile.characterEquipment.data[characterId].items;
 
     let items = equipment.map(item => ({
       ...manifest.DestinyInventoryItemDefinition[item.itemHash],
