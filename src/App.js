@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 import cx from 'classnames';
 import assign from 'lodash/assign';
@@ -14,14 +14,11 @@ import './App.css';
 
 import init from './utils/init';
 
-
 import { Globals, isProfileRoute } from './utils/globals';
 import dexie from './utils/dexie';
 import * as ls from './utils/localStorage';
 import GoogleAnalytics from './components/GoogleAnalytics';
 import { getProfile } from './utils/getProfile';
-
-import store from './utils/reduxStore';
 
 import Loading from './components/Loading';
 import Header from './components/Header';
@@ -45,13 +42,9 @@ import Credits from './views/Credits';
 import Tools from './views/Tools';
 import ClanBannerBuilder from './views/Tools/ClanBannerBuilder';
 
-import BraytechContext from './BraytechContext';
-
 class App extends Component {
   constructor(props) {
     super();
-    
-    let theme = ls.get('setting.theme') ? ls.get('setting.theme') : 'light-mode';
 
     this.state = {
       status: {
@@ -61,10 +54,6 @@ class App extends Component {
       manifest: {
         version: false,
         settings: false
-      },
-      theme: {
-        selected: theme,
-        setFn: this.setTheme
       }
     };
 
@@ -265,188 +254,183 @@ class App extends Component {
   }
 
   render() {
-
     if (!window.ga) {
       GoogleAnalytics.init();
     }
 
-    console.log(this)
+    console.log(this);
 
     if (this.state.status.code !== 'ready') {
-      return <Loading state={this.state.status} theme={this.state.theme.selected} />;
+      return <Loading state={this.state.status} theme={this.props.theme.selected} />;
     } else {
       if (this.props.profile.data && this.props.profile.characterId) {
         return (
-          <BraytechContext.Provider value={this.state.theme}>
-            <Router>
-              <Route
-                render={route => (
-                  <div className={cx('wrapper', this.state.theme.selected, { 'profile-route': isProfileRoute(route.location.pathname) })}>
-                    <Route path='/' render={route => <Notifications updateAvailable={this.props.updateAvailable} />} />
-                    <GoogleAnalytics.RouteTracker />
-                    <div className='main'>
-                      <Route path='/' render={route => <Header route={route} {...this.state} {...this.props} manifest={this.manifest} />} />
-                      <Switch>
-                        <Route path='/character-select' render={route => <CharacterSelect getProfile={getProfile} setProfile={this.setProfile} location={route.location} user={this.props.profile} viewport={this.state.viewport} manifest={this.manifest} />} />
-                        <Route
-                          path='/account'
-                          exact
-                          render={() => (
-                            <>
-                              <Account {...this.props.profile} manifest={this.manifest} />
-                              <Tooltip manifest={this.manifest} />
-                            </>
-                          )}
-                        />
-                        <Route path='/clan/:view?/:subView?' exact render={route => <Clan {...this.props.profile} manifest={this.manifest} view={route.match.params.view} subView={route.match.params.subView} />} />
-                        <Route path='/character' exact render={() => <Character {...this.props.profile} viewport={this.state.viewport} manifest={this.manifest} />} />
-                        <Route path='/checklists' exact render={() => <Checklists {...this.props.profile} viewport={this.state.viewport} manifest={this.manifest} />} />
-                        <Route
-                          path='/collections/:primary?/:secondary?/:tertiary?/:quaternary?'
-                          render={route => (
-                            <>
-                              <Collections {...route} {...this.props.profile} manifest={this.manifest} />
-                              <Tooltip manifest={this.manifest} />
-                            </>
-                          )}
-                        />
-                        <Route path='/triumphs/:primary?/:secondary?/:tertiary?/:quaternary?' render={route => <Triumphs {...route} {...this.props.profile} manifest={this.manifest} />} />
-                        <Route
-                          path='/this-week'
-                          exact
-                          render={() => (
-                            <>
-                              <ThisWeek {...this.props.profile} manifest={this.manifest} />
-                              <Tooltip manifest={this.manifest} />
-                            </>
-                          )}
-                        />
-                        <Route path='/vendors/:hash?' exact render={route => <Vendors vendorHash={route.match.params.hash} {...this.props.profile} manifest={this.manifest} />} />
-                        <Route path='/settings' exact render={() => <Settings {...this.props.profile} manifest={this.manifest} availableLanguages={this.availableLanguages} />} />
-                        <Route path='/pride' exact render={() => <Pride />} />
-                        <Route path='/credits' exact render={() => <Credits />} />
-                        <Route path='/tools' exact render={() => <Tools />} />
-                        <Route path='/tools/clan-banner-builder/:decalBackgroundColorId?/:decalColorId?/:decalId?/:gonfalonColorId?/:gonfalonDetailColorId?/:gonfalonDetailId?/:gonfalonId?/' exact render={route => <ClanBannerBuilder {...route} />} />
-                        <Route path='/' exact render={() => <Index />} />
-                      </Switch>
-                    </div>
-                    <Route path='/' render={route => <Footer route={route} />} />
+          <Router>
+            <Route
+              render={route => (
+                <div className={cx('wrapper', this.props.theme.selected, { 'profile-route': isProfileRoute(route.location.pathname) })}>
+                  <Route path='/' render={route => <Notifications updateAvailable={this.props.updateAvailable} />} />
+                  <GoogleAnalytics.RouteTracker />
+                  <div className='main'>
+                    <Route path='/' render={route => <Header route={route} {...this.state} {...this.props} manifest={this.manifest} />} />
+                    <Switch>
+                      <Route path='/character-select' render={route => <CharacterSelect getProfile={getProfile} setProfile={this.setProfile} location={route.location} user={this.props.profile} viewport={this.state.viewport} manifest={this.manifest} />} />
+                      <Route
+                        path='/account'
+                        exact
+                        render={() => (
+                          <>
+                            <Account manifest={this.manifest} />
+                            <Tooltip manifest={this.manifest} />
+                          </>
+                        )}
+                      />
+                      <Route path='/clan/:view?/:subView?' exact render={route => <Clan manifest={this.manifest} view={route.match.params.view} subView={route.match.params.subView} />} />
+                      <Route path='/character' exact render={() => <Character viewport={this.state.viewport} manifest={this.manifest} />} />
+                      <Route path='/checklists' exact render={() => <Checklists viewport={this.state.viewport} manifest={this.manifest} />} />
+                      <Route
+                        path='/collections/:primary?/:secondary?/:tertiary?/:quaternary?'
+                        render={route => (
+                          <>
+                            <Collections {...route} manifest={this.manifest} />
+                            <Tooltip manifest={this.manifest} />
+                          </>
+                        )}
+                      />
+                      <Route path='/triumphs/:primary?/:secondary?/:tertiary?/:quaternary?' render={route => <Triumphs {...route} manifest={this.manifest} />} />
+                      <Route
+                        path='/this-week'
+                        exact
+                        render={() => (
+                          <>
+                            <ThisWeek manifest={this.manifest} />
+                            <Tooltip manifest={this.manifest} />
+                          </>
+                        )}
+                      />
+                      <Route path='/vendors/:hash?' exact render={route => <Vendors vendorHash={route.match.params.hash} manifest={this.manifest} />} />
+                      <Route path='/settings' exact render={() => <Settings manifest={this.manifest} availableLanguages={this.availableLanguages} />} />
+                      <Route path='/pride' exact render={() => <Pride />} />
+                      <Route path='/credits' exact render={() => <Credits />} />
+                      <Route path='/tools' exact render={() => <Tools />} />
+                      <Route path='/tools/clan-banner-builder/:decalBackgroundColorId?/:decalColorId?/:decalId?/:gonfalonColorId?/:gonfalonDetailColorId?/:gonfalonDetailId?/:gonfalonId?/' exact render={route => <ClanBannerBuilder {...route} />} />
+                      <Route path='/' exact render={() => <Index />} />
+                    </Switch>
                   </div>
-                )}
-              />
-            </Router>
-          </BraytechContext.Provider>
+                  <Route path='/' render={route => <Footer route={route} />} />
+                </div>
+              )}
+            />
+          </Router>
         );
       } else {
         return (
-          <BraytechContext.Provider value={this.state.theme}>
-            <Router>
-              <Route
-                render={route => (
-                  <div className={cx('wrapper', this.state.theme.selected, { 'profile-route': isProfileRoute(route.location.pathname) })}>
-                    <Route path='/' render={route => <Notifications updateAvailable={this.props.updateAvailable} />} />
-                    <GoogleAnalytics.RouteTracker />
-                    <div className='main'>
-                      <Route path='/' render={route => <Header route={route} {...this.state} {...this.props} manifest={this.manifest} />} />
-                      <Switch>
-                        <Route path='/character-select' render={route => <CharacterSelect getProfile={getProfile} setProfile={this.setProfile} location={route.location} user={this.props.profile} viewport={this.state.viewport} manifest={this.manifest} />} />
-                        <Route
-                          path='/account'
-                          exact
-                          render={route => (
-                            <Redirect
-                              to={{
-                                pathname: '/character-select',
-                                state: { from: route.location }
-                              }}
-                            />
-                          )}
-                        />
-                        <Route
-                          path='/clan/:view?/:subView?'
-                          exact
-                          render={route => (
-                            <Redirect
-                              to={{
-                                pathname: '/character-select',
-                                state: { from: route.location }
-                              }}
-                            />
-                          )}
-                        />
-                        <Route
-                          path='/character'
-                          exact
-                          render={route => (
-                            <Redirect
-                              to={{
-                                pathname: '/character-select',
-                                state: { from: route.location }
-                              }}
-                            />
-                          )}
-                        />
-                        <Route
-                          path='/checklists'
-                          exact
-                          render={route => (
-                            <Redirect
-                              to={{
-                                pathname: '/character-select',
-                                state: { from: route.location }
-                              }}
-                            />
-                          )}
-                        />
-                        <Route
-                          path='/collections/:primary?/:secondary?/:tertiary?/:quaternary?'
-                          render={route => (
-                            <Redirect
-                              to={{
-                                pathname: '/character-select',
-                                state: { from: route.location }
-                              }}
-                            />
-                          )}
-                        />
-                        <Route
-                          path='/triumphs/:primary?/:secondary?/:tertiary?/:quaternary?'
-                          render={route => (
-                            <Redirect
-                              to={{
-                                pathname: '/character-select',
-                                state: { from: route.location }
-                              }}
-                            />
-                          )}
-                        />
-                        <Route
-                          path='/this-week'
-                          exact
-                          render={route => (
-                            <Redirect
-                              to={{
-                                pathname: '/character-select',
-                                state: { from: route.location }
-                              }}
-                            />
-                          )}
-                        />
-                        <Route path='/vendors/:hash?' exact render={route => <Vendors vendorHash={route.match.params.hash} manifest={this.manifest} />} />
-                        <Route path='/settings' exact render={() => <Settings {...this.props.profile} manifest={this.manifest} availableLanguages={this.availableLanguages} />} />
-                        <Route path='/pride' exact render={() => <Pride />} />
-                        <Route path='/credits' exact render={() => <Credits />} />
-                        <Route path='/tools' exact render={() => <Tools />} />
-                        <Route path='/tools/clan-banner-builder/:decalBackgroundColorId?/:decalColorId?/:decalId?/:gonfalonColorId?/:gonfalonDetailColorId?/:gonfalonDetailId?/:gonfalonId?/' exact render={route => <ClanBannerBuilder {...route} />} />
-                        <Route path='/' render={() => <Index />} />
-                      </Switch>
-                    </div>
-                    <Route path='/' render={route => <Footer route={route} />} />
+          <Router>
+            <Route
+              render={route => (
+                <div className={cx('wrapper', this.props.theme.selected, { 'profile-route': isProfileRoute(route.location.pathname) })}>
+                  <Route path='/' render={route => <Notifications updateAvailable={this.props.updateAvailable} />} />
+                  <GoogleAnalytics.RouteTracker />
+                  <div className='main'>
+                    <Route path='/' render={route => <Header route={route} {...this.state} {...this.props} manifest={this.manifest} />} />
+                    <Switch>
+                      <Route path='/character-select' render={route => <CharacterSelect getProfile={getProfile} setProfile={this.setProfile} location={route.location} user={this.props.profile} viewport={this.state.viewport} manifest={this.manifest} />} />
+                      <Route
+                        path='/account'
+                        exact
+                        render={route => (
+                          <Redirect
+                            to={{
+                              pathname: '/character-select',
+                              state: { from: route.location }
+                            }}
+                          />
+                        )}
+                      />
+                      <Route
+                        path='/clan/:view?/:subView?'
+                        exact
+                        render={route => (
+                          <Redirect
+                            to={{
+                              pathname: '/character-select',
+                              state: { from: route.location }
+                            }}
+                          />
+                        )}
+                      />
+                      <Route
+                        path='/character'
+                        exact
+                        render={route => (
+                          <Redirect
+                            to={{
+                              pathname: '/character-select',
+                              state: { from: route.location }
+                            }}
+                          />
+                        )}
+                      />
+                      <Route
+                        path='/checklists'
+                        exact
+                        render={route => (
+                          <Redirect
+                            to={{
+                              pathname: '/character-select',
+                              state: { from: route.location }
+                            }}
+                          />
+                        )}
+                      />
+                      <Route
+                        path='/collections/:primary?/:secondary?/:tertiary?/:quaternary?'
+                        render={route => (
+                          <Redirect
+                            to={{
+                              pathname: '/character-select',
+                              state: { from: route.location }
+                            }}
+                          />
+                        )}
+                      />
+                      <Route
+                        path='/triumphs/:primary?/:secondary?/:tertiary?/:quaternary?'
+                        render={route => (
+                          <Redirect
+                            to={{
+                              pathname: '/character-select',
+                              state: { from: route.location }
+                            }}
+                          />
+                        )}
+                      />
+                      <Route
+                        path='/this-week'
+                        exact
+                        render={route => (
+                          <Redirect
+                            to={{
+                              pathname: '/character-select',
+                              state: { from: route.location }
+                            }}
+                          />
+                        )}
+                      />
+                      <Route path='/vendors/:hash?' exact render={route => <Vendors vendorHash={route.match.params.hash} manifest={this.manifest} />} />
+                      <Route path='/settings' exact render={() => <Settings {...this.props.profile} manifest={this.manifest} availableLanguages={this.availableLanguages} />} />
+                      <Route path='/pride' exact render={() => <Pride />} />
+                      <Route path='/credits' exact render={() => <Credits />} />
+                      <Route path='/tools' exact render={() => <Tools />} />
+                      <Route path='/tools/clan-banner-builder/:decalBackgroundColorId?/:decalColorId?/:decalId?/:gonfalonColorId?/:gonfalonDetailColorId?/:gonfalonDetailId?/:gonfalonId?/' exact render={route => <ClanBannerBuilder {...route} />} />
+                      <Route path='/' render={() => <Index />} />
+                    </Switch>
                   </div>
-                )}
-              />
-            </Router>
-          </BraytechContext.Provider>
+                  <Route path='/' render={route => <Footer route={route} />} />
+                </div>
+              )}
+            />
+          </Router>
         );
       }
     }
@@ -457,18 +441,22 @@ function mapStateToProps(state, ownProps) {
   // console.log(state, ownProps)
   return {
     profile: state.profile,
-  }
+    theme: state.theme
+  };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    setProfile: (value) => {
-      dispatch({ type: 'SET_PROFILE', payload: value })
+    setProfile: value => {
+      dispatch({ type: 'SET_PROFILE', payload: value });
     }
-  }
+  };
 }
 
 export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
   withNamespaces()
 )(App);

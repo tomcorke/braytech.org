@@ -1,8 +1,12 @@
 import React from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { withNamespaces } from 'react-i18next';
+import cx from 'classnames';
 
 import Records from '../../components/Records';
 import Collectibles from '../../components/Collectibles';
+
 import './styles.css';
 
 class ThisWeek extends React.Component {
@@ -13,9 +17,9 @@ class ThisWeek extends React.Component {
   }
 
   render() {
-    const {t} = this.props;
+    const { t } = this.props;
     const manifest = this.props.manifest;
-    const milestones = this.props.data.milestones;
+    const milestones = this.props.profile.data.milestones;
 
     const resetTime = '17:00 UTC';
 
@@ -475,7 +479,7 @@ class ThisWeek extends React.Component {
     });
 
     return (
-      <div className='view' id='this-week'>
+      <div className={cx('view', this.props.theme.selected)} id='this-week'>
         <div className='module'>
           <div className='sub-header sub'>
             <div>{t('Flashpoint')}</div>
@@ -534,4 +538,15 @@ class ThisWeek extends React.Component {
   }
 }
 
-export default withNamespaces()(ThisWeek);
+function mapStateToProps(state, ownProps) {
+  return {
+    profile: state.profile,
+    collectibles: state.collectibles,
+    theme: state.theme
+  };
+}
+
+export default compose(
+  connect(mapStateToProps),
+  withNamespaces()
+)(ThisWeek);

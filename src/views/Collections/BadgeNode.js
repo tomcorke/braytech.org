@@ -4,20 +4,18 @@ import cx from 'classnames';
 import { withNamespaces } from 'react-i18next';
 
 import ObservedImage from '../../components/ObservedImage';
-
 import Collectibles from '../../components/Collectibles';
-
 import { enumerateCollectibleState } from '../../utils/destinyEnums';
 
 class BadgeNode extends React.Component {
   render() {
     const { t } = this.props;
     const manifest = this.props.manifest;
-    const characterId = this.props.characterId;
+    const characterId = this.props.profile.characterId;
 
 
-    const characterCollectibles = this.props.data.profile.characterCollectibles.data;
-    const profileCollectibles = this.props.data.profile.profileCollectibles.data;
+    const characterCollectibles = this.props.profile.data.profile.characterCollectibles.data;
+    const profileCollectibles = this.props.profile.data.profile.profileCollectibles.data;
 
     let badgeDefinition = manifest.DestinyPresentationNodeDefinition[this.props.match.params.secondary];
 

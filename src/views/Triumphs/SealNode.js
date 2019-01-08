@@ -1,11 +1,11 @@
 import React from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withNamespaces } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import cx from 'classnames';
-import { withNamespaces } from 'react-i18next';
 
 import ObservedImage from '../../components/ObservedImage';
-import * as ls from '../../utils/localStorage';
-
 import Records from '../../components/Records';
 
 class SealNode extends React.Component {
@@ -20,11 +20,11 @@ class SealNode extends React.Component {
   render() {
     const { t } = this.props;
     const manifest = this.props.manifest;
-    const characterId = this.props.characterId;
+    const characterId = this.props.profile.characterId;
 
-    const characters = this.props.data.profile.characters.data;
+    const characters = this.props.profile.data.profile.characters.data;
     const genderHash = characters.find(character => character.characterId === characterId).genderHash;
-    const profileRecords = this.props.data.profile.profileRecords.data.records;
+    const profileRecords = this.props.profile.data.profile.profileRecords.data.records;
 
     const sealBars = {
       2588182977: {
@@ -125,4 +125,14 @@ class SealNode extends React.Component {
   }
 }
 
-export default withNamespaces()(SealNode);
+function mapStateToProps(state, ownProps) {
+  return {
+    profile: state.profile,
+    theme: state.theme
+  };
+}
+
+export default compose(
+  connect(mapStateToProps),
+  withNamespaces()
+)(SealNode);

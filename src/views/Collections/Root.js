@@ -1,20 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import cx from 'classnames';
+import { withNamespaces } from 'react-i18next';
 
 import ObservedImage from '../../components/ObservedImage';
-
 import { enumerateCollectibleState } from '../../utils/destinyEnums';
-import { withNamespaces } from 'react-i18next';
 
 class Root extends React.Component {
   render() {
     const { t } = this.props;
     const manifest = this.props.manifest;
-    const characterId = this.props.characterId;
+    const characterId = this.props.profile.characterId;
 
-    const characterCollectibles = this.props.data.profile.characterCollectibles.data;
-    const profileCollectibles = this.props.data.profile.profileCollectibles.data;
+    const characterCollectibles = this.props.profile.data.profile.characterCollectibles.data;
+    const profileCollectibles = this.props.profile.data.profile.profileCollectibles.data;
 
     const parent = manifest.DestinyPresentationNodeDefinition[manifest.settings.destiny2CoreSettings.collectionRootNode];
     const parentBadges = manifest.DestinyPresentationNodeDefinition[manifest.settings.destiny2CoreSettings.badgesRootNode];

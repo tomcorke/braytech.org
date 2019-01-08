@@ -1,9 +1,10 @@
 import React from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import cx from 'classnames';
 
 import ObservedImage from '../../components/ObservedImage';
-
 import { enumerateCollectibleState } from '../../utils/destinyEnums';
 
 import './styles.css';
@@ -25,10 +26,10 @@ class Collectibles extends React.Component {
 
   render() {
     const manifest = this.props.manifest;
-    const characterId = this.props.characterId;
+    const characterId = this.props.profile.characterId;
 
-    const characterCollectibles = this.props.data.profile.characterCollectibles.data;
-    const profileCollectibles = this.props.data.profile.profileCollectibles.data;
+    const characterCollectibles = this.props.profile.data.profile.characterCollectibles.data;
+    const profileCollectibles = this.props.profile.data.profile.profileCollectibles.data;
 
     const highlight = this.props.highlight;
 
@@ -227,4 +228,12 @@ class Collectibles extends React.Component {
   }
 }
 
-export default Collectibles;
+function mapStateToProps(state, ownProps) {
+  return {
+    profile: state.profile
+  };
+}
+
+export default compose(
+  connect(mapStateToProps)
+)(Collectibles);

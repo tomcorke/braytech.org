@@ -1,8 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { withNamespaces } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import cx from 'classnames';
 
-import * as ls from '../../utils/localStorage';
 import Root from './Root';
 import SealNode from './SealNode';
 import PresentationNode from './PresentationNode';
@@ -14,30 +16,21 @@ class Triumphs extends React.Component {
     super(props);
 
     this.state = {
-      collectibleDisplayState: ls.get('setting.collectibleDisplayState')
+      
     };
 
     this.toggleCompleted = this.toggleCompleted.bind(this);
   }
 
   toggleCompleted = () => {
-    let currentState = this.state.collectibleDisplayState;
+    let currentState = this.props.collectibles;
     let newState = {
       hideTriumphRecords: !currentState.hideTriumphRecords,
       hideChecklistItems: currentState.hideChecklistItems
     }
 
-    this.setState({
-      collectibleDisplayState: newState
-    });
-
-    ls.set('setting.collectibleDisplayState', newState);
+    this.props.setCollectibleDisplayState(newState);
   };
-
-
-  componentDidMount() {
-    
-  }
 
   componentDidUpdate(prevProps) {
     if (!this.props.match.params.quaternary && prevProps.location.pathname !== this.props.location.pathname) {
@@ -52,7 +45,7 @@ class Triumphs extends React.Component {
     let toggleCompletedLink = (
       // eslint-disable-next-line jsx-a11y/anchor-is-valid
       <a onClick={this.toggleCompleted}>
-        {this.state.collectibleDisplayState.hideTriumphRecords ? (
+        {this.props.collectibles.hideTriumphRecords ? (
           <>
             <i className='uniE0522' />
             {t('Show acquired')}
@@ -69,15 +62,15 @@ class Triumphs extends React.Component {
 
     if (!primaryHash) {
       return (
-        <div className='view presentation-node' id='triumphs'>
+        <div className={cx('view', 'presentation-node', this.props.theme.selected)} id='triumphs'>
           <Root {...this.props} />
         </div>
       );
     } else if (primaryHash === 'seal') {
       return (
         <>
-          <div className='view presentation-node' id='triumphs'>
-            <SealNode {...this.props} collectibleDisplayState={this.state.collectibleDisplayState} />
+          <div className={cx('view', 'presentation-node', this.props.theme.selected)} id='triumphs'>
+            <SealNode {...this.props} />
           </div>
           <div className='sticky-nav'>
             <div />
@@ -95,8 +88,8 @@ class Triumphs extends React.Component {
     } else {
       return (
         <>
-          <div className='view presentation-node' id='triumphs'>
-            <PresentationNode {...this.props} collectibleDisplayState={this.state.collectibleDisplayState} primaryHash={primaryHash} />
+          <div className={cx('view', 'presentation-node', this.props.theme.selected)} id='triumphs'>
+            <PresentationNode {...this.props} primaryHash={primaryHash} />
           </div>
           <div className='sticky-nav'>
             <div />
@@ -116,4 +109,23 @@ class Triumphs extends React.Component {
   }
 }
 
-export default withNamespaces()(Triumphs);
+function mapStateToProps(state, ownProps) {
+  return {
+    profile: state.profile,
+    collectibles: state.collectibles,
+    theme: state.theme
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    setCollectibleDisplayState: value => {
+      dispatch({ type: 'SET_COLLECTIBLES', payload: value });
+    }
+  };
+}
+
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  withNamespaces()
+)(Triumphs);

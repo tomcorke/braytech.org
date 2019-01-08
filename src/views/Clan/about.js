@@ -1,4 +1,6 @@
 import React from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import cx from 'classnames';
@@ -62,7 +64,7 @@ class AboutView extends React.Component {
   };
 
   componentDidMount() {
-    const groups = this.props.data.groups;
+    const groups = this.props.profile.data.groups;
     const clan = groups.results.length > 0 ? groups.results[0].group : false;
 
     if (clan) {
@@ -77,13 +79,13 @@ class AboutView extends React.Component {
 
   render() {
     const manifest = this.props.manifest;
-    const groups = this.props.data.groups;
+    const groups = this.props.profile.data.groups;
     const clan = groups.results.length > 0 ? groups.results[0].group : false;
     const { t } = this.props;
 
     if (clan) {
       const clanLevel = clan.clanInfo.d2ClanProgressions[584850370];
-      const weeklyPersonalContribution = this.props.data.profile.characterProgressions.data[this.props.characterId].progressions[540048094];
+      const weeklyPersonalContribution = this.props.profile.data.profile.characterProgressions.data[this.props.characterId].progressions[540048094];
 
       const weeklyClanEngramsDefinition = manifest.DestinyMilestoneDefinition[4253138191].rewards[1064137897].rewardEntries;
       let rewardState = null;
@@ -92,7 +94,7 @@ class AboutView extends React.Component {
       }
 
       return (
-        <div className='view' id='clan'>
+        <div className={cx('view', this.props.theme.selected)} id='clan'>
           <div className='about'>
             <div className='banner'>
               <ClanBanner bannerData={clan.clanInfo.clanBannerData} />
@@ -191,7 +193,7 @@ class AboutView extends React.Component {
       );
     } else {
       return (
-        <div className='view' id='clan'>
+        <div className={cx('view', this.props.theme.selected)} id='clan'>
           <div className='no-clan'>
             <div className='properties'>
               <div className='name'>{t('No clan affiliation')}</div>
@@ -207,4 +209,17 @@ class AboutView extends React.Component {
   }
 }
 
-export default withNamespaces()(AboutView);
+function mapStateToProps(state, ownProps) {
+  console.log(state, ownProps);
+  return {
+    profile: state.profile,
+    theme: state.theme
+  };
+}
+
+export default compose(
+  connect(
+    mapStateToProps
+  ),
+  withNamespaces()
+)(AboutView);

@@ -1,11 +1,12 @@
 import React from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import orderBy from 'lodash/orderBy';
 import cx from 'classnames';
 
 import ObservedImage from '../ObservedImage';
 import ProgressBar from '../ProgressBar';
-
 import { enumerateRecordState } from '../../utils/destinyEnums';
 
 import './styles.css';
@@ -28,9 +29,9 @@ class Records extends React.Component {
   render() {
     const manifest = this.props.manifest;
 
-    const characterRecords = this.props.data.profile.characterRecords.data;
-    const profileRecords = this.props.data.profile.profileRecords.data.records;
-    const characterId = this.props.characterId;
+    const characterRecords = this.props.profile.data.profile.characterRecords.data;
+    const profileRecords = this.props.profile.data.profile.profileRecords.data.records;
+    const characterId = this.props.profile.characterId;
 
     const highlight = this.props.highlight;
 
@@ -88,7 +89,7 @@ class Records extends React.Component {
           return;
         }
 
-        if (enumerateRecordState(state).recordRedeemed && this.props.collectibleDisplayState.hideTriumphRecords) {
+        if (enumerateRecordState(state).recordRedeemed && this.props.collectibles.hideTriumphRecords) {
           return;
         }
 
@@ -246,7 +247,7 @@ class Records extends React.Component {
           return;
         }
 
-        if (enumerateRecordState(state).recordRedeemed && this.props.collectibleDisplayState && this.props.collectibleDisplayState.hideTriumphRecords) {
+        if (enumerateRecordState(state).recordRedeemed && this.props.collectibles && this.props.collectibles.hideTriumphRecords) {
           return;
         }
 
@@ -320,7 +321,7 @@ class Records extends React.Component {
       });
     }
 
-    if (records.length === 0 && this.props.collectibleDisplayState.hideTriumphRecords) {
+    if (records.length === 0 && this.props.collectibles.hideTriumphRecords) {
       records.push(
         <li key='lol'>
           <div className='properties'>
@@ -340,4 +341,13 @@ class Records extends React.Component {
   }
 }
 
-export default Records;
+function mapStateToProps(state, ownProps) {
+  return {
+    profile: state.profile,
+    collectibles: state.collectibles
+  };
+}
+
+export default compose(
+  connect(mapStateToProps)
+)(Records);

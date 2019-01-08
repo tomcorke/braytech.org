@@ -1,9 +1,13 @@
 import { createStore, combineReducers } from 'redux';
 
 import profileReducer from './reducers/profile';
+import themeReducer from './reducers/theme';
+import collectiblesReducer from './reducers/collectibles';
 
 const rootReducer = combineReducers({
-  profile: profileReducer
+  profile: profileReducer,
+  theme: themeReducer,
+  collectibles: collectiblesReducer
 })
 
 const store = createStore(
