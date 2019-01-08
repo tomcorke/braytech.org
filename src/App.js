@@ -418,7 +418,7 @@ class App extends Component {
                         )}
                       />
                       <Route path='/vendors/:hash?' exact render={route => <Vendors vendorHash={route.match.params.hash} manifest={this.manifest} />} />
-                      <Route path='/settings' exact render={() => <Settings {...this.props.profile} manifest={this.manifest} availableLanguages={this.availableLanguages} />} />
+                      <Route path='/settings' exact render={() => <Settings manifest={this.manifest} availableLanguages={this.availableLanguages} />} />
                       <Route path='/pride' exact render={() => <Pride />} />
                       <Route path='/credits' exact render={() => <Credits />} />
                       <Route path='/tools' exact render={() => <Tools />} />
