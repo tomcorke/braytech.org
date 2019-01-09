@@ -1,3 +1,4 @@
+import { connect } from 'react-redux';
 import assign from 'lodash/assign';
 import Globals from './globals';
 

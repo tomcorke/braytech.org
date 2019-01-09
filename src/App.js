@@ -2,23 +2,20 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
+import { withNamespaces } from 'react-i18next';
 import cx from 'classnames';
 import assign from 'lodash/assign';
-import packageJSON from '../package.json';
-import { withNamespaces } from 'react-i18next';
-
-import './utils/i18n';
 
 import './Core.css';
 import './App.css';
 
-import init from './utils/init';
-
+import './utils/i18n';
 import { Globals, isProfileRoute } from './utils/globals';
 import dexie from './utils/dexie';
 import * as ls from './utils/localStorage';
 import GoogleAnalytics from './components/GoogleAnalytics';
 import { getProfile } from './utils/getProfile';
+// import refreshProfile from './utils/refreshProfileService';
 
 import Loading from './components/Loading';
 import Header from './components/Header';
@@ -60,14 +57,8 @@ class App extends Component {
     this.manifest = {};
     this.bungieSettings = {};
     this.currentLanguage = props.i18n.getCurrentLanguage();
+    this.refreshServiceTimer = false;
   }
-
-  setTheme = theme => {
-    this.setState(state => ({
-      theme: { ...state.theme, selected: theme }
-    }));
-    ls.set('setting.theme', theme);
-  };
 
   updateViewport = () => {
     let width = window.innerWidth;
@@ -80,7 +71,7 @@ class App extends Component {
     });
   };
 
-  setProfile = (membershipType, membershipId, characterId, data, setAsDefaultProfile = false) => {
+  setProfile = (membershipType, membershipId, characterId = this.props.profile.characterId, data, setAsDefaultProfile = false) => {
     if (setAsDefaultProfile) {
       ls.set('setting.profile', {
         membershipType: membershipType,
@@ -95,13 +86,32 @@ class App extends Component {
       characterId: characterId,
       data: data
     });
+
+    // refreshProfile();
+
+    //this.refreshServiceTimer = false;
+    //this.refreshService();
+
   };
 
-  viewCharacters = () => {
-    let state = this.state;
-    state.user.characterId = false;
-    this.setState(state);
-  };
+  refreshService = () => {
+    if (!this.refreshServiceTimer) {
+      let { membershipType, membershipId, characterId } = this.props.profile;
+      this.refreshServiceTimer = setTimeout(() => {
+        if (this.props.profile.membershipId === membershipId) {
+          console.log("Refreshing profile data");
+
+          getProfile(membershipType, membershipId, (callback) => {
+            console.log(callback);
+
+            if (!callback.error) {
+              this.setProfile(membershipType, membershipId, characterId, callback.data);
+            }
+          });
+        }
+      }, 10000);
+    }
+  }
 
   getVersionAndSettings = () => {
     let state = this.state;
@@ -258,7 +268,7 @@ class App extends Component {
       GoogleAnalytics.init();
     }
 
-    console.log(this);
+    // console.log(this.props)
 
     if (this.state.status.code !== 'ready') {
       return <Loading state={this.state.status} theme={this.props.theme.selected} />;
@@ -447,6 +457,9 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    setProfile: value => {
+      dispatch({ type: 'SET_PROFILE', payload: value });
+    },
     setProfile: value => {
       dispatch({ type: 'SET_PROFILE', payload: value });
     }
