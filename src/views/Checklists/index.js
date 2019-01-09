@@ -18,7 +18,7 @@ function getItemsPerPage(width) {
   return 1;
 }
 
-class Checklists extends React.Component {
+export class Checklists extends React.Component {
   constructor(props) {
     super(props);
 
@@ -71,8 +71,7 @@ class Checklists extends React.Component {
     ];
 
     if (
-      Object.values(this.props.data.profile.profileProgression.data.checklists[2448912219]).filter(i => i)
-        .length === 4
+      Object.values(this.props.data.profile.profileProgression.data.checklists[2448912219]).filter(i => i).length === 4
     ) {
       lists.push(f.caydesJournals());
     }
