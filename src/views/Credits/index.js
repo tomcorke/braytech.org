@@ -66,6 +66,16 @@ class Credits extends React.Component {
                 </ul>
               </li>
               <li>
+                <strong>{t('Checklists')}</strong>
+                <ul>
+                  <li>
+                    <a href='https://github.com/mipearson' target='_blank' rel='noopener noreferrer'>
+                      Michael Pearson
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              <li>
                 <strong>{t('This Week')}</strong>
                 <ul>
                   <li>
