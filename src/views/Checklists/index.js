@@ -16,7 +16,7 @@ function getItemsPerPage(width) {
   return 1;
 }
 
-class Checklists extends React.Component {
+export class Checklists extends React.Component {
   constructor(props) {
     super(props);
 
