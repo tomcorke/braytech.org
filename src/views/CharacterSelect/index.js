@@ -81,7 +81,7 @@ class CharacterSelect extends React.Component {
   resultClick = (membershipType, membershipId, displayName) => {
     window.scrollTo(0, 0);
 
-    this.props.getProfile(membershipType, membershipId, this.getProfileCallback);
+    this.props.getProfile(membershipType, membershipId, false, this.getProfileCallback);
 
     if (displayName) {
       ls.update('history.profiles', { membershipType: membershipType, membershipId: membershipId, displayName: displayName }, true, 6);
@@ -93,7 +93,7 @@ class CharacterSelect extends React.Component {
     if (this.props.user.data) {
       this.setState({ profile: { data: this.props.user.data }, loading: false });
     } else if (this.props.user.membershipId && !this.state.profile.data) {
-      this.props.getProfile(this.props.user.membershipType, this.props.user.membershipId, this.getProfileCallback);
+      this.props.getProfile(this.props.user.membershipType, this.props.user.membershipId, this.props.user.characterId, this.getProfileCallback);
     } else {
       this.setState({ loading: false });
     }

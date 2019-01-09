@@ -1,8 +1,10 @@
-import { connect } from 'react-redux';
 import assign from 'lodash/assign';
 import Globals from './globals';
 
+import store from './reduxStore';
 import * as responseUtils from './responseUtils';
+
+const state = store.getState();
 
 async function apiRequest(membershipType, membershipId) {
   let requests = [
@@ -40,10 +42,11 @@ async function apiRequest(membershipType, membershipId) {
   }
 }
 
-export async function getProfile(membershipType, membershipId, stateCallback) {
-
+export async function getProfile(membershipType, membershipId, characterId = false, stateCallback) {
+console.log(state)
   stateCallback({
-    data: false,
+    data: state.profile.data,
+    characterId: characterId,
     loading: true,
     error: false
   });
@@ -52,7 +55,8 @@ export async function getProfile(membershipType, membershipId, stateCallback) {
 
   if (data.profile.ErrorCode !== 1) {
     stateCallback({
-      data: false,
+      data: state.profile.data,
+      characterId: characterId,
       loading: false,
       error: data.profile.ErrorCode
     });
@@ -61,7 +65,8 @@ export async function getProfile(membershipType, membershipId, stateCallback) {
 
   if (!data.profile.Response.characterProgressions.data) {
     stateCallback({
-      data: false,
+      data: state.profile.data,
+      characterId: characterId,
       loading: false,
       error: 'privacy'
     });
@@ -72,6 +77,7 @@ export async function getProfile(membershipType, membershipId, stateCallback) {
   
   stateCallback({
     data: data,
+    characterId: characterId,
     loading: false,
     error: false
   });

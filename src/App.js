@@ -57,7 +57,9 @@ class App extends Component {
     this.manifest = {};
     this.bungieSettings = {};
     this.currentLanguage = props.i18n.getCurrentLanguage();
+
     this.refreshServiceTimer = false;
+    this.refreshServiceActive = false;
   }
 
   updateViewport = () => {
@@ -78,7 +80,7 @@ class App extends Component {
         membershipId: membershipId,
         characterId: characterId
       });
-    }
+    }console.log(this.props.profile)
 
     this.props.setProfile({
       membershipType: membershipType,
@@ -87,30 +89,31 @@ class App extends Component {
       data: data
     });
 
-    // refreshProfile();
-
-    //this.refreshServiceTimer = false;
-    //this.refreshService();
+    
+    if (!this.refreshServiceActive) {
+      this.refreshServiceTimer = false;
+      this.refreshService(membershipType, membershipId, characterId);
+    }
 
   };
 
-  refreshService = () => {
-    if (!this.refreshServiceTimer) {
-      let { membershipType, membershipId, characterId } = this.props.profile;
-      this.refreshServiceTimer = setTimeout(() => {
-        if (this.props.profile.membershipId === membershipId) {
-          console.log("Refreshing profile data");
+  refreshService = (membershipType, membershipId, characterId) => {
+    this.refreshServiceActive = true;
+    this.refreshServiceTimer = setTimeout(() => {
+      console.warn(new Date());
+      console.log("Refreshing profile data", membershipType, membershipId, characterId);
 
-          getProfile(membershipType, membershipId, (callback) => {
-            console.log(callback);
+      getProfile(membershipType, membershipId, characterId, (callback) => {
+        console.log(callback);
 
-            if (!callback.error) {
-              this.setProfile(membershipType, membershipId, characterId, callback.data);
-            }
-          });
+        if (!callback.error && !callback.loading && this.props.profile.membershipId === membershipId) {
+          let currentCharacterId = this.props.profile.characterId && this.props.profile.characterId !== characterId ? this.props.profile.characterId : characterId;
+          this.setProfile(membershipType, membershipId, currentCharacterId, callback.data);
         }
-      }, 10000);
-    }
+        this.refreshServiceActive = false;
+      });
+      
+    }, 3000);
   }
 
   getVersionAndSettings = () => {
