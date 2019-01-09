@@ -80,7 +80,7 @@ class App extends Component {
         membershipId: membershipId,
         characterId: characterId
       });
-    }console.log(this.props.profile)
+    }
 
     this.props.setProfile({
       membershipType: membershipType,
@@ -90,10 +90,10 @@ class App extends Component {
     });
 
     
-    if (!this.refreshServiceActive) {
-      this.refreshServiceTimer = false;
-      this.refreshService(membershipType, membershipId, characterId);
-    }
+    // if (!this.refreshServiceActive) {
+    //   this.refreshServiceTimer = false;
+    //   this.refreshService(membershipType, membershipId, characterId);
+    // }
 
   };
 
