@@ -51,29 +51,37 @@ class ChecklistFactory {
   }
 
   amkaharaBones() {
-    return this.m.dreamingCityChecklist('Bones', {
+    return this.m.checklist({
       name: this.t('Ahamkara Bones'),
       icon: 'destiny-ahamkara_bones',
       progressDescription: this.t('Bones found'),
+      itemTitle: i => i.lore,
+      // Hack: Brephos II is listed as Temple of Illyn, but it's only available
+      // during the strike, so hardcode it here to be consistent with the other
+      // strike item.
+      itemSubtitle: i => (i.hash === 1370818869 ? 'The Corrupted' : i.bubble || false),
+      sortBy: ['itemNumber'],
       items: this.m.items(1297424116)
     });
   }
 
   corruptedEggs() {
-    return this.m.dreamingCityChecklist('Egg', {
+    return this.m.numberedChecklist('Egg', {
       name: this.t('Corrupted Eggs'),
       icon: 'destiny-corrupted_eggs',
       progressDescription: this.t('Eggs destroyed'),
+      itemSubtitle: i => i.bubble || false,
       items: this.m.items(2609997025)
     });
   }
 
   catStatues() {
-    return this.m.dreamingCityChecklist('Feline friend', {
+    return this.m.numberedChecklist('Feline friend', {
       name: this.t('Cat Statues'),
       icon: 'destiny-cat_statues',
       progressDescription: this.t('Feline friends satisfied'),
-      items: this.m.items(2726513366)
+      items: this.m.items(2726513366),
+      itemSubtitle: i => i.bubble || false
     });
   }
 
@@ -84,7 +92,7 @@ class ChecklistFactory {
       items: this.m.items(365218222),
       progressDescription: this.t('Sleeper nodes hacked'),
       itemTitle: i => i.inventoryItem.replace('CB.NAV/RUN.()', ''),
-      itemMapPath: i => `destiny/maps/mars/${i.item.hash}`,
+      itemSubtitle: i => i.bubble || false,
       sortBy: ['inventoryItem']
     });
   }
@@ -95,27 +103,25 @@ class ChecklistFactory {
       icon: 'destiny-ghost',
       items: this.m.items(2360931290),
       progressDescription: this.t('Ghost scans performed'),
-      itemSubtitle: i => `${i.bubble || 'The Farm'}, ${i.place}`
+      itemSubtitle: i => `${i.bubble}, ${i.place}`
     });
   }
 
   latentMemories() {
-    return this.m.checklist({
+    return this.m.numberedChecklist('Memory', {
       name: this.t('Lost Memory Fragments'),
       icon: 'destiny-lost_memory_fragments',
       items: this.m.items(2955980198),
       progressDescription: this.t('Memories destroyed'),
-      itemTitle: i => `${this.t('Memory')} ${i.itemNumber}`,
-      itemMapPath: i => `destiny/maps/mars/${i.item.hash}`,
-      sortBy: ['itemNumber']
+      itemSubtitle: i => i.bubble || false
     });
   }
 
   caydesJournals() {
     const caydesJournalIds = [78905203, 1394016600, 1399126202, 4195138678];
 
-    let items = this.m.items(2448912219).filter(i => caydesJournalIds.includes(i.item.hash));
-    items = sortBy(items, i => [i.item.hash]);
+    let items = this.m.items(2448912219).filter(i => caydesJournalIds.includes(i.hash));
+    items = sortBy(items, i => [i.hash]);
 
     const checklist = (
       <Checklist
@@ -126,7 +132,7 @@ class ChecklistFactory {
         completedItems={items.filter(i => i.completed).length}
       >
         {items.map(i => (
-          <ChecklistItem key={i.item.hash} completed={i.completed}>
+          <ChecklistItem key={i.hash} completed={i.completed}>
             <ReactMarkdown className='text' source={i.item.displayProperties.description} />
           </ChecklistItem>
         ))}
