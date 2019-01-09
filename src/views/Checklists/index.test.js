@@ -1,53 +1,75 @@
 import React from 'react';
 
-import Checklists from './';
+import fs from 'fs';
+import path from 'path';
+
+import { Checklists } from './';
 import TestRenderer from 'react-test-renderer';
+import ChecklistFactory from './ChecklistFactory';
 
-const response = require(`./__fixtures__/response.json`);
-
-let manifest;
-try {
-  manifest = require(`./__fixtures__/manifest.json`);
-} catch {}
-
-const props = {
-  characterId: 'CHARACTER_ID',
-  viewport: {
-    width: 1280,
-    height: 720
-  },
-  manifest: manifest,
-  response: require(`./__fixtures__/response.json`),
-  showAllItems: true
-};
-
-jest.mock('react-i18next', () => ({
-  // this mock makes sure any components using the translate HoC receive the t function as a prop
-  withNamespaces: () => Component => {
-    Component.defaultProps = { ...Component.defaultProps, t: a => a };
-    return Component;
+/// SETUP
+function loadManifest() {
+  const filename = path.join(__dirname, '__fixtures__/manifest.json');
+  if (fs.existsSync(filename)) {
+    return JSON.parse(fs.readFileSync(filename));
+  } else {
+    throw `
+Could not load manifest file for tests. It is ignored by git as it is 62mb uncompressed.
+..
+Download it from Bungie by visiting https://www.bungie.net/Platform/Destiny2/Manifest/
+..
+and saving the file specified by Response.jsonWorldContentPaths.en to
+..
+${filename}
+        `;
   }
-}));
+}
 
-test(`Checklists matches snapshot`, done => {
-  if (props.manifest) {
-    const component = TestRenderer.create(<Checklists {...props} />).toJSON();
+/// TESTS
+const characterId = 'CHARACTER_ID';
+const manifest = loadManifest();
+const data = require(`./__fixtures__/data.json`);
+const dataShallow = require(`./__fixtures__/data.shallow.json`);
+const t = a => a;
+
+const lists = [
+  'regionChests',
+  'lostSectors',
+  'adventures',
+  'corruptedEggs',
+  'amkaharaBones',
+  'catStatues',
+  'sleeperNodes',
+  'ghostScans',
+  'latentMemories',
+  'caydesJournals'
+];
+
+lists.forEach(l => {
+  test(`Checklist ${l} matches snapshot`, () => {
+    const f = new ChecklistFactory(t, data.profile, manifest, characterId, false);
+
+    const checklist = f[l]().checklist;
+    const component = TestRenderer.create(<>{checklist}</>).toJSON();
 
     expect(component).toMatchSnapshot();
-    done();
-  } else {
-    console.log(`
-Could not load manifest file for tests. It is ignored by git as it 
-is 62mb uncompressed.
+  });
+});
 
-Download it from Bungie by running:
+test(`Checklists matches shallow snapshot`, () => {
+  const props = {
+    viewport: {
+      width: 1280,
+      height: 720
+    },
+    data: dataShallow,
+    showAllItems: true,
+    manifest,
+    characterId,
+    t
+  };
 
-curl -L https://www.bungie.net/common/destiny2_content/json/en/aggregate-4ba29e22-81f5-435e-b09c-2e0ea0f3dd41.json > views/Checklists/__fixtures__/manifest.json'
+  const component = TestRenderer.create(<Checklists {...props} />).toJSON();
 
-Or visit https://www.bungie.net/Platform/Destiny2/Manifest/ and save the
-JSON to ./src/views/Checklists/__fixtures__/manifest.json
-        `);
-    done.fail('Manifest Missing!');
-    // done.fail()
-  }
+  expect(component).toMatchSnapshot();
 });
