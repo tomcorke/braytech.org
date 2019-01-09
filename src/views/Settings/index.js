@@ -4,10 +4,9 @@ import { connect } from 'react-redux';
 import { withNamespaces } from 'react-i18next';
 import cx from 'classnames';
 
-import ProgressCheckbox from '../../components/ProgressCheckbox';
+import Checkbox from '../../components/Checkbox';
 import Button from '../../components/Button';
 import { getLanguageInfo } from '../../utils/languageInfo';
-import * as ls from '../../utils/localStorage';
 
 import './styles.css';
 
@@ -79,7 +78,7 @@ class Settings extends React.Component {
             this.selectLanguage(code);
           }}
         >
-          <ProgressCheckbox checked={this.state.language.selected === code} text={langInfo.name || langInfo.code} />
+          <Checkbox linked checked={this.state.language.selected === code} text={langInfo.name || langInfo.code} />
         </li>
       );
     });
@@ -92,7 +91,7 @@ class Settings extends React.Component {
             this.selectCollectibleDisplayState('showAll');
           }}
         >
-          <ProgressCheckbox checked={!this.props.collectibles.hideTriumphRecords && !this.props.collectibles.hideChecklistItems} text={t('Show all items')} />
+          <Checkbox linked checked={!this.props.collectibles.hideTriumphRecords && !this.props.collectibles.hideChecklistItems} text={t('Show all items')} />
         </li>
         <li
           key='hideTriumphRecords'
@@ -100,7 +99,7 @@ class Settings extends React.Component {
             this.selectCollectibleDisplayState('hideTriumphRecords');
           }}
         >
-          <ProgressCheckbox checked={this.props.collectibles.hideTriumphRecords} text={t('Hide completed triumphs')} />
+          <Checkbox linked checked={this.props.collectibles.hideTriumphRecords} text={t('Hide completed triumphs')} />
         </li>
         <li
           key='hideChecklistItems'
@@ -108,7 +107,7 @@ class Settings extends React.Component {
             this.selectCollectibleDisplayState('hideChecklistItems');
           }}
         >
-          <ProgressCheckbox checked={this.props.collectibles.hideChecklistItems} text={t('Hide completed checklist items')} />
+          <Checkbox linked checked={this.props.collectibles.hideChecklistItems} text={t('Hide completed checklist items')} />
         </li>
       </>
     );
@@ -126,7 +125,7 @@ class Settings extends React.Component {
                 this.props.setTheme('light-mode');
               }}
             >
-              <ProgressCheckbox checked={this.props.theme.selected === 'light-mode'} text={t('Lights on')} />
+              <Checkbox linked checked={this.props.theme.selected === 'light-mode'} text={t('Lights on')} />
             </li>
             <li
               key='dark'
@@ -134,7 +133,7 @@ class Settings extends React.Component {
                 this.props.setTheme('dark-mode');
               }}
             >
-              <ProgressCheckbox checked={this.props.theme.selected === 'dark-mode'} text={t('Lights off')} />
+              <Checkbox linked checked={this.props.theme.selected === 'dark-mode'} text={t('Lights off')} />
             </li>
           </ul>
         </div>

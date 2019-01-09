@@ -1,9 +1,9 @@
 import React from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import cx from 'classnames';
 import { withNamespaces } from 'react-i18next';
-
-import BraytechContext from '../../BraytechContext';
 
 import ObservedImage from '../../components/ObservedImage';
 import * as utils from '../../utils/destinyUtils';
@@ -64,15 +64,22 @@ class Characters extends React.Component {
     });
 
     return (
-      <BraytechContext.Consumer>
-        {theme => (
-          <div className={cx('characters-list', theme.selected)}>
-            <ul className='list'>{charactersRender}</ul>
-          </div>
-        )}
-      </BraytechContext.Consumer>
+      <div className={cx('characters-list', this.props.theme.selected)}>
+        <ul className='list'>{charactersRender}</ul>
+      </div>
     );
   }
 }
 
-export default withNamespaces()(Characters);
+function mapStateToProps(state, ownProps) {
+  return {
+    theme: state.theme
+  };
+}
+
+export default compose(
+  connect(
+    mapStateToProps
+  ),
+  withNamespaces()
+)(Characters);

@@ -29,6 +29,7 @@ class SealNode extends React.Component {
     const sealBars = {
       2588182977: {
         text: manifest.DestinyRecordDefinition[2757681677].titleInfo.titlesByGenderHash[genderHash],
+        image: '037E-00001367.PNG',
         nodeHash: 2588182977,
         recordHash: 2757681677,
         total: profileRecords[2757681677].objectives[0].completionValue,
@@ -36,6 +37,7 @@ class SealNode extends React.Component {
       },
       3481101973: {
         text: manifest.DestinyRecordDefinition[3798931976].titleInfo.titlesByGenderHash[genderHash],
+        image: '037E-00001343.PNG',
         nodeHash: 3481101973,
         recordHash: 3798931976,
         total: profileRecords[3798931976].objectives[0].completionValue,
@@ -43,6 +45,7 @@ class SealNode extends React.Component {
       },
       147928983: {
         text: manifest.DestinyRecordDefinition[3369119720].titleInfo.titlesByGenderHash[genderHash],
+        image: '037E-0000134A.PNG',
         nodeHash: 147928983,
         recordHash: 3369119720,
         total: profileRecords[3369119720].objectives[0].completionValue,
@@ -50,6 +53,7 @@ class SealNode extends React.Component {
       },
       2693736750: {
         text: manifest.DestinyRecordDefinition[1754983323].titleInfo.titlesByGenderHash[genderHash],
+        image: '037E-0000133C.PNG',
         nodeHash: 2693736750,
         recordHash: 1754983323,
         total: profileRecords[1754983323].objectives[0].completionValue,
@@ -57,6 +61,7 @@ class SealNode extends React.Component {
       },
       2516503814: {
         text: manifest.DestinyRecordDefinition[1693645129].titleInfo.titlesByGenderHash[genderHash],
+        image: '037E-00001351.PNG',
         nodeHash: 2516503814,
         recordHash: 1693645129,
         total: profileRecords[1693645129].objectives[0].completionValue,
@@ -64,6 +69,7 @@ class SealNode extends React.Component {
       },
       1162218545: {
         text: manifest.DestinyRecordDefinition[2182090828].titleInfo.titlesByGenderHash[genderHash],
+        image: '037E-00001358.PNG',
         nodeHash: 1162218545,
         recordHash: 2182090828,
         total: profileRecords[2182090828].objectives[0].completionValue,
@@ -71,6 +77,7 @@ class SealNode extends React.Component {
       },
       2039028930: {
         text: manifest.DestinyRecordDefinition[2053985130].titleInfo.titlesByGenderHash[genderHash],
+        image: '0560-000000EB.PNG',
         nodeHash: 2039028930,
         recordHash: 2053985130,
         total: profileRecords[2053985130].objectives[0].completionValue,
@@ -88,7 +95,7 @@ class SealNode extends React.Component {
         <div className='children'>
           <div className='icon'>
             <div className='corners t' />
-            <ObservedImage className={cx('image')} src={`https://www.bungie.net${sealDefinition.displayProperties.icon}`} />
+            <ObservedImage className={cx('image')} src={`/static/images/extracts/badges/${sealBars[sealDefinition.hash].image}`} />
             <div className='corners b' />
           </div>
           <div className='text'>

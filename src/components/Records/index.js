@@ -281,9 +281,9 @@ class Records extends React.Component {
           });
         } else {
           let description = recordDefinition.displayProperties.description !== '' ? recordDefinition.displayProperties.description : false;
-          description = !description && recordDefinition.loreHash ? manifest.DestinyLoreDefinition[recordDefinition.loreHash].displayProperties.description.slice(0, 32) + '...' : description;
+          description = !description && recordDefinition.loreHash ? manifest.DestinyLoreDefinition[recordDefinition.loreHash].displayProperties.description.slice(0, 80) + '...' : description;
           if (recordDefinition.hash === 2367932631) {
-          console.log(enumerateRecordState(state))
+            console.log(enumerateRecordState(state))
           }
 
           records.push({

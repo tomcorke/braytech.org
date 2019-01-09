@@ -11,7 +11,7 @@ import ClanBanner from '../../components/ClanBanner';
 import Roster from '../../components/Roster';
 import Spinner from '../../components/Spinner';
 import ProgressBar from '../../components/ProgressBar';
-import ProgressCheckbox from '../../components/ProgressCheckbox';
+import Checkbox from '../../components/Checkbox';
 
 import './about.css';
 import { withNamespaces } from 'react-i18next';
@@ -85,7 +85,7 @@ class AboutView extends React.Component {
 
     if (clan) {
       const clanLevel = clan.clanInfo.d2ClanProgressions[584850370];
-      const weeklyPersonalContribution = this.props.profile.data.profile.characterProgressions.data[this.props.characterId].progressions[540048094];
+      const weeklyPersonalContribution = this.props.profile.data.profile.characterProgressions.data[this.props.profile.characterId].progressions[540048094];
 
       const weeklyClanEngramsDefinition = manifest.DestinyMilestoneDefinition[4253138191].rewards[1064137897].rewardEntries;
       let rewardState = null;
@@ -142,7 +142,7 @@ class AboutView extends React.Component {
                     {rewardState ? (
                       rewardState.map(reward => (
                         <li key={reward.rewardEntryHash}>
-                          <ProgressCheckbox completed={reward.earned} text={weeklyClanEngramsDefinition[reward.rewardEntryHash].displayProperties.name} />
+                          <Checkbox completed={reward.earned} text={weeklyClanEngramsDefinition[reward.rewardEntryHash].displayProperties.name} />
                         </li>
                       ))
                     ) : (
@@ -152,7 +152,7 @@ class AboutView extends React.Component {
                 </div>
                 <div className='personalContribution'>
                   <div className='text'>{t('Weekly Personal XP Contribution')}</div>
-                  <ProgressCheckbox
+                  <Checkbox
                     completed={weeklyPersonalContribution.weeklyProgress === 5000}
                     text={
                       <>
