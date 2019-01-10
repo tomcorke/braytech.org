@@ -55,8 +55,6 @@ class App extends Component {
     this.manifest = {};
     this.bungieSettings = {};
     this.currentLanguage = props.i18n.getCurrentLanguage();
-
-    this.refreshServiceTimer = false;
   }
 
   updateViewport = () => {
@@ -71,8 +69,9 @@ class App extends Component {
   };
 
   componentDidUpdate() {
-    if (!this.props.refreshService.active && !this.refreshServiceTimer) {
-      refreshService(this.refreshServiceTimer, false, this.props.profile.membershipType, this.props.profile.membershipId);
+    if (this.props.profile.data && !window.refreshActive) {
+      window.refreshTimer = false;
+      refreshService(this.props.profile.membershipType, this.props.profile.membershipId);
     }
   }
 

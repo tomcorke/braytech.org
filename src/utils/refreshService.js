@@ -11,13 +11,10 @@ const deactivate = () => {
   store.dispatch({ type: 'SET_REFRESH_STATE', payload: { active: false } });
 }
 
-const refreshService = (membershipType, membershipId, timer) => {
-
+const refreshService = (membershipType, membershipId) => {
   const state = store.getState();
 
-  activate();
-
-  timer = setTimeout(() => {
+  window.refreshTimer = setTimeout(() => {
     let time = new Date();
     console.warn("Refreshing profile data", time, state);
 
@@ -28,17 +25,17 @@ const refreshService = (membershipType, membershipId, timer) => {
         if (callback.error === 'fetch') {
           // TO DO: error count - fail after 3
           // console.log(membershipType, membershipId, state.profile.characterId, callback.data);
-          deactivate();
+          window.refreshActive = false;
           setProfile(membershipType, membershipId, state.profile.characterId, callback.data);
         }
         return;
       }
 
       if (!callback.loading && state.profile.membershipId === membershipId) {
-        deactivate();
+        window.refreshActive = false;
         setProfile(membershipType, membershipId, state.profile.characterId, callback.data);
       } else {
-        timer = false;
+        window.refreshTimer = false;
         refreshService();
       }
     });
@@ -46,12 +43,12 @@ const refreshService = (membershipType, membershipId, timer) => {
   }, 5000);
 }
 
-const service = (timer, callback, membershipType, membershipId) => {
+const service = (membershipType, membershipId) => {
   
   const state = store.getState();
 
-  if (!timer && !state.refreshService.active) {
-    refreshService(membershipType, membershipId, timer);
+  if (!window.refreshActive) {
+    refreshService(membershipType, membershipId);
   }
 
 }
