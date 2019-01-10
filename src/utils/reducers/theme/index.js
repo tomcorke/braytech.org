@@ -1,8 +1,9 @@
 import * as ls from '../../localStorage';
 
-const defaultState = ls.get('setting.theme') ? ls.get('setting.theme') : { selected: 'light-mode' };
+let lsState = ls.get('setting.theme') ? ls.get('setting.theme') : false;
+lsState = lsState && lsState.selected ? lsState : { selected: 'light-mode' };
 
-export default function themeReducer(state = defaultState, action) {
+export default function themeReducer(state = lsState, action) {
   switch (action.type) {
     case 'SET_THEME':
       ls.set('setting.theme', {
