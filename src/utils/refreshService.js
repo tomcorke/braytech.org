@@ -3,17 +3,11 @@ import store from './reduxStore';
 import getProfile from './getProfile';
 import setProfile from './setProfile';
 
-const activate = () => {
-  store.dispatch({ type: 'SET_REFRESH_STATE', payload: { active: true } });
-}
-
-const deactivate = () => {
-  store.dispatch({ type: 'SET_REFRESH_STATE', payload: { active: false } });
-}
-
 const refreshService = (membershipType, membershipId) => {
+  
+  window.refreshActive = true;
+  
   const state = store.getState();
-
   window.refreshTimer = setTimeout(() => {
     let time = new Date();
     console.warn("Refreshing profile data", time, state);
@@ -36,7 +30,7 @@ const refreshService = (membershipType, membershipId) => {
         setProfile(membershipType, membershipId, state.profile.characterId, callback.data);
       } else {
         window.refreshTimer = false;
-        refreshService();
+        //refreshService();
       }
     });
     
@@ -45,8 +39,6 @@ const refreshService = (membershipType, membershipId) => {
 
 const service = (membershipType, membershipId) => {
   
-  const state = store.getState();
-
   if (!window.refreshActive) {
     refreshService(membershipType, membershipId);
   }
