@@ -73,14 +73,18 @@ class App extends Component {
     });
   };
 
-  setProfile = (membershipType, membershipId, characterId = this.props.profile.characterId, data, setAsDefaultProfile = false) => {
-    if (setAsDefaultProfile) {
+  setProfile = (membershipType, membershipId, characterId = false, data, setAsDefaultProfile = false) => {
+    
+    let savedProfile = ls.get('setting.profile') ? ls.get('setting.profile') : false;
+    if (setAsDefaultProfile || (savedProfile && savedProfile.membershipId === membershipId)) {
       ls.set('setting.profile', {
         membershipType: membershipType,
         membershipId: membershipId,
         characterId: characterId
       });
     }
+
+    console.log('setProfile', membershipType, membershipId, characterId, data, setAsDefaultProfile);
 
     this.props.setProfile({
       membershipType: membershipType,
@@ -89,31 +93,47 @@ class App extends Component {
       data: data
     });
 
-    
-    // if (!this.refreshServiceActive) {
-    //   this.refreshServiceTimer = false;
-    //   this.refreshService(membershipType, membershipId, characterId);
-    // }
-
   };
 
-  refreshService = (membershipType, membershipId, characterId) => {
+  componentDidUpdate() {
+    if (this.props.profile.data) {
+      if (!this.refreshServiceActive) {
+        this.refreshServiceTimer = false;
+        this.refreshService();
+      }
+    }
+  }
+
+  refreshService = (membershipType, membershipId) => {
     this.refreshServiceActive = true;
     this.refreshServiceTimer = setTimeout(() => {
-      console.warn(new Date());
-      console.log("Refreshing profile data", membershipType, membershipId, characterId);
+      let time = new Date();
+      console.warn(time);
+      console.log("Refreshing profile data", this.props.profile.membershipType, this.props.profile.membershipId, this.props.profile);
 
-      getProfile(membershipType, membershipId, characterId, (callback) => {
+      getProfile(this.props.profile.membershipType, this.props.profile.membershipId, this.props.profile.characterId, (callback) => {
         console.log(callback);
 
-        if (!callback.error && !callback.loading && this.props.profile.membershipId === membershipId) {
-          let currentCharacterId = this.props.profile.characterId && this.props.profile.characterId !== characterId ? this.props.profile.characterId : characterId;
-          this.setProfile(membershipType, membershipId, currentCharacterId, callback.data);
+        if (!callback.loading && callback.error) {
+          if (callback.error === 'fetch') {
+            // TO DO: error count - fail after 3
+            this.refreshServiceActive = false;
+            console.log(membershipType, membershipId, this.props.profile.characterId, callback.data)
+            this.setProfile(membershipType, membershipId, this.props.profile.characterId, callback.data);
+          }
+          return;
         }
-        this.refreshServiceActive = false;
+
+        if (!callback.loading && this.props.profile.membershipId === membershipId) {
+          this.refreshServiceActive = false;
+          this.setProfile(membershipType, membershipId, this.props.profile.characterId, callback.data);
+        } else {
+          this.refreshServiceTimer = false;
+          this.refreshService();
+        }
       });
       
-    }, 3000);
+    }, 30000);
   }
 
   getVersionAndSettings = () => {

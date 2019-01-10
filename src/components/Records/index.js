@@ -1,6 +1,4 @@
 import React from 'react';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import orderBy from 'lodash/orderBy';
 import cx from 'classnames';
@@ -341,13 +339,4 @@ class Records extends React.Component {
   }
 }
 
-function mapStateToProps(state, ownProps) {
-  return {
-    profile: state.profile,
-    collectibles: state.collectibles
-  };
-}
-
-export default compose(
-  connect(mapStateToProps)
-)(Records);
+export default Records;

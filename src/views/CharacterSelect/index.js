@@ -32,7 +32,7 @@ class CharacterSelect extends React.Component {
     };
   }
 
-  SearchDestinyPlayer = e => {
+  searchDestinyPlayer = e => {
     let membershipType = '-1';
     let displayName = e.target.value;
 
@@ -53,7 +53,9 @@ class CharacterSelect extends React.Component {
             return;
           }
           this.setState({
-            results: SearchResponse.Response,
+            search: {
+              results: SearchResponse.Response
+            },
             error: false
           });
         })
@@ -64,7 +66,13 @@ class CharacterSelect extends React.Component {
   };
 
   characterClick = characterId => {
-    this.props.setProfile(this.state.profile.data.profile.profile.data.userInfo.membershipType, this.state.profile.data.profile.profile.data.userInfo.membershipId, characterId, this.state.profile.data, true);
+
+    let membershipType = this.state.profile.data.profile.profile.data.userInfo.membershipType;
+    let membershipId = this.state.profile.data.profile.profile.data.userInfo.membershipId;
+    let data = this.state.profile.data;
+    let setAsDefaultProfile = true;
+
+    this.props.setProfile(membershipType, membershipId, characterId, data, setAsDefaultProfile);
   };
 
   getProfileCallback = state => {
@@ -90,6 +98,7 @@ class CharacterSelect extends React.Component {
 
   componentDidMount() {
     window.scrollTo(0, 0);
+
     if (this.props.user.data) {
       this.setState({ profile: { data: this.props.user.data }, loading: false });
     } else if (this.props.user.membershipId && !this.state.profile.data) {
@@ -114,7 +123,7 @@ class CharacterSelect extends React.Component {
                 <li className='linked' key={result.membershipId}>
                   <a
                     onClick={e => {
-                      this.ResultHandler(result.membershipType, result.membershipId, false, result.displayName);
+                      this.resultClick(result.membershipType, result.membershipId, false, result.displayName);
                     }}
                   >
                     <span className={`destiny-platform_${destinyEnums.PLATFORMS[result.membershipType].toLowerCase()}`} />
@@ -190,7 +199,7 @@ class CharacterSelect extends React.Component {
           </div>
           <div className='form'>
             <div className='field'>
-              <input onInput={this.SearchDestinyPlayer} type='text' placeholder={t('insert gamertag')} spellCheck='false' />
+              <input onInput={this.searchDestinyPlayer} type='text' placeholder={t('insert gamertag')} spellCheck='false' />
             </div>
           </div>
           <div className='results'>{resultsElement}</div>
