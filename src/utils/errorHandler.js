@@ -22,6 +22,17 @@ const errorHandler = props => {
       );
       break;
 
+    case 'fetch':
+      error = (
+        <>
+          <div className='sub-header sub'>
+            <div>Network error</div>
+          </div>
+          <p>Wi-fi blip or maybe you're offline</p>
+        </>
+      );
+      break;
+
     default:
       error = (
         <>

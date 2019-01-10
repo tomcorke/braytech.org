@@ -1,4 +1,6 @@
 import React from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import cx from 'classnames';
 
 import Records from '../Records';
@@ -13,10 +15,10 @@ class RecordsAlmost extends React.Component {
 
   render() {
     const manifest = this.props.manifest;
-    const characterId = this.props.characterId;
+    const characterId = this.props.profile.characterId;
 
-    const characterRecords = this.props.data.profile.characterRecords.data;
-    const profileRecords = this.props.data.profile.profileRecords.data.records;
+    const characterRecords = this.props.profile.data.profile.characterRecords.data;
+    const profileRecords = this.props.profile.data.profile.profileRecords.data.records;
 
     let almost = [];
     let ignores = [];
@@ -115,4 +117,12 @@ class RecordsAlmost extends React.Component {
   }
 }
 
-export default RecordsAlmost;
+function mapStateToProps(state, ownProps) {
+  return {
+    profile: state.profile
+  };
+}
+
+export default compose(
+  connect(mapStateToProps)
+)(RecordsAlmost);

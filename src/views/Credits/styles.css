@@ -12,6 +12,16 @@
   width: 100%;
 }
 
+#credits .content a::before {
+  content: ' ';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 100%;
+  border-bottom: 1px solid;
+  opacity: 0.2;
+}
+
 #credits .content .name {
   text-transform: uppercase;
   letter-spacing: 3px;

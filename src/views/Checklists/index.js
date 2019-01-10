@@ -1,10 +1,8 @@
 import React from 'react';
-import cx from 'classnames';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { withNamespaces } from 'react-i18next';
-
-import BraytechContext from '../../BraytechContext';
-
-import * as ls from '../../utils/localStorage';
+import cx from 'classnames';
 
 import './styles.css';
 
@@ -24,9 +22,6 @@ export class Checklists extends React.Component {
 
     this.state = {
       page: 0,
-      collectibleDisplayState: ls.get('setting.collectibleDisplayState')
-        ? ls.get('setting.collectibleDisplayState')
-        : false,
       itemsPerPage: getItemsPerPage(props.viewport.width)
     };
   }
@@ -52,10 +47,10 @@ export class Checklists extends React.Component {
 
     const f = new ChecklistFactory(
       t,
-      this.props.data.profile,
+      this.props.profile.data.profile,
       this.props.manifest,
-      this.props.characterId,
-      this.state.collectibleDisplayState.hideChecklistItems
+      this.props.profile.characterId,
+      this.props.collectibles.hideChecklistItems
     );
 
     const lists = [
@@ -71,7 +66,7 @@ export class Checklists extends React.Component {
     ];
 
     if (
-      Object.values(this.props.data.profile.profileProgression.data.checklists[2448912219]).filter(i => i).length === 4
+      Object.values(this.props.profile.data.profile.profileProgression.data.checklists[2448912219]).filter(i => i).length === 4
     ) {
       lists.push(f.caydesJournals());
     }
@@ -82,43 +77,50 @@ export class Checklists extends React.Component {
     const visible = this.props.showAllItems ? lists : lists.slice(sliceStart, sliceEnd);
 
     return (
-      <BraytechContext.Consumer>
-        {theme => (
-          <div className={cx('view', theme.selected)} id='checklists'>
-            <div className='views'>
-              <div className='sub-header sub'>
-                <div>Checklists</div>
-              </div>
-              <ul className='list'>
-                {lists.map((list, index) => (
-                  <li key={list.name} className='linked'>
-                    <a
-                      href='/'
-                      className={cx({
-                        active: visible.includes(list)
-                      })}
-                      data-index={index}
-                      onClick={this.changeSkip}
-                    >
-                      <div className={list.icon} />
-                      <div className='name'>{list.name}</div>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className={cx('lists', 'col-' + this.state.itemsPerPage)}>
-              {visible.map(list => (
-                <div className='col' key={list.name}>
-                  {list.checklist}
-                </div>
-              ))}
-            </div>
+      <div className={cx('view', this.props.theme.selected)} id='checklists'>
+        <div className='views'>
+          <div className='sub-header sub'>
+            <div>Checklists</div>
           </div>
-        )}
-      </BraytechContext.Consumer>
+          <ul className='list'>
+            {lists.map((list, index) => (
+              <li key={list.name} className='linked'>
+                <a
+                  href='/'
+                  className={cx({
+                    active: visible.includes(list)
+                  })}
+                  data-index={index}
+                  onClick={this.changeSkip}
+                >
+                  <div className={list.icon} />
+                  <div className='name'>{list.name}</div>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className={cx('lists', 'col-' + this.state.itemsPerPage)}>
+          {visible.map(list => (
+            <div className='col' key={list.name}>
+              {list.checklist}
+            </div>
+          ))}
+        </div>
+      </div>
     );
   }
 }
 
-export default withNamespaces()(Checklists);
+function mapStateToProps(state, ownProps) {
+  return {
+    profile: state.profile,
+    collectibles: state.collectibles,
+    theme: state.theme
+  };
+}
+
+export default compose(
+  connect(mapStateToProps),
+  withNamespaces()
+)(Checklists);

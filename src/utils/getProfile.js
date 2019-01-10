@@ -1,6 +1,7 @@
 import assign from 'lodash/assign';
 import Globals from './globals';
 
+import store from './reduxStore';
 import * as responseUtils from './responseUtils';
 
 async function apiRequest(membershipType, membershipId) {
@@ -39,19 +40,35 @@ async function apiRequest(membershipType, membershipId) {
   }
 }
 
-export async function getProfile(membershipType, membershipId, stateCallback) {
+async function getProfile(membershipType, membershipId, characterId = false, stateCallback) {
+  
+  const state = store.getState();
+
+  // console.log('getProfile', state);
 
   stateCallback({
-    data: false,
+    data: state.profile.data,
+    characterId: characterId,
     loading: true,
     error: false
   });
 
   let data = await apiRequest(membershipType, membershipId);
 
+  if (!data) {
+    stateCallback({
+      data: state.profile.data,
+      characterId: characterId,
+      loading: false,
+      error: 'fetch'
+    });
+    return;
+  }
+  
   if (data.profile.ErrorCode !== 1) {
     stateCallback({
-      data: false,
+      data: state.profile.data,
+      characterId: characterId,
       loading: false,
       error: data.profile.ErrorCode
     });
@@ -60,7 +77,8 @@ export async function getProfile(membershipType, membershipId, stateCallback) {
 
   if (!data.profile.Response.characterProgressions.data) {
     stateCallback({
-      data: false,
+      data: state.profile.data,
+      characterId: characterId,
       loading: false,
       error: 'privacy'
     });
@@ -71,7 +89,10 @@ export async function getProfile(membershipType, membershipId, stateCallback) {
   
   stateCallback({
     data: data,
+    characterId: characterId,
     loading: false,
     error: false
   });
 }
+
+export default getProfile;

@@ -1,11 +1,11 @@
 import React from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withNamespaces } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import assign from 'lodash/assign';
 import cx from 'classnames';
 import mapValues from 'lodash/mapValues';
-import { withNamespaces } from 'react-i18next';
-
-import BraytechContext from '../../../BraytechContext';
 
 import ObservedImage from '../../../components/ObservedImage';
 import Spinner from '../../../components/Spinner';
@@ -247,26 +247,31 @@ class ClanBannerBuilder extends React.Component {
     }
 
     return (
-      <BraytechContext.Consumer>
-        {theme => (
-          <div className={cx('view', theme.selected)} id='banner-builder'>
-            <div className='banner'>
-              <ClanBanner bannerData={bannerData} dark />
-            </div>
-            <div className='options'>
-              <div className='header'>
-                <div className='name'>{t('Clan Banner Builder')}</div>
-                <div className='description'>
-                  <p>{t("Collaborate with clan members on a new clan banner. Selecting different options instantly updates the page's URL, which allows you to easily share your customisations.")}</p>
-                </div>
-              </div>
-              <div className='config'>{this.state.clanBannerManifest ? configOptions : <Spinner dark />}</div>
+      <div className={cx('view', this.props.theme.selected)} id='banner-builder'>
+        <div className='banner'>
+          <ClanBanner bannerData={bannerData} dark />
+        </div>
+        <div className='options'>
+          <div className='header'>
+            <div className='name'>{t('Clan Banner Builder')}</div>
+            <div className='description'>
+              <p>{t("Collaborate with clan members on a new clan banner. Selecting different options instantly updates the page's URL, which allows you to easily share your customisations.")}</p>
             </div>
           </div>
-        )}
-      </BraytechContext.Consumer>
+          <div className='config'>{this.state.clanBannerManifest ? configOptions : <Spinner dark />}</div>
+        </div>
+      </div>
     );
   }
 }
 
-export default withNamespaces()(ClanBannerBuilder);
+function mapStateToProps(state, ownProps) {
+  return {
+    theme: state.theme
+  };
+}
+
+export default compose(
+  connect(mapStateToProps),
+  withNamespaces()
+)(ClanBannerBuilder);

@@ -69,14 +69,14 @@
 }
 
 .list.record-items li.completed {
-  background-color: rgba(207, 191, 124, 0.1);
-  box-shadow: inset 0 0 0px 1px rgba(207, 191, 124, 1);
-  color: rgba(207, 191, 124, 1);
+  background-color: rgba(207, 191, 124, 0.15);
+  box-shadow: inset 0 0 0 2px rgba(207, 191, 124, 1);
+  color: rgb(221, 209, 162);
 }
 
 .list.record-items li.completed .properties .text .description {
-  color: rgba(207, 191, 124, 0.8);
-  border-top: 1px solid rgba(207, 191, 124, 0.4);
+  color: rgba(221, 209, 162, 0.6);
+  border-top: 1px solid rgba(221, 209, 162, 0.4);
 }
 
 .list.record-items li.completed .progress-bar .check.ed::before {
@@ -100,8 +100,16 @@
 }
 
 .list.record-items li.unRedeemed {
-  background-color: rgba(90, 163, 102, 0.1);
-  box-shadow: inset 0 0 0 1px #5aa366;
+  background-color: rgba(90, 163, 102, 0.15);
+  box-shadow: inset 0 0 0 2px #5aa366;
+}
+
+.list.record-items li.unRedeemed .progress-bar .bar {
+  background-color: rgba(90, 163, 102, 0);
+}
+
+.list.record-items li.unRedeemed .progress-bar .bar .fill {
+  background-color: rgba(90, 163, 102, 0);
 }
 
 .list.record-items li.highlight::after {

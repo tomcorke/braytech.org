@@ -5,7 +5,6 @@ import cx from 'classnames';
 
 import ObservedImage from '../ObservedImage';
 import ProgressBar from '../ProgressBar';
-
 import { enumerateRecordState } from '../../utils/destinyEnums';
 
 import './styles.css';
@@ -28,9 +27,9 @@ class Records extends React.Component {
   render() {
     const manifest = this.props.manifest;
 
-    const characterRecords = this.props.data.profile.characterRecords.data;
-    const profileRecords = this.props.data.profile.profileRecords.data.records;
-    const characterId = this.props.characterId;
+    const characterRecords = this.props.profile.data.profile.characterRecords.data;
+    const profileRecords = this.props.profile.data.profile.profileRecords.data.records;
+    const characterId = this.props.profile.characterId;
 
     const highlight = this.props.highlight;
 
@@ -88,7 +87,7 @@ class Records extends React.Component {
           return;
         }
 
-        if (enumerateRecordState(state).recordRedeemed && this.props.collectibleDisplayState.hideTriumphRecords) {
+        if (enumerateRecordState(state).recordRedeemed && this.props.collectibles.hideTriumphRecords) {
           return;
         }
 
@@ -246,7 +245,7 @@ class Records extends React.Component {
           return;
         }
 
-        if (enumerateRecordState(state).recordRedeemed && this.props.collectibleDisplayState && this.props.collectibleDisplayState.hideTriumphRecords) {
+        if (enumerateRecordState(state).recordRedeemed && this.props.collectibles && this.props.collectibles.hideTriumphRecords) {
           return;
         }
 
@@ -280,9 +279,9 @@ class Records extends React.Component {
           });
         } else {
           let description = recordDefinition.displayProperties.description !== '' ? recordDefinition.displayProperties.description : false;
-          description = !description && recordDefinition.loreHash ? manifest.DestinyLoreDefinition[recordDefinition.loreHash].displayProperties.description.slice(0, 32) + '...' : description;
+          description = !description && recordDefinition.loreHash ? manifest.DestinyLoreDefinition[recordDefinition.loreHash].displayProperties.description.slice(0, 80) + '...' : description;
           if (recordDefinition.hash === 2367932631) {
-          console.log(enumerateRecordState(state))
+            console.log(enumerateRecordState(state))
           }
 
           records.push({
@@ -320,7 +319,7 @@ class Records extends React.Component {
       });
     }
 
-    if (records.length === 0 && this.props.collectibleDisplayState.hideTriumphRecords) {
+    if (records.length === 0 && this.props.collectibles.hideTriumphRecords) {
       records.push(
         <li key='lol'>
           <div className='properties'>

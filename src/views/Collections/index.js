@@ -1,12 +1,15 @@
 import React from 'react';
-
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withNamespaces } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import cx from 'classnames';
+
 import Root from './Root';
 import BadgeNode from './BadgeNode';
 import PresentationNode from './PresentationNode';
 
 import './styles.css';
-import { withNamespaces } from 'react-i18next';
 
 class Collections extends React.Component {
   constructor(props) {
@@ -27,14 +30,14 @@ class Collections extends React.Component {
 
     if (!primaryHash) {
       return (
-        <div className='view presentation-node' id='collections'>
+        <div className={cx('view', 'presentation-node', this.props.theme.selected)} id='collections'>
           <Root {...this.props} />
         </div>
       );
     } else if (primaryHash === 'badge') {
       return (
         <>
-          <div className='view presentation-node' id='collections'>
+          <div className={cx('view', 'presentation-node', this.props.theme.selected)} id='collections'>
             <BadgeNode {...this.props} />
           </div>
           <div className='sticky-nav'>
@@ -53,7 +56,7 @@ class Collections extends React.Component {
     } else {
       return (
         <>
-          <div className='view presentation-node' id='collections'>
+          <div className={cx('view', 'presentation-node', this.props.theme.selected)} id='collections'>
             <PresentationNode {...this.props} primaryHash={primaryHash} />
           </div>
           <div className='sticky-nav'>
@@ -73,4 +76,14 @@ class Collections extends React.Component {
   }
 }
 
-export default withNamespaces()(Collections);
+function mapStateToProps(state, ownProps) {
+  return {
+    profile: state.profile,
+    theme: state.theme
+  };
+}
+
+export default compose(
+  connect(mapStateToProps),
+  withNamespaces()
+)(Collections);

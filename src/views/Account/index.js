@@ -1,14 +1,15 @@
 import React from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { withNamespaces } from 'react-i18next';
 import cx from 'classnames';
 import ReactMarkdown from 'react-markdown';
 import orderBy from 'lodash/orderBy';
-import { withNamespaces } from 'react-i18next';
 
 import ObservedImage from '../../components/ObservedImage';
 import Collectibles from '../../components/Collectibles';
 import RecordsAlmost from '../../components/RecordsAlmost';
 import ProgressBar from '../../components/ProgressBar';
-
 import * as utils from '../../utils/destinyUtils';
 
 import './styles.css';
@@ -23,13 +24,13 @@ class Account extends React.Component {
   render() {
     const { t } = this.props;
     const manifest = this.props.manifest;
-    const characterId = this.props.characterId;
+    const characterId = this.props.profile.characterId;
 
-    const characters = this.props.data.profile.characters.data;
-    const characterProgressions = this.props.data.profile.characterProgressions.data;
-    const profileRecords = this.props.data.profile.profileRecords.data.records;
-    const characterRecords = this.props.data.profile.characterRecords.data;
-    const genderHash = characters.filter(character => character.characterId == characterId)[0].genderHash;
+    const characters = this.props.profile.data.profile.characters.data;
+    const characterProgressions = this.props.profile.data.profile.characterProgressions.data;
+    const profileRecords = this.props.profile.data.profile.profileRecords.data.records;
+    const characterRecords = this.props.profile.data.profile.characterRecords.data;
+    const genderHash = characters.find(character => character.characterId === characterId).genderHash;
 
     const Characters = () => {
       let charactersEl = [];
@@ -342,7 +343,7 @@ class Account extends React.Component {
     console.log(this);
 
     return (
-      <div className='view' id='account'>
+      <div className={cx('view', this.props.theme.selected)} id='account'>
         <div className='module'>
           <div className='sub-header sub'>
             <div>{t('Rare collectibles')}</div>
@@ -377,4 +378,15 @@ class Account extends React.Component {
   }
 }
 
-export default withNamespaces()(Account);
+function mapStateToProps(state, ownProps) {
+  return {
+    profile: state.profile,
+    collectibles: state.collectibles,
+    theme: state.theme
+  };
+}
+
+export default compose(
+  connect(mapStateToProps),
+  withNamespaces()
+)(Account);

@@ -1,9 +1,10 @@
 import React from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import cx from 'classnames';
 
 import ObservedImage from '../../components/ObservedImage';
-
 import Records from '../../components/Records';
 
 class PresentationNode extends React.Component {
@@ -101,7 +102,7 @@ class PresentationNode extends React.Component {
         </div>
         <div className="records">
           <ul className="list tertiary record-items">
-            <Records {...this.props} {...this.state} hashes={tertiaryDefinition.children.records.map(child => child.recordHash)} highlight={quaternaryHash} />
+            <Records {...this.props} hashes={tertiaryDefinition.children.records.map(child => child.recordHash)} highlight={quaternaryHash} />
           </ul>
         </div>
       </div>
@@ -109,4 +110,13 @@ class PresentationNode extends React.Component {
   }
 }
 
-export default PresentationNode;
+function mapStateToProps(state, ownProps) {
+  return {
+    profile: state.profile,
+    theme: state.theme
+  };
+}
+
+export default compose(
+  connect(mapStateToProps),
+)(PresentationNode);

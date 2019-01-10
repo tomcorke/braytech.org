@@ -7,7 +7,7 @@ button {
   display: flex;
   align-items: center;
   color: rgba(255, 255, 255, 0.8);
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
   font-size: 18px;
   cursor: default;
   transition: opacity 0.25s, color 0.25s, background-color 0.25s, box-shadow 0.25s;
@@ -68,7 +68,7 @@ button.invisible {
 
 
 button.light-mode {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: rgba(0, 0, 0, 0.1);
   color: #555;
 }
 
@@ -81,7 +81,7 @@ button.light-mode::after {
 }
 
 button.light-mode:hover {
-  background-color: rgba(0, 0, 0, 0.15);
+  background-color: rgba(0, 0, 0, 0.2);
   color: #222;
 }
 

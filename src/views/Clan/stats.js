@@ -1,4 +1,6 @@
 import React from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import cx from 'classnames';
 import moment from 'moment';
@@ -146,7 +148,7 @@ class StatsView extends React.Component {
   };
 
   componentDidMount() {
-    const groups = this.props.data.groups;
+    const groups = this.props.profile.data.groups;
     const clan = groups.results.length > 0 ? groups.results[0].group : false;
 
     window.scrollTo(0, 0);
@@ -166,7 +168,7 @@ class StatsView extends React.Component {
   render() {
     const manifest = this.props.manifest;
     const {t} = this.props;
-    const groups = this.props.data.groups;
+    const groups = this.props.profile.data.groups;
     const clan = groups.results.length > 0 ? groups.results[0].group : false;
 
     let collation = null;
@@ -1149,7 +1151,7 @@ class StatsView extends React.Component {
 
     if (clan) {
       return (
-        <div className='view' id='clan'>
+        <div className={cx('view', this.props.theme.selected)} id='clan'>
           <div className='stats'>
             <div className='summary'>
               <div className='clan-properties'>
@@ -1192,7 +1194,7 @@ class StatsView extends React.Component {
       );
     } else {
       return (
-        <div className='view' id='clan'>
+        <div className={cx('view', this.props.theme.selected)} id='clan'>
           <div className='no-clan'>
             <div className='properties'>
               <div className='name'>{t('No clan affiliation')}</div>
@@ -1208,4 +1210,17 @@ class StatsView extends React.Component {
   }
 }
 
-export default withNamespaces()(StatsView);
+function mapStateToProps(state, ownProps) {
+  console.log(state, ownProps);
+  return {
+    profile: state.profile,
+    theme: state.theme
+  };
+}
+
+export default compose(
+  connect(
+    mapStateToProps
+  ),
+  withNamespaces()
+)(StatsView);

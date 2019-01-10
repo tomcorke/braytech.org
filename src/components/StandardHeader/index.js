@@ -1,9 +1,9 @@
 import React from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
 import cx from 'classnames';
 import packageJSON from '../../../package.json';
-
-import BraytechContext from '../../BraytechContext';
 
 import './styles.css';
 
@@ -76,38 +76,44 @@ class StandardHeader extends React.Component {
     );
 
     return (
-      <BraytechContext.Consumer>
-        {theme => (
-          <div id='header' className={cx('standard', theme.selected, { navOpen: this.state.mobileNavOpen, isIndex: this.props.isIndex })}>
-            <div className='braytech'>
-              <div className='logo'>
-                <Link to='/'>
-                  <span className='destiny-clovis_bray_device' />
-                  Braytech {packageJSON.version}
-                </Link>
-              </div>
-              {!viewsInline ? (
-                this.state.mobileNavOpen ? (
-                  <div className='trigger' onClick={this.TriggerClickHandler}>
-                    <i className='uniE106' />
-                    Exit
-                  </div>
-                ) : (
-                  <div className='trigger' onClick={this.TriggerClickHandler}>
-                    <i className='uniEA55' />
-                    Views
-                  </div>
-                )
-              ) : (
-                <div className='ui'>{viewsRender}</div>
-              )}
-              {this.state.mobileNavOpen ? mobileNav : null}
-            </div>
+      <div id='header' className={cx('standard', this.props.theme.selected, { navOpen: this.state.mobileNavOpen, isIndex: this.props.isIndex })}>
+        <div className='braytech'>
+          <div className='logo'>
+            <Link to='/'>
+              <span className='destiny-clovis_bray_device' />
+              Braytech {packageJSON.version}
+            </Link>
           </div>
-        )}
-      </BraytechContext.Consumer>
+          {!viewsInline ? (
+            this.state.mobileNavOpen ? (
+              <div className='trigger' onClick={this.TriggerClickHandler}>
+                <i className='uniE106' />
+                Exit
+              </div>
+            ) : (
+              <div className='trigger' onClick={this.TriggerClickHandler}>
+                <i className='uniEA55' />
+                Views
+              </div>
+            )
+          ) : (
+            <div className='ui'>{viewsRender}</div>
+          )}
+          {this.state.mobileNavOpen ? mobileNav : null}
+        </div>
+      </div>
     );
   }
 }
 
-export default StandardHeader;
+function mapStateToProps(state, ownProps) {
+  return {
+    theme: state.theme
+  };
+}
+
+export default compose(
+  connect(
+    mapStateToProps
+  )
+)(StandardHeader);
