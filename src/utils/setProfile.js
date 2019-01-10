@@ -13,7 +13,7 @@ const setProfile = (membershipType, membershipId, characterId = false, data, set
     });
   }
 
-  console.log('setProfile', membershipType, membershipId, characterId, data, setAsDefaultProfile);
+  // console.log('setProfile', membershipType, membershipId, characterId, data, setAsDefaultProfile);
 
   // this.props.setProfile({
   //   membershipType: membershipType,

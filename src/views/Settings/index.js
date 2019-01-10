@@ -15,7 +15,7 @@ class Settings extends React.Component {
     super(props);
 
     let initLanguage = this.props.i18n.getCurrentLanguage();
-    
+
     this.state = {
       language: {
         current: initLanguage,
@@ -137,18 +137,51 @@ class Settings extends React.Component {
             </li>
           </ul>
         </div>
-        <div className='module language'>
+        <div className='module theme'>
           <div className='sub-header sub'>
-            <div>{t('Language')}</div>
+            <div>{t('Refresh service')}</div>
           </div>
-          <ul className='list settings'>{languageButtons}</ul>
-          <Button text={t('Save and restart')} invisible={this.state.language.current === this.state.language.selected} action={this.saveAndRestart} />
+          <ul className='list settings'>
+            <li
+              key='enabled'
+              onClick={() => {
+                this.props.setRefreshServiceConfig({
+                  config: {
+                    enabled: true,
+                    frequency: 20
+                  }
+                });
+              }}
+            >
+              <Checkbox linked checked={this.props.refreshService.config.enabled} text={t('Enabled')} />
+            </li>
+            <li
+              key='disabled'
+              onClick={() => {
+                this.props.setRefreshServiceConfig({
+                  config: {
+                    enabled: false,
+                    frequency: 20
+                  }
+                });
+              }}
+            >
+              <Checkbox linked checked={!this.props.refreshService.config.enabled} text={t('Disabled')} />
+            </li>
+          </ul>
         </div>
         <div className='module collectibles'>
           <div className='sub-header sub'>
             <div>{t('Collectibles')}</div>
           </div>
           <ul className='list settings'>{collectiblesButtons}</ul>
+        </div>
+        <div className='module language'>
+          <div className='sub-header sub'>
+            <div>{t('Language')}</div>
+          </div>
+          <ul className='list settings'>{languageButtons}</ul>
+          <Button text={t('Save and restart')} invisible={this.state.language.current === this.state.language.selected} action={this.saveAndRestart} />
         </div>
       </div>
     );
@@ -160,7 +193,8 @@ function mapStateToProps(state, ownProps) {
   return {
     profile: state.profile,
     theme: state.theme,
-    collectibles: state.collectibles
+    collectibles: state.collectibles,
+    refreshService: state.refreshService
   };
 }
 
@@ -171,6 +205,9 @@ function mapDispatchToProps(dispatch) {
     },
     setCollectibleDisplayState: value => {
       dispatch({ type: 'SET_COLLECTIBLES', payload: value });
+    },
+    setRefreshServiceConfig: value => {
+      dispatch({ type: 'SET_REFRESH_OPTIONS', payload: value });
     }
   };
 }

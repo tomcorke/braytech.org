@@ -69,7 +69,7 @@ class App extends Component {
   };
 
   componentDidUpdate() {
-    if (this.props.profile.data && !window.refreshActive) {
+    if (this.props.refreshService.config.enabled && this.props.profile.data && !window.refreshActive) {
       window.refreshTimer = false;
       refreshService(this.props.profile.membershipType, this.props.profile.membershipId);
     }

@@ -3,17 +3,19 @@ import store from './reduxStore';
 import getProfile from './getProfile';
 import setProfile from './setProfile';
 
-const refreshService = (membershipType, membershipId) => {
-  
+const refreshService = (frequency, membershipType, membershipId) => {
+
   window.refreshActive = true;
-  
-  const state = store.getState();
   window.refreshTimer = setTimeout(() => {
+
+    const state = store.getState();
     let time = new Date();
     console.warn("Refreshing profile data", time, state);
 
     getProfile(state.profile.membershipType, state.profile.membershipId, state.profile.characterId, (callback) => {
       // console.log(callback);
+
+      const state = store.getState();
 
       if (!callback.loading && callback.error) {
         if (callback.error === 'fetch') {
@@ -34,13 +36,16 @@ const refreshService = (membershipType, membershipId) => {
       }
     });
     
-  }, 5000);
+  }, frequency);
 }
 
 const service = (membershipType, membershipId) => {
   
+  const state = store.getState();
+  let frequency = state.refreshService.config.frequency * 1000;
+
   if (!window.refreshActive) {
-    refreshService(membershipType, membershipId);
+    refreshService(frequency, membershipType, membershipId);
   }
 
 }

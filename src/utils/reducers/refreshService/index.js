@@ -1,11 +1,11 @@
 import * as ls from '../../localStorage';
 
-const refreshConfig = ls.get('setting.refresh') ? ls.get('setting.refresh') : false;
+const refreshConfig = ls.get('setting.refresh') ? ls.get('setting.refresh') : {
+  enabled: false,
+  frequency: 20
+};
 const defaultState = {
-  config: {
-    enabled: true,
-    frequency: 30
-  },
+  config: refreshConfig,
   active: false
 }
 
@@ -13,8 +13,8 @@ export default function profileReducer(state = defaultState, action) {
   switch (action.type) {
     case 'SET_REFRESH_OPTIONS':
       ls.set('setting.refresh', {
-        enabled: action.payload.enabled,
-        frequency: action.payload.frequency
+        ...state,
+        ...action.payload
       });
       return {
         ...state,

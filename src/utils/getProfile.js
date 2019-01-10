@@ -44,7 +44,7 @@ async function getProfile(membershipType, membershipId, characterId = false, sta
   
   const state = store.getState();
 
-  console.log('getProfile', state);
+  // console.log('getProfile', state);
 
   stateCallback({
     data: state.profile.data,
