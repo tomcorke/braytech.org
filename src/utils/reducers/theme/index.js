@@ -7,7 +7,7 @@ export default function themeReducer(state = defaultState, action) {
     case 'SET_THEME':
       ls.set('setting.theme', {
         selected: action.payload
-      })
+      });
       return {
         selected: action.payload
       }

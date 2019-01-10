@@ -12,10 +12,8 @@ import './App.css';
 import './utils/i18n';
 import { Globals, isProfileRoute } from './utils/globals';
 import dexie from './utils/dexie';
-import * as ls from './utils/localStorage';
 import GoogleAnalytics from './components/GoogleAnalytics';
-import { getProfile } from './utils/getProfile';
-// import refreshProfile from './utils/refreshProfileService';
+import refreshService from './utils/refreshService';
 
 import Loading from './components/Loading';
 import Header from './components/Header';
@@ -59,7 +57,6 @@ class App extends Component {
     this.currentLanguage = props.i18n.getCurrentLanguage();
 
     this.refreshServiceTimer = false;
-    this.refreshServiceActive = false;
   }
 
   updateViewport = () => {
@@ -73,67 +70,10 @@ class App extends Component {
     });
   };
 
-  setProfile = (membershipType, membershipId, characterId = false, data, setAsDefaultProfile = false) => {
-    
-    let savedProfile = ls.get('setting.profile') ? ls.get('setting.profile') : false;
-    if (setAsDefaultProfile || (savedProfile && savedProfile.membershipId === membershipId)) {
-      ls.set('setting.profile', {
-        membershipType: membershipType,
-        membershipId: membershipId,
-        characterId: characterId
-      });
-    }
-
-    console.log('setProfile', membershipType, membershipId, characterId, data, setAsDefaultProfile);
-
-    this.props.setProfile({
-      membershipType: membershipType,
-      membershipId: membershipId,
-      characterId: characterId,
-      data: data
-    });
-
-  };
-
   componentDidUpdate() {
-    if (this.props.profile.data) {
-      if (!this.refreshServiceActive) {
-        this.refreshServiceTimer = false;
-        this.refreshService();
-      }
+    if (!this.props.refreshService.active && !this.refreshServiceTimer) {
+      refreshService(this.refreshServiceTimer, false, this.props.profile.membershipType, this.props.profile.membershipId);
     }
-  }
-
-  refreshService = (membershipType, membershipId) => {
-    this.refreshServiceActive = true;
-    this.refreshServiceTimer = setTimeout(() => {
-      let time = new Date();
-      console.warn(time);
-      console.log("Refreshing profile data", this.props.profile.membershipType, this.props.profile.membershipId, this.props.profile);
-
-      getProfile(this.props.profile.membershipType, this.props.profile.membershipId, this.props.profile.characterId, (callback) => {
-        console.log(callback);
-
-        if (!callback.loading && callback.error) {
-          if (callback.error === 'fetch') {
-            // TO DO: error count - fail after 3
-            this.refreshServiceActive = false;
-            console.log(membershipType, membershipId, this.props.profile.characterId, callback.data)
-            this.setProfile(membershipType, membershipId, this.props.profile.characterId, callback.data);
-          }
-          return;
-        }
-
-        if (!callback.loading && this.props.profile.membershipId === membershipId) {
-          this.refreshServiceActive = false;
-          this.setProfile(membershipType, membershipId, this.props.profile.characterId, callback.data);
-        } else {
-          this.refreshServiceTimer = false;
-          this.refreshService();
-        }
-      });
-      
-    }, 30000);
   }
 
   getVersionAndSettings = () => {
@@ -307,7 +247,7 @@ class App extends Component {
                   <div className='main'>
                     <Route path='/' render={route => <Header route={route} {...this.state} {...this.props} manifest={this.manifest} />} />
                     <Switch>
-                      <Route path='/character-select' render={route => <CharacterSelect getProfile={getProfile} setProfile={this.setProfile} location={route.location} user={this.props.profile} viewport={this.state.viewport} manifest={this.manifest} />} />
+                      <Route path='/character-select' render={route => <CharacterSelect location={route.location} user={this.props.profile} viewport={this.state.viewport} manifest={this.manifest} />} />
                       <Route
                         path='/account'
                         exact
@@ -367,7 +307,7 @@ class App extends Component {
                   <div className='main'>
                     <Route path='/' render={route => <Header route={route} {...this.state} {...this.props} manifest={this.manifest} />} />
                     <Switch>
-                      <Route path='/character-select' render={route => <CharacterSelect getProfile={getProfile} setProfile={this.setProfile} location={route.location} user={this.props.profile} viewport={this.state.viewport} manifest={this.manifest} />} />
+                      <Route path='/character-select' render={route => <CharacterSelect location={route.location} user={this.props.profile} viewport={this.state.viewport} manifest={this.manifest} />} />
                       <Route
                         path='/account'
                         exact
@@ -471,28 +411,16 @@ class App extends Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  // console.log(state, ownProps)
   return {
     profile: state.profile,
-    theme: state.theme
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    setProfile: value => {
-      dispatch({ type: 'SET_PROFILE', payload: value });
-    },
-    setProfile: value => {
-      dispatch({ type: 'SET_PROFILE', payload: value });
-    }
+    theme: state.theme,
+    refreshService: state.refreshService
   };
 }
 
 export default compose(
   connect(
-    mapStateToProps,
-    mapDispatchToProps
+    mapStateToProps
   ),
   withNamespaces()
 )(App);

@@ -40,10 +40,10 @@ async function apiRequest(membershipType, membershipId) {
   }
 }
 
-export async function getProfile(membershipType, membershipId, characterId = false, stateCallback) {
+async function getProfile(membershipType, membershipId, characterId = false, stateCallback) {
   
   const state = store.getState();
-  
+
   console.log('getProfile', state);
 
   stateCallback({
@@ -94,3 +94,5 @@ export async function getProfile(membershipType, membershipId, characterId = fal
     error: false
   });
 }
+
+export default getProfile;

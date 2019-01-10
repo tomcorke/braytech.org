@@ -6,9 +6,10 @@ import cx from 'classnames';
 import assign from 'lodash/assign';
 import { withNamespaces } from 'react-i18next';
 
+import getProfile from '../../utils/getProfile';
+import setProfile from '../../utils/setProfile';
 import Characters from '../../components/Characters';
 import Globals from '../../utils/globals';
-import * as responseUtils from '../../utils/responseUtils';
 import * as destinyEnums from '../../utils/destinyEnums';
 import * as ls from '../../utils/localStorage';
 import errorHandler from '../../utils/errorHandler';
@@ -72,7 +73,7 @@ class CharacterSelect extends React.Component {
     let data = this.state.profile.data;
     let setAsDefaultProfile = true;
 
-    this.props.setProfile(membershipType, membershipId, characterId, data, setAsDefaultProfile);
+    setProfile(membershipType, membershipId, characterId, data, setAsDefaultProfile);
   };
 
   getProfileCallback = state => {
@@ -89,7 +90,7 @@ class CharacterSelect extends React.Component {
   resultClick = (membershipType, membershipId, displayName) => {
     window.scrollTo(0, 0);
 
-    this.props.getProfile(membershipType, membershipId, false, this.getProfileCallback);
+    getProfile(membershipType, membershipId, false, this.getProfileCallback);
 
     if (displayName) {
       ls.update('history.profiles', { membershipType: membershipType, membershipId: membershipId, displayName: displayName }, true, 6);
@@ -102,7 +103,7 @@ class CharacterSelect extends React.Component {
     if (this.props.user.data) {
       this.setState({ profile: { data: this.props.user.data }, loading: false });
     } else if (this.props.user.membershipId && !this.state.profile.data) {
-      this.props.getProfile(this.props.user.membershipType, this.props.user.membershipId, this.props.user.characterId, this.getProfileCallback);
+      getProfile(this.props.user.membershipType, this.props.user.membershipId, this.props.user.characterId, this.getProfileCallback);
     } else {
       this.setState({ loading: false });
     }
