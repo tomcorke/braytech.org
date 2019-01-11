@@ -58,5 +58,10 @@
     "date": "2019-01-11T02:04:08.288Z",
     "version": "1.3.3",
     "content": "## Changes\n- Significant triumphs root nodes QoL styling improvements"
+  },
+  {
+    "date": "2019-01-11T06:20:44.305Z",
+    "version": "1.3.4",
+    "content": "## Changes\n- Further work on triumphs styling and total logic"
   }
 ]
