@@ -12943,34 +12943,6 @@ Array [
         className="text"
       >
         <p>
-          ???
-        </p>
-        <p>
-          The Tangled Shore
-        </p>
-      </div>
-      <div
-        className="lowlines"
-      >
-        <a
-          href="https://lowlidev.com.au/destiny/maps/359854275/1997430677?origin=BRAYTECH"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          <i
-            className="uniE1C4"
-          />
-        </a>
-      </div>
-    </li>
-    <li>
-      <div
-        className="state completed"
-      />
-      <div
-        className="text"
-      >
-        <p>
           Four-Horn Gulch
         </p>
         <p>
@@ -13010,6 +12982,34 @@ Array [
       >
         <a
           href="https://lowlidev.com.au/destiny/maps/359854275/3612414514?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state completed"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          High Plains
+        </p>
+        <p>
+          The Tangled Shore
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/359854275/1997430677?origin=BRAYTECH"
           rel="noopener noreferrer"
           target="_blank"
         >

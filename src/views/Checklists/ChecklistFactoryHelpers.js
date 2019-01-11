@@ -26,6 +26,22 @@ const manualBubbleNames = {
   'ascendant-plane': 'Dark Monastery'
 };
 
+// Anything here gets merged in to created items - use it when you need to
+// override something in item()
+const itemOverrides = {
+  // Brephos II is listed as Temple of Illyn, but it's only available
+  // during the strike, so hardcode it here to be consistent with the other
+  // strike item.
+  1370818869: {
+    bubble: 'The Corrupted'
+  },
+
+  // No bubble on this region chest, but it's in the High Plains
+  1997430677: {
+    bubble: 'High Plains'
+  }
+};
+
 class ChecklistFactoryHelpers {
   constructor(t, profile, manifest, characterId, hideCompletedItems) {
     this.t = t;
@@ -88,7 +104,8 @@ class ChecklistFactoryHelpers {
       hash: item.hash,
       destinationHash,
       item,
-      completed
+      completed,
+      ...itemOverrides[item.hash]
     };
   }
 
