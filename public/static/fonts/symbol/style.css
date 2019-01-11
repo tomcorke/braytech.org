@@ -1,9 +1,9 @@
 @font-face {
   font-family: 'symbols';
   src:
-    url('symbols.ttf?wl5bck') format('truetype'),
-    url('symbols.woff?wl5bck') format('woff'),
-    url('symbols.svg?wl5bck#symbols') format('svg');
+    url('symbols.ttf?yjnlyf') format('truetype'),
+    url('symbols.woff?yjnlyf') format('woff'),
+    url('symbols.svg?yjnlyf#symbols') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -437,6 +437,15 @@ i {
 }
 .uniF10E:before {
   content: "\f10e";
+}
+.uniF16B:before {
+  content: "\f16b";
+}
+.uniF16C:before {
+  content: "\f16c";
+}
+.uniF16E:before {
+  content: "\f16e";
 }
 .uniF22C:before {
   content: "\f22c";

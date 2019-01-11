@@ -134,6 +134,32 @@
   }
 }
 
+.list.record-items .all-completed {
+  grid-column: 1/-1;
+}
+
+.list.record-items .all-completed::before {
+  box-shadow: none;
+}
+
+.list.record-items .all-completed .properties {
+  grid-template-columns: 1fr;
+  padding: 0;
+}
+
+.list.record-items .all-completed .properties .text {
+  margin: 0;
+}
+
+.list.record-items .all-completed .properties .text .name {
+  display: none;
+}
+
+.list.record-items .all-completed .properties .text .description {
+  margin: 0;
+  padding: 1.5rem 0 1rem;
+}
+
 
 
 @media screen and (max-width: 1200px) {

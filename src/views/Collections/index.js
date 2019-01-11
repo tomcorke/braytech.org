@@ -45,8 +45,8 @@ class Collections extends React.Component {
             <ul>
               <li>
                 <Link to='/collections'>
-                  <i className='uniE742' />
-                  Collections
+                  <i className='uniF094' />
+                  Back
                 </Link>
               </li>
             </ul>
@@ -64,8 +64,8 @@ class Collections extends React.Component {
             <ul>
               <li>
                 <Link to='/collections'>
-                  <i className='uniE742' />
-                  {t('Collections')}
+                  <i className='uniF094' />
+                  {t('Back')}
                 </Link>
               </li>
             </ul>

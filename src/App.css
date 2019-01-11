@@ -469,26 +469,26 @@ button.square.active {
   position: sticky;
   bottom: 0;
   left: 0;
-  height: 40px;
+  /* height: 40px; */
   width: 100%;
-  padding: 0 3rem;
+  padding: 1rem 3rem 2rem;
   z-index: 10;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: rgba(0, 0, 0, 0.4);
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: hsla(0, 0%, 45%, 0.8);
+  /* background-color: rgba(0, 0, 0, 0.8); */
+  /* border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2); */
   font-size: 14px;
   color: rgba(255, 255, 255, 0.8);
-  text-transform: uppercase;
   user-select: none;
 }
 
-html.backdropfilter .sticky-nav {
+/* html.backdropfilter .sticky-nav {
   background-color: rgba(0, 0, 0, 0);
   backdrop-filter: blur(3px) brightness(0.9);
-}
+} */
 
 .sticky-nav i {
   vertical-align: -2px;
@@ -506,8 +506,11 @@ html.backdropfilter .sticky-nav {
 @media screen and (max-width: 500px) {
   .sticky-nav {
     width: 100%;
-    padding: 0 2rem;
+    padding: 1rem 2rem;
     font-size: 12px;
   }
 }
 
+.wrapper.dark-mode .sticky-nav {
+  background-color: hsla(0, 0%, 16%, 0.8);
+}

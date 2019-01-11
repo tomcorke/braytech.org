@@ -54,9 +54,7 @@ class Records extends React.Component {
                 }
               });
 
-              objectives.push(
-                <ProgressBar key={objectiveDefinition.hash} objectiveDefinition={objectiveDefinition} playerProgress={playerProgress} />
-              );
+              objectives.push(<ProgressBar key={objectiveDefinition.hash} objectiveDefinition={objectiveDefinition} playerProgress={playerProgress} />);
             } else if (characterRecords[characterId].records[recordDefinition.hash]) {
               let playerProgress = null;
               characterRecords[characterId].records[recordDefinition.hash].objectives.forEach(objective => {
@@ -65,9 +63,7 @@ class Records extends React.Component {
                 }
               });
 
-              objectives.push(
-                <ProgressBar key={objectiveDefinition.hash} objectiveDefinition={objectiveDefinition} playerProgress={playerProgress} />
-              );
+              objectives.push(<ProgressBar key={objectiveDefinition.hash} objectiveDefinition={objectiveDefinition} playerProgress={playerProgress} />);
             } else {
               objectives.push(null);
             }
@@ -212,9 +208,7 @@ class Records extends React.Component {
                 playerProgress.progress = 16;
               }
 
-              objectives.push(
-                <ProgressBar key={objectiveDefinition.hash} objectiveDefinition={objectiveDefinition} playerProgress={playerProgress} />
-              );
+              objectives.push(<ProgressBar key={objectiveDefinition.hash} objectiveDefinition={objectiveDefinition} playerProgress={playerProgress} />);
             } else if (characterRecords[characterId].records[recordDefinition.hash]) {
               let playerProgress = null;
               characterRecords[characterId].records[recordDefinition.hash].objectives.forEach(objective => {
@@ -223,9 +217,7 @@ class Records extends React.Component {
                 }
               });
 
-              objectives.push(
-                <ProgressBar key={objectiveDefinition.hash} objectiveDefinition={objectiveDefinition} playerProgress={playerProgress} />
-              );
+              objectives.push(<ProgressBar key={objectiveDefinition.hash} objectiveDefinition={objectiveDefinition} playerProgress={playerProgress} />);
             } else {
               objectives.push(null);
             }
@@ -281,7 +273,7 @@ class Records extends React.Component {
           let description = recordDefinition.displayProperties.description !== '' ? recordDefinition.displayProperties.description : false;
           description = !description && recordDefinition.loreHash ? manifest.DestinyLoreDefinition[recordDefinition.loreHash].displayProperties.description.slice(0, 80) + '...' : description;
           if (recordDefinition.hash === 2367932631) {
-            console.log(enumerateRecordState(state))
+            console.log(enumerateRecordState(state));
           }
 
           records.push({
@@ -296,7 +288,7 @@ class Records extends React.Component {
                   // eslint-disable-next-line eqeqeq
                   highlight: highlight && highlight == recordDefinition.hash,
                   completed: enumerateRecordState(state).recordRedeemed,
-                  unRedeemed:  !enumerateRecordState(state).recordRedeemed && !enumerateRecordState(state).objectiveNotCompleted,
+                  unRedeemed: !enumerateRecordState(state).recordRedeemed && !enumerateRecordState(state).objectiveNotCompleted,
                   'no-description': !description
                 })}
               >
@@ -320,17 +312,18 @@ class Records extends React.Component {
     }
 
     if (records.length === 0 && this.props.collectibles.hideTriumphRecords) {
-      records.push(
-        <li key='lol'>
-          <div className='properties'>
-            <div className='icon' />
-            <div className='text'>
-              <div className='name'>Nothing to show for your effort</div>
-              <div className='description'>You've completed all the records here! GG</div>
+      records.push({
+        element: (
+          <li key='lol' className='all-completed'>
+            <div className='properties'>
+              <div className='text'>
+                <div className='name'>When all is said and done</div>
+                <div className='description'>You've completed these records</div>
+              </div>
             </div>
-          </div>
-        </li>
-      );
+          </li>
+        )
+      });
     }
 
     records = this.props.ordered ? orderBy(records, [item => item.completed], ['asc']) : records;

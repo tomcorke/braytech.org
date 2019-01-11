@@ -309,11 +309,13 @@
 
 #collections .node.badge .children .until h4 {
   margin: 0 0 1rem;
-  font-size: 16px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
 #collections .node.badge .children .until h4.completed {
-  color: rgb(206, 174, 51);
+  color: rgb(195, 178, 111);
 }
 
 #collections .node.badge .children .progress {

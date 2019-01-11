@@ -206,11 +206,13 @@
 
 #triumphs .node.seal .children .until h4 {
   margin: 0 0 1rem;
-  font-size: 16px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
 #triumphs .node.seal .children .until h4.completed {
-  color: rgb(206, 174, 51);
+  color: rgb(195, 178, 111);
 }
 
 #triumphs .node.seal .children .progress {

@@ -47,13 +47,13 @@ class Triumphs extends React.Component {
       <a onClick={this.toggleCompleted}>
         {this.props.collectibles.hideTriumphRecords ? (
           <>
-            <i className='uniE0522' />
-            {t('Show acquired')}
+            <i className='uniF16E' />
+            {t('Show all')}
           </>
         ) : (
           <>
-            <i className='uniE0522' />
-            {t('Hide acquired')}
+            <i className='uniF16B' />
+            {t('Hide redeemed')}
             
           </>
         )}
@@ -75,10 +75,11 @@ class Triumphs extends React.Component {
           <div className='sticky-nav'>
             <div />
             <ul>
+              <li>{toggleCompletedLink}</li>
               <li>
                 <Link to='/triumphs'>
-                  <i className='uniE742' />
-                  {t('Triumphs')}
+                  <i className='uniF094' />
+                  {t('Back')}
                 </Link>
               </li>
             </ul>
@@ -97,8 +98,8 @@ class Triumphs extends React.Component {
               <li>{toggleCompletedLink}</li>
               <li>
                 <Link to='/triumphs'>
-                  <i className='uniE742' />
-                  {t('Triumphs')}
+                  <i className='uniF094' />
+                  {t('Back')}
                 </Link>
               </li>
             </ul>

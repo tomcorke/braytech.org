@@ -135,7 +135,8 @@ class SealNode extends React.Component {
 function mapStateToProps(state, ownProps) {
   return {
     profile: state.profile,
-    theme: state.theme
+    theme: state.theme,
+    collectibles: state.collectibles
   };
 }
 

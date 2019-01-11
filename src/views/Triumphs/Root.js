@@ -95,16 +95,18 @@ class Root extends React.Component {
         nodeChildNode.children.presentationNodes.forEach(nodeChildNodeChild => {
           let nodeChildNodeChildNode = manifest.DestinyPresentationNodeDefinition[nodeChildNodeChild.presentationNodeHash];
           if (nodeChildNodeChildNode.redacted) {
-            console.log(nodeChildNodeChildNode)
+            // console.log(nodeChildNodeChildNode)
             return;
           }
           nodeChildNodeChildNode.children.records.forEach(record => {
-            let scope = profileRecords[record.recordHash] ? profileRecords[record.recordHash] : characterRecords[characterId][record.recordHash];
+            let scope = profileRecords[record.recordHash] ? profileRecords[record.recordHash] : characterRecords[characterId].records[record.recordHash];
             if (scope) {
-              states.push(scope.state);
-              recordsStates.push(scope.state);
+              states.push(scope);
+              recordsStates.push(scope);
             } else {
-              console.log(`93 Undefined state for ${record.recordHash}`);
+              // console.log(`107 Undefined state for ${record.recordHash}`);
+              states.push({ state: 0 });
+              recordsStates.push({ state: 0 });
             }
           });
         });
@@ -117,7 +119,7 @@ class Root extends React.Component {
             {node.displayProperties.name}
           </Link>
           <div className='state'>
-            <span>{states.filter(record => enumerateRecordState(record).recordRedeemed).length}</span> / {states.filter(record => !enumerateRecordState(record).invisible).length}
+            <span>{states.filter(record => enumerateRecordState(record.state).recordRedeemed).length}</span> / {states.filter(record => !enumerateRecordState(record.state).invisible).length}
           </div>
         </div>
       );
@@ -128,12 +130,12 @@ class Root extends React.Component {
       let states = [];
 
       node.children.records.forEach(record => {
-        let scope = profileRecords[record.recordHash] ? profileRecords[record.recordHash] : characterRecords[characterId][record.recordHash];
+        let scope = profileRecords[record.recordHash] ? profileRecords[record.recordHash] : characterRecords[characterId].records[record.recordHash];
         if (scope) {
-          states.push(scope.state);
-          recordsStates.push(scope.state);
+          states.push(scope);
+          recordsStates.push(scope);
         } else {
-          console.log(`122 Undefined state for ${record.recordHash}`);
+          // console.log(`138 Undefined state for ${record.recordHash}`);
         }
       });
 
@@ -161,7 +163,7 @@ class Root extends React.Component {
           <div className='sub-header'>
             <div>{t('Triumphs')}</div>
             <div>
-              {recordsStates.filter(collectible => enumerateRecordState(collectible).recordRedeemed).length}/{recordsStates.filter(collectible => !enumerateRecordState(collectible).invisible).length}
+              {recordsStates.filter(record => enumerateRecordState(record.state).recordRedeemed).length}/{recordsStates.filter(record => !enumerateRecordState(record.state).invisible).length}
             </div>
           </div>
           <div className='nodes'>{nodes}</div>
