@@ -20,7 +20,7 @@
   background-color: rgba(0, 0, 0, 0.1);
 }
 
-.progress-bar .check.ed::before {
+.progress-bar .check::before {
   content: ' ';
   position: absolute;
   top: 0;
@@ -28,6 +28,11 @@
   width: calc(100% - 6px);
   height: calc(100% - 6px);
   margin: 3px;
+  background-color: transparent;
+  transition: background-color 0.25s;
+}
+
+.progress-bar .check.ed::before {
   background-color: #5aa366;
 }
 

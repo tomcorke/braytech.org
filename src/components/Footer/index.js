@@ -36,8 +36,8 @@ class Footer extends React.Component {
               </a>
             </li>
             <li>
-              <a href='https://www.reddit.com/user/xhtmlvalid' target='_blank' rel='noopener noreferrer'>
-                Reddit
+              <a href='https://discordapp.com/invite/Y68xDsG' target='_blank' rel='noopener noreferrer'>
+                Discord
               </a>
             </li>
             <li>

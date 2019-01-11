@@ -8,13 +8,13 @@ let _currentLanguage;
 
 function getCurrentLanguage() {
   if (_currentLanguage) return _currentLanguage;
-  _currentLanguage = ls.get('settings.language');
+  _currentLanguage = ls.get('setting.language');
   return _currentLanguage || _defaultLanguage;
 }
 
 function setCurrentLanguage(lang) {
   _currentLanguage = lang;
-  ls.set('settings.language', lang);
+  ls.set('setting.language', lang);
 }
 
 i18n
