@@ -157,22 +157,18 @@ class Root extends React.Component {
 
     return (
       <>
-        <div className='nodes'>
+        <div className='parent-nodes'>
           <div className='sub-header'>
             <div>{t('Triumphs')}</div>
             <div>
               {recordsStates.filter(collectible => enumerateRecordState(collectible).recordRedeemed).length}/{recordsStates.filter(collectible => !enumerateRecordState(collectible).invisible).length}
             </div>
           </div>
-          <div className='node'>
-            <div className='parent'>{nodes}</div>
+          <div className='nodes'>{nodes}</div>
+          <div className='sub-header'>
+            <div>{t('Seals')}</div>
           </div>
-          <div className='node'>
-            <div className='sub-header'>
-              <div>{t('Seals')}</div>
-            </div>
-            <div className='parent seals'>{sealNodes}</div>
-          </div>
+          <div className='nodes seals'>{sealNodes}</div>
         </div>
         <div className='sidebar'>
           <div className='sub-header'>

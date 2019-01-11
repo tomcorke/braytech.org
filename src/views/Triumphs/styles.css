@@ -32,7 +32,7 @@
   position: absolute;
 }
 
-#triumphs .nodes {
+#triumphs .parent-nodes {
   flex-basis: calc(100% / 3 * 2 - 3rem);
   width: 100%;
   display: flex;
@@ -40,18 +40,29 @@
   align-content: flex-start;
 }
 
-#triumphs .parent .node {
-  flex-basis: 9rem;
+#triumphs .parent-nodes .nodes {
+  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0 0 3rem;
+  justify-content: center;
 }
 
-#triumphs .parent .node .image {
+#triumphs .parent-nodes .nodes .node {
+  flex-basis: calc(100% / 7);
+  padding: 0 1rem;
+  justify-content: center;
+}
+
+#triumphs .parent-nodes .node .image {
   position: relative;
-  width: 128px;
-  height: 128px;
+  width: 100%;
+  height: unset;
+  padding-bottom: 100%;
   margin: 0 auto 1rem;
 }
 
-#triumphs .parent .node .image::before {
+#triumphs .parent-nodes .node .image::before {
   content: ' ';
   position: absolute;
   top: 0;
@@ -63,7 +74,7 @@
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
-#triumphs .parent .node .image::after {
+#triumphs .parent-nodes .node .image::after {
   content: ' ';
   position: absolute;
   top: -4px;
@@ -75,59 +86,66 @@
   box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0);
 }
 
-#triumphs .parent .node a:hover {
+#triumphs .parent-nodes .node a {
+  width: 100%;
+}
+
+#triumphs .parent-nodes .node a:hover {
   color: rgba(255, 255, 255, 1);
 }
 
-#triumphs .parent .node a:hover .image::before {
+#triumphs .parent-nodes .node a:hover .image::before {
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 1);
 }
 
-#triumphs .parent .node a:hover .image::after {
+#triumphs .parent-nodes .node a:hover .image::after {
   box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 1);
 }
 
-#triumphs .parent.seals .node a .image {
+#triumphs .parent-nodes .nodes.seals .node a .image {
   transition: opacity 0.5s;
 }
 
-#triumphs .parent.seals .node a .image.dl {
+#triumphs .parent-nodes .nodes.seals .node a .image.dl {
   opacity: 0.4;
 }
 
-#triumphs .parent.seals .node.completed a .image.dl {
+#triumphs .parent-nodes .nodes.seals .node.completed a .image.dl {
   opacity: 1;
 }
 
-#triumphs .parent.seals .node a:hover .image {
+#triumphs .parent-nodes .nodes.seals .node a:hover .image {
   opacity: 0.8;
 }
 
-#triumphs .parent.seals .node .image::before {
+#triumphs .parent-nodes .nodes.seals .node .image::before {
   box-shadow: none;
 }
 
-#triumphs .parent.seals .node .image::after {
+#triumphs .parent-nodes .nodes.seals .node .image::after {
   box-shadow: none;
 }
 
-#triumphs .parent.seals .node a:hover .image::before {
+#triumphs .parent-nodes .nodes.seals .node a:hover .image::before {
   box-shadow: none;
 }
 
-#triumphs .parent.seals .node a:hover .image::after {
+#triumphs .parent-nodes .nodes.seals .node a:hover .image::after {
   box-shadow: none;
 }
 
-#triumphs .parent .node .state {
-  flex-basis: 100%;
+#triumphs .parent-nodes .node {
   text-align: center;
   font-size: 14px;
+}
+
+#triumphs .parent-nodes .node .state {
+  flex-basis: 100%;
   margin: 0.4rem 0 0;
   color: rgba(255, 255, 255, 0.4);
 }
 
-#triumphs .parent .node .state span {
+#triumphs .parent-nodes .node .state span {
   color: rgba(255, 255, 255, 0.8);
 }
 
@@ -140,13 +158,6 @@
   font-size: 30px;
   font-weight: 500;
   text-transform: uppercase;
-}
-
-#triumphs .node {
-  display: flex;
-  flex-flow: row wrap;
-  width: 100%;
-  margin: 0 0 2rem;
 }
 
 #triumphs .node .children {
@@ -267,6 +278,12 @@
 }
 
 @media screen and (max-width: 1200px) {
+
+  #triumphs .parent-nodes .nodes .node {
+    flex-basis: calc(100% / 4);
+    padding: 0 2rem;
+  }
+  
   #triumphs .node.seal {
     margin: 1rem 0 0;
   }
@@ -276,13 +293,32 @@
   }
 }
 
+@media screen and (max-width: 768px) {
+
+  #triumphs .parent-nodes .nodes {
+    margin: 0 0 2rem;
+  }
+
+  #triumphs .parent-nodes .nodes .node {
+    flex-basis: calc(100% / 4);
+    padding: 0 1rem;
+    margin: 0 0 1rem;
+  }
+}
+
 @media screen and (max-width: 500px) {
   #triumphs {
     padding: 3rem 2rem 2rem;
   }
 
-  #triumphs .nodes {
+  #triumphs .parent-nodes {
     flex-basis: 100%;
+  }
+
+  #triumphs .parent-nodes .nodes .node {
+    flex-basis: calc(100% / 3);
+    padding: 0 1rem;
+    margin: 0 0 1rem;
   }
 
   #triumphs .sidebar {
@@ -300,20 +336,6 @@
 
   #triumphs .header .name {
     font-size: 24px;
-  }
-
-  #triumphs .parent .node {
-    margin: 0 0 2rem;
-    flex-basis: calc(100% / 2);
-  }
-
-  #triumphs .parent .node a {
-  }
-
-  #triumphs .parent .node .image {
-    width: 96px;
-    height: 96px;
-    margin: 0 auto 1rem;
   }
 
   #triumphs .node .children {
