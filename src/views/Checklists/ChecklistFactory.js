@@ -56,10 +56,7 @@ class ChecklistFactory {
       icon: 'destiny-ahamkara_bones',
       progressDescription: this.t('Bones found'),
       itemTitle: i => i.lore,
-      // Hack: Brephos II is listed as Temple of Illyn, but it's only available
-      // during the strike, so hardcode it here to be consistent with the other
-      // strike item.
-      itemSubtitle: i => (i.hash === 1370818869 ? 'The Corrupted' : i.bubble || false),
+      itemSubtitle: i => i.bubble,
       sortBy: ['itemNumber'],
       items: this.m.items(1297424116)
     });
