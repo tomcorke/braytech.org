@@ -320,7 +320,7 @@
   #triumphs .parent-nodes .nodes .node {
     flex-basis: calc(100% / 3);
     padding: 0 1rem;
-    margin: 0 0 1rem;
+    margin: 0 0 2rem;
   }
 
   #triumphs .sidebar {

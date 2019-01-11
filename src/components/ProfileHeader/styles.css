@@ -12,11 +12,10 @@
 #header.profile-header .braytech {
   background-color: rgba(0, 0, 0, 0.1);
   color: rgba(255, 255, 255, 0.8);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 html.backdropfilter #header.profile-header .braytech {
-  backdrop-filter: blur(4px) brightness(1.2);
+  backdrop-filter: blur(2px) brightness(1.2);
 }
 
 #header.profile-header .ui {
