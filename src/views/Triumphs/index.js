@@ -8,6 +8,7 @@ import cx from 'classnames';
 import Root from './Root';
 import SealNode from './SealNode';
 import PresentationNode from './PresentationNode';
+import AlmostComplete from './AlmostComplete';
 
 import './styles.css';
 
@@ -32,8 +33,14 @@ class Triumphs extends React.Component {
     this.props.setCollectibleDisplayState(newState);
   };
 
+  componentDidMount() {
+    if (!this.props.match.params.quaternary) {
+      window.scrollTo(0, 0);
+    }
+  }
+
   componentDidUpdate(prevProps) {
-    if (!this.props.match.params.quaternary && prevProps.location.pathname !== this.props.location.pathname) {
+    if (!this.props.match.params.quaternary && prevProps.location.pathname !== this.props.location.pathname && this.props.location.pathname !== '/triumphs/almost-complete') {
       window.scrollTo(0, 0);
     }
   }
@@ -60,6 +67,8 @@ class Triumphs extends React.Component {
       </a>
     );
 
+    let backLinkPath = this.props.location.state && this.props.location.state.from ? this.props.location.state.from : '/triumphs';
+
     if (!primaryHash) {
       return (
         <div className={cx('view', 'presentation-node', this.props.theme.selected)} id='triumphs'>
@@ -77,7 +86,26 @@ class Triumphs extends React.Component {
             <ul>
               <li>{toggleCompletedLink}</li>
               <li>
-                <Link to='/triumphs'>
+                <Link to={backLinkPath}>
+                  <i className='uniF094' />
+                  {t('Back')}
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </>
+      );
+    } else if (primaryHash === 'almost-complete') {
+      return (
+        <>
+          <div className={cx('view', this.props.theme.selected)} id='triumphs'>
+            <AlmostComplete {...this.props} />
+          </div>
+          <div className='sticky-nav'>
+            <div />
+            <ul>
+              <li>
+                <Link to={backLinkPath}>
                   <i className='uniF094' />
                   {t('Back')}
                 </Link>
@@ -97,7 +125,7 @@ class Triumphs extends React.Component {
             <ul>
               <li>{toggleCompletedLink}</li>
               <li>
-                <Link to='/triumphs'>
+                <Link to={backLinkPath}>
                   <i className='uniF094' />
                   {t('Back')}
                 </Link>

@@ -1,7 +1,9 @@
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import cx from 'classnames';
+import orderBy from 'lodash/orderBy';
 
 import Records from '../Records';
 import { enumerateRecordState } from '../../utils/destinyEnums';
@@ -37,12 +39,17 @@ class RecordsAlmost extends React.Component {
     });
 
     Object.entries(profileRecords).forEach(([key, record]) => {
+
+      if (manifest.DestinyRecordDefinition[key].redacted) {
+        return;
+      }
+
       // ignore collections badges etc
       if (ignores.includes(parseInt(key, 10))) {
         return;
       }
 
-      if (enumerateRecordState(record.state).invisible) {
+      if (enumerateRecordState(record.state).invisible || enumerateRecordState(record.state).recordRedeemed) {
         return;
       }
 
@@ -57,55 +64,63 @@ class RecordsAlmost extends React.Component {
         progressValueTotal = progressValueTotal + (p > v ? v : p); // prevents progress values that are greater than the completion value from affecting the average
       });
 
-      var mark = false;
+      // var mark = false;
 
-      let distance = progressValueTotal / completionValueTotal;
-      if (distance > 0.81 && distance < 1.0) {
-        mark = true;
+      const distance = progressValueTotal / completionValueTotal;
+      // if (distance > 0.81 && distance < 1.0) {
+      //   mark = true;
+      // }
+
+      if (distance >= 1.0) {
+        return;
       }
 
       let objectives = [];
 
-      if (mark) {
-        record.objectives.forEach(obj => {
-          let objDef = manifest.DestinyObjectiveDefinition[obj.objectiveHash];
+      record.objectives.forEach(obj => {
+        let objDef = manifest.DestinyObjectiveDefinition[obj.objectiveHash];
 
-          objectives.push(
-            <li key={objDef.hash}>
-              <div
-                className={cx('progress', {
-                  complete: obj.progress >= obj.completionValue ? true : false
-                })}
-              >
-                <div className='title'>{objDef.progressDescription}</div>
-                <div className='fraction'>
-                  {obj.progress}/{obj.completionValue}
-                </div>
-                <div
-                  className='bar'
-                  style={{
-                    width: `${(obj.progress / obj.completionValue) * 100}%`
-                  }}
-                />
+        objectives.push(
+          <li key={objDef.hash}>
+            <div
+              className={cx('progress', {
+                complete: obj.progress >= obj.completionValue ? true : false
+              })}
+            >
+              <div className='title'>{objDef.progressDescription}</div>
+              <div className='fraction'>
+                {obj.progress}/{obj.completionValue}
               </div>
-            </li>
-          );
-        });
+              <div
+                className='bar'
+                style={{
+                  width: `${(obj.progress / obj.completionValue) * 100}%`
+                }}
+              />
+            </div>
+          </li>
+        );
+      });
 
-        almost.push({
-          distance: distance,
-          item: <Records selfLink key={key} {...this.props} hashes={[key]} />
-        });
-      }
+      let selfLinkFrom = this.props.selfLinkFrom ? this.props.location.pathname : false;
+
+      almost.push({
+        distance: distance,
+        item: <Records key={key} {...this.props} selfLink selfLinkFrom={selfLinkFrom} hashes={[key]} />
+      });
     });
 
-    almost.sort(function(b, a) {
-      let distanceA = a.distance;
-      let distanceB = b.distance;
-      return distanceA < distanceB ? -1 : distanceA > distanceB ? 1 : 0;
-    });
-
-    almost = this.props.limit ? almost.slice(0,3) : almost;
+    almost = orderBy(almost, [record => record.distance], ['desc']);
+    almost = this.props.limit ? almost.slice(0, this.props.limit) : almost;
+    if (this.props.pageLink) {
+      almost.push({
+        item: (
+          <li key='pageLink' className='linked'>
+            <Link to={{ pathname: '/triumphs/almost-complete', state: { from: '/triumphs' } }}>See next 100</Link>
+          </li>
+        )
+      })
+    }
 
     return (
       <ul className={cx('list record-items almost')}>

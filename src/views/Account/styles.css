@@ -224,6 +224,25 @@
   grid-template-columns: 1fr;
 }
 
+#account .module .almost .list.record-items li:not(:last-child) a {
+  position: absolute;
+}
+
+#account .module .almost .list.record-items li:last-child {
+  height: 38px;
+  background-color: initial;
+}
+
+#account .module .almost .list.record-items li.linked:last-child {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+#account .module .almost .list.record-items li.linked:last-child:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 1);
+  z-index: 2;
+}
+
 
 
 

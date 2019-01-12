@@ -7,6 +7,14 @@
   grid-template-columns: 1.6fr 3fr 1.6fr;
 }
 
+#clan .banner .canvas {
+  position: relative;
+}
+
+#clan .banner .canvas .spinner {
+  position: absolute;
+}
+
 #clan .banner .canvas canvas {
   width: 100%;
 }

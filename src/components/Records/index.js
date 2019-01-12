@@ -188,7 +188,7 @@ class Records extends React.Component {
 
           link = `/triumphs/${reverse3.hash}/${reverse2.hash}/${reverse1.hash}/${hash}`;
         } catch (e) {
-          console.log(e);
+          // console.log(e);
         }
 
         if (recordDefinition.objectiveHashes) {
@@ -303,7 +303,7 @@ class Records extends React.Component {
                   </div>
                 </div>
                 <div className='objectives'>{objectives}</div>
-                {link && this.props.selfLink ? <Link to={link} /> : null}
+                {link && this.props.selfLink ? <Link to={{ pathname: link, state: { from: this.props.selfLinkFrom ? this.props.selfLinkFrom : false } }} /> : null}
               </li>
             )
           });

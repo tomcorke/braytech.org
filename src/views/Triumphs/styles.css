@@ -28,8 +28,23 @@
   grid-template-columns: 1fr;
 }
 
-#triumphs .sidebar .almost-complete .list.record-items li a {
+#triumphs .sidebar .almost-complete .list.record-items li:not(:last-child) a {
   position: absolute;
+}
+
+#triumphs .sidebar .almost-complete .list.record-items li:last-child {
+  height: 38px;
+  background-color: initial;
+}
+
+#triumphs .sidebar .almost-complete .list.record-items li.linked:last-child {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+#triumphs .sidebar .almost-complete .list.record-items li.linked:last-child:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 1);
+  z-index: 2;
 }
 
 #triumphs .parent-nodes {
@@ -279,7 +294,33 @@
   background-color: transparent;
 }
 
-@media screen and (max-width: 1200px) {
+#triumphs > .almost-complete .list.record-items {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+@media screen and (max-width: 1600px) {
+  #triumphs > .almost-complete .list.record-items {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  #triumphs .node .records .list.record-items {
+    grid-template-columns: 1fr;
+  }
+  
+  #triumphs > .almost-complete .list.record-items {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  #triumphs > .almost-complete .list.record-items {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media screen and (max-width: 1280px) {
 
   #triumphs .parent-nodes .nodes .node {
     flex-basis: calc(100% / 4);
@@ -308,7 +349,7 @@
   }
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 600px) {
   #triumphs {
     padding: 3rem 2rem 2rem;
   }

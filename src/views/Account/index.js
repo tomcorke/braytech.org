@@ -364,7 +364,7 @@ class Account extends React.Component {
             <div>{t('Almost complete triumphs')}</div>
           </div>
           <div className='content almost'>
-            <RecordsAlmost {...this.props} />
+            <RecordsAlmost {...this.props} limit='5' pageLink />
           </div>
         </div>
         <div className='module'>

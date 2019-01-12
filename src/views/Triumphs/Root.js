@@ -178,10 +178,10 @@ class Root extends React.Component {
           </div>
           <div className='total-score'>{this.props.profile.data.profile.profileRecords.data.score}</div>
           <div className='sub-header'>
-            <div>{t('Almost complete - next 3')}</div>
+            <div>{t('Almost complete')}</div>
           </div>
           <div className='almost-complete'>
-            <RecordsAlmost {...this.props} limit='3' />
+            <RecordsAlmost {...this.props} limit='3' pageLink />
           </div>
         </div>
       </>
