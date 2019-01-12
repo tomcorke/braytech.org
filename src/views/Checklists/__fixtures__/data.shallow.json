@@ -31,6 +31,12 @@
       },
       "privacy": 2
     },
+    "profileRecords": {
+      "data": {
+        "records": {}
+      }
+    },
+
     "characterProgressions": {
       "data": {
         "CHARACTER_ID": {

@@ -1,15 +1,19 @@
 import sortBy from 'lodash/sortBy';
 import React from 'react';
+import find from 'lodash/find';
 
 import Checklist from './Checklist';
 import ChecklistItem from './ChecklistItem';
 import ChecklistFactoryHelpers from './ChecklistFactoryHelpers';
+import mappings from '../../data/mappings';
 
 import ReactMarkdown from 'react-markdown';
 
 class ChecklistFactory {
   constructor(t, profile, manifest, characterId, hideCompletedItems) {
     this.t = t;
+    this.manifest = manifest;
+    this.profile = profile;
     this.m = new ChecklistFactoryHelpers(t, profile, manifest, characterId, hideCompletedItems);
   }
 
@@ -141,6 +145,47 @@ class ChecklistFactory {
       icon: 'destiny-ace_of_spades',
       checklist: checklist
     };
+  }
+
+  ghostStories() {
+    const rootPresentationHash = 1420597821;
+    const rootRecordHash = 2122886722; // Main "Ghost Stories" record when all are collected
+
+    const root = this.manifest.DestinyPresentationNodeDefinition[rootPresentationHash];
+    const recordHashes = root.children.records.map(r => r.recordHash).filter(r => r !== rootRecordHash);
+
+    const items = recordHashes.map(hash => {
+      const item = this.manifest.DestinyRecordDefinition[hash];
+      const profileRecord = this.profile.profileRecords.data.records[hash];
+      const completed = profileRecord && profileRecord.objectives[0].complete;
+
+      const mapping = mappings.records[hash];
+      const destinationHash = mapping.destinationHash;
+      const destination = this.manifest.DestinyDestinationDefinition[destinationHash];
+      const place = destination && this.manifest.DestinyPlaceDefinition[destination.placeHash];
+      const bubble = find(destination.bubbles, { hash: mapping.bubbleHash });
+
+      return {
+        destination: destination.displayProperties.name,
+        place: place && place.displayProperties.name,
+        bubble: (bubble && bubble.displayProperties.name) || 'High Plains',
+        record: item.displayProperties.name,
+        hash,
+        destinationHash,
+        item,
+        completed
+      };
+    });
+
+    return this.m.checklist({
+      name: this.t('Ghost Stories'),
+      icon: 'destiny-sleeper_nodes',
+      items: items,
+      progressDescription: this.t('Stories found'),
+      itemTitle: i => i.record,
+      itemSubtitle: i => `${i.bubble}, ${i.place}`,
+      sortBy: false
+    });
   }
 }
 

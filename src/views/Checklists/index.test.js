@@ -25,6 +25,14 @@ ${filename}
   }
 }
 
+jest.mock('react-i18next', () => ({
+  // this mock makes sure any components using the translate HoC receive the t function as a prop
+  withNamespaces: () => Component => {
+    Component.defaultProps = { ...Component.defaultProps, t: a => a };
+    return Component;
+  }
+}));
+
 /// TESTS
 const characterId = 'CHARACTER_ID';
 const manifest = loadManifest();
@@ -42,7 +50,8 @@ const lists = [
   'sleeperNodes',
   'ghostScans',
   'latentMemories',
-  'caydesJournals'
+  'caydesJournals',
+  'ghostStories'
 ];
 
 lists.forEach(l => {
@@ -62,10 +71,11 @@ test(`Checklists matches shallow snapshot`, () => {
       width: 1280,
       height: 720
     },
-    data: dataShallow,
+    profile: { characterId, data: dataShallow },
+    theme: {},
     showAllItems: true,
+    collectibles: {},
     manifest,
-    characterId,
     t
   };
 

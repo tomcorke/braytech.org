@@ -74,8 +74,8 @@ class ChecklistFactoryHelpers {
     const bubbleHash = item.bubbleHash || mapping.bubbleHash;
 
     // Try to find the destination, place and bubble by the hashes if we have them
-    const destination = destinationHash && find(manifest.DestinyDestinationDefinition, { hash: destinationHash });
-    const place = destination && find(manifest.DestinyPlaceDefinition, { hash: destination.placeHash });
+    const destination = destinationHash && manifest.DestinyDestinationDefinition[destinationHash];
+    const place = destination && manifest.DestinyPlaceDefinition[destination.placeHash];
     const bubble = bubbleHash && find(destination.bubbles, { hash: bubbleHash });
 
     // If the item has a name with a number in it, extract it so we can use it later
@@ -127,7 +127,7 @@ class ChecklistFactoryHelpers {
 
     options = { ...defaultOptions, ...options };
 
-    const items = sortBy(options.items, options.sortBy);
+    const items = options.sortBy ? sortBy(options.items, options.sortBy) : options.items;
 
     const visible = this.hideCompletedItems ? items.filter(i => !i.completed) : items;
     const mapPath = i => i.destinationHash && `destiny/maps/${i.destinationHash}/${i.hash}`;
