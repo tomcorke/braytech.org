@@ -122,15 +122,14 @@ class ChecklistFactoryHelpers {
       sortBy: ['completed', 'place', 'bubble'],
       binding: this.t('Profile bound'),
       itemTitle: i => i.bubble || '???',
-      itemSubtitle: i => i.place
+      itemSubtitle: i => i.place,
+      mapPath: i => i.destinationHash && `destiny/maps/${i.destinationHash}/${i.hash}`
     };
 
     options = { ...defaultOptions, ...options };
 
     const items = options.sortBy ? sortBy(options.items, options.sortBy) : options.items;
-
     const visible = this.hideCompletedItems ? items.filter(i => !i.completed) : items;
-    const mapPath = i => i.destinationHash && `destiny/maps/${i.destinationHash}/${i.hash}`;
 
     const checklist = (
       <Checklist
@@ -141,7 +140,7 @@ class ChecklistFactoryHelpers {
         completedItems={items.filter(i => i.completed).length}
       >
         {visible.map(i => (
-          <ChecklistItem key={i.hash} completed={i.completed} mapPath={mapPath(i)}>
+          <ChecklistItem key={i.hash} completed={i.completed} mapPath={options.mapPath(i)}>
             <div className='text'>
               <p>{options.itemTitle(i)}</p>
               {options.itemSubtitle(i) && <p>{options.itemSubtitle(i)}</p>}

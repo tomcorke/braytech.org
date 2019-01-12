@@ -67,7 +67,8 @@ export class Checklists extends React.Component {
     ];
 
     if (
-      Object.values(this.props.profile.data.profile.profileProgression.data.checklists[2448912219]).filter(i => i).length === 4
+      Object.values(this.props.profile.data.profile.profileProgression.data.checklists[2448912219]).filter(i => i)
+        .length === 4
     ) {
       lists.push(f.caydesJournals());
     }

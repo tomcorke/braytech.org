@@ -166,7 +166,6 @@ class ChecklistFactory {
       const bubble = find(destination.bubbles, { hash: mapping.bubbleHash });
 
       return {
-        destination: destination.displayProperties.name,
         place: place && place.displayProperties.name,
         bubble: (bubble && bubble.displayProperties.name) || 'High Plains',
         record: item.displayProperties.name,
@@ -184,6 +183,7 @@ class ChecklistFactory {
       progressDescription: this.t('Stories found'),
       itemTitle: i => i.record,
       itemSubtitle: i => `${i.bubble}, ${i.place}`,
+      mapPath: i => `destiny/maps/${i.destinationHash}/record/${i.hash}`,
       sortBy: false
     });
   }
