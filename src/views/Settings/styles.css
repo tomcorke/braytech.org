@@ -35,6 +35,7 @@
 @media screen and (max-width: 500px) {
   #settings {
     padding: 2rem;
+    grid-gap: 2rem;
     grid-template-columns: repeat(1, 1fr);
   }
 

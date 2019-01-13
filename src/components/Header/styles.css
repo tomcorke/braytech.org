@@ -125,11 +125,13 @@
   margin: 0 0 1rem;
   display: block;
   flex-basis: 100%;
+  position: relative;
 }
 
 #header .nav ul li a {
   height: unset;
   padding: unset;
+  position: unset;
   display: inline-block;
   margin: 0 0 0.6rem;
   color: rgba(0, 0, 0, 0.9);
@@ -139,10 +141,10 @@
 #header .nav ul li a::before {
   content: ' ';
   position: absolute;
-  bottom: -2px;
-  height: 1px;
-  left: 0;
-  width: 100%;
+  bottom: 0px;
+  height: 100%;
+  left: -8px;
+  width: 2px;
   background-color: rgba(0, 0, 0, 1);
   transition: transform 0.2s;
   transform: scaleX(0);

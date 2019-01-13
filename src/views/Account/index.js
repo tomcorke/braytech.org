@@ -169,15 +169,18 @@ class Account extends React.Component {
         3260604717, // Not Forgotten
         4047371119, // The Mountaintop
 
-        1660030045, // Malfeasance
-        1666039008, // Breakneck
-
         3810740723, // Loaded Question
+
+        1666039008, // Breakneck
+        1660030045, // Malfeasance
 
         1660030044, // Wish-Ender
 
-        199171386, // Sleeper Simulant
-        199171387 // Worldline Zero
+        199171386,  // Sleeper Simulant
+        199171387,  // Worldline Zero
+
+        1469913803, // Harbinger's Echo
+        3142437750, // A Thousand Wings
       ];
 
       return (

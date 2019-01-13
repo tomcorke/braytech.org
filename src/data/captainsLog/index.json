@@ -67,6 +67,6 @@
   {
     "date": "2019-01-13T04:27:23.136Z",
     "version": "1.3.5",
-    "content": "## Changes\n- added a new mini-feature: next 💯 closest to complete triumphs\n- added HTML entity decoding for whacky clan names and call signs\n- usual number of minor style changes"
+    "content": "## Changes\n- added a new mini-feature: next 💯 closest to complete triumphs\n- added HTML entity decoding for whacky clan names and call signs\n- usual number of minor style changes\n- mobile nav improvements including dark mode"
   }
 ]
