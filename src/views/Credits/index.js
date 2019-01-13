@@ -58,10 +58,10 @@ class Credits extends React.Component {
                 <strong>{t('Index')}</strong>
                 <ul>
                   <li>
-                    <a href='https://www.artstation.com/artwork/m9q01' target='_blank' rel='noopener noreferrer'>
+                    <a href='https://www.artstation.com/artwork/nP22e' target='_blank' rel='noopener noreferrer'>
                       Image
                     </a>{' '}
-                    by Andrew Averkin / Blur
+                    by Dorje Bellbrook / Bungie
                   </li>
                 </ul>
               </li>
