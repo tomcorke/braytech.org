@@ -25,17 +25,19 @@ class Root extends React.Component {
     let badgesStates = [];
 
     // recently discovered
-    profileCollectibles.recentCollectibleHashes.forEach(child => {
-      let collectibleDefinition = manifest.DestinyCollectibleDefinition[child];
-
-      recentlyDiscovered.push(
-        <li key={collectibleDefinition.hash} className={cx('item', 'tooltip')} data-itemhash={collectibleDefinition.itemHash}>
-          <div className='icon'>
-            <ObservedImage className={cx('image', 'icon')} src={`https://www.bungie.net${collectibleDefinition.displayProperties.icon}`} />
-          </div>
-        </li>
-      );
-    });
+    if (profileCollectibles.recentCollectibleHashes) {
+      profileCollectibles.recentCollectibleHashes.forEach(child => {
+        let collectibleDefinition = manifest.DestinyCollectibleDefinition[child];
+  
+        recentlyDiscovered.push(
+          <li key={collectibleDefinition.hash} className={cx('item', 'tooltip')} data-itemhash={collectibleDefinition.itemHash}>
+            <div className='icon'>
+              <ObservedImage className={cx('image', 'icon')} src={`https://www.bungie.net${collectibleDefinition.displayProperties.icon}`} />
+            </div>
+          </li>
+        );
+      });
+    }
 
     // items nodes
     parent.children.presentationNodes.forEach(child => {

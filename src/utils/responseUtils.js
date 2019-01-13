@@ -1,3 +1,6 @@
+
+import entities from 'entities';
+
 export const profileScrubber = response => {
 
   // convert character response to an array
@@ -43,5 +46,16 @@ export const profileScrubber = response => {
   })
 
   return scrubbed;
+
+}
+
+export const groupScrubber = response => {
+  
+  if (response.groups.results.length > 0) {
+    response.groups.results[0].group.clanInfo.clanCallsign = entities.decodeHTML(response.groups.results[0].group.clanInfo.clanCallsign);
+    response.groups.results[0].group.name = entities.decodeHTML(response.groups.results[0].group.name);
+  }
+
+  return response;
 
 }

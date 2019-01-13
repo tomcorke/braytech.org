@@ -86,6 +86,7 @@ async function getProfile(membershipType, membershipId, characterId = false, sta
   }
 
   data = responseUtils.profileScrubber(data);
+  data = responseUtils.groupScrubber(data);
   
   stateCallback({
     data: data,

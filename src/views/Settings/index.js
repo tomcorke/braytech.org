@@ -69,6 +69,7 @@ class Settings extends React.Component {
   render() {
     const { t, availableLanguages } = this.props;
 
+    const complete = ['en', 'de', 'pt-br']
     let languageButtons = availableLanguages.map(code => {
       let langInfo = getLanguageInfo(code);
       return (
@@ -118,6 +119,7 @@ class Settings extends React.Component {
           <div className='sub-header sub'>
             <div>{t('Theme')}</div>
           </div>
+          <div className='description'>{t('Set the theme')}</div>
           <ul className='list settings'>
             <li
               key='light'
@@ -137,10 +139,11 @@ class Settings extends React.Component {
             </li>
           </ul>
         </div>
-        <div className='module theme'>
+        <div className='module refresh-service'>
           <div className='sub-header sub'>
             <div>{t('Refresh service')}</div>
           </div>
+          <div className='description'>{t("This is an experimental feature that will refresh the active profile's data every 20 seconds")}</div>
           <ul className='list settings'>
             <li
               key='enabled'
@@ -174,12 +177,14 @@ class Settings extends React.Component {
           <div className='sub-header sub'>
             <div>{t('Collectibles')}</div>
           </div>
+          <div className='description'>{t('Choose to hide redeemed triumph records or completed checklist items. This setting applies site-wide.')}</div>
           <ul className='list settings'>{collectiblesButtons}</ul>
         </div>
         <div className='module language'>
           <div className='sub-header sub'>
             <div>{t('Language')}</div>
           </div>
+          <div className='description'>{t('Set manifest language')}</div>
           <ul className='list settings'>{languageButtons}</ul>
           <Button text={t('Save and restart')} invisible={this.state.language.current === this.state.language.selected} action={this.saveAndRestart} />
         </div>
