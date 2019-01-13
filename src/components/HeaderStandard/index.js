@@ -7,7 +7,7 @@ import packageJSON from '../../../package.json';
 
 import './styles.css';
 
-class StandardHeader extends React.Component {
+class HeaderStandard extends React.Component {
   constructor(props) {
     super(props);
 
@@ -116,4 +116,4 @@ export default compose(
   connect(
     mapStateToProps
   )
-)(StandardHeader);
+)(HeaderStandard);

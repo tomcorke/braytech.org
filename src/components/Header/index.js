@@ -5,8 +5,8 @@ import { isProfileRoute } from '../../utils/globals';
 
 import './styles.css';
 
-import StandardHeader from '../StandardHeader';
-import ProfileHeader from '../ProfileHeader';
+import HeaderStandard from '../HeaderStandard';
+import HeaderProfile from '../HeaderProfile';
 
 class Header extends React.Component {
   constructor(props) {
@@ -83,9 +83,9 @@ class Header extends React.Component {
     views = process.env.NODE_ENV !== 'development' ? views.filter(view => !view.dev) : views;
 
     if (this.props.profile.data && this.props.profile.characterId && isProfileRoute(this.props.route.location.pathname)) {
-      return <ProfileHeader {...this.props.route} {...this.props.profile} viewport={this.props.viewport} manifest={this.props.manifest} views={views} />;
+      return <HeaderProfile {...this.props.route} {...this.props.profile} viewport={this.props.viewport} manifest={this.props.manifest} views={views} />;
     } else {
-      return <StandardHeader {...this.props.profile} viewport={this.props.viewport} views={views} isIndex={this.props.route.location.pathname === '/' ? true : false} />;
+      return <HeaderStandard {...this.props.profile} viewport={this.props.viewport} views={views} isIndex={this.props.route.location.pathname === '/' ? true : false} />;
     }
   }
 }

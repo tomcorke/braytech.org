@@ -11,7 +11,7 @@ import { classHashToString } from '../../utils/destinyUtils';
 
 import './styles.css';
 
-class ProfileHeader extends React.Component {
+class HeaderProfile extends React.Component {
   constructor(props) {
     super(props);
     this.manifest = props.manifest;
@@ -180,4 +180,4 @@ export default compose(
   connect(
     mapStateToProps
   )
-)(ProfileHeader);
+)(HeaderProfile);
