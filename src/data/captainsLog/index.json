@@ -65,8 +65,8 @@
     "content": "## Changes\n- Further work on triumphs styling and total logic"
   },
   {
-    "date": "2019-01-13T04:27:23.136Z",
+    "date": "2019-01-13T22:30:10.962Z",
     "version": "1.3.5",
-    "content": "## Changes\n- added a new mini-feature: next 💯 closest to complete triumphs\n- added HTML entity decoding for whacky clan names and call signs\n- usual number of minor style changes\n- mobile nav improvements including dark mode"
+    "content": "## Changes\n- added a new mini-feature: next 💯 closest to complete triumphs\n- added HTML entity decoding for whacky clan names and call signs\n- usual number of minor style changes\n- mobile nav improvements including dark mode\n- fixed a profile history bug\n- enabled GZIP on my server - I thought it was on - so initial loads and updates will be much faster"
   }
 ]

@@ -3,7 +3,6 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import cx from 'classnames';
-import assign from 'lodash/assign';
 import { withNamespaces } from 'react-i18next';
 
 import getProfile from '../../utils/getProfile';
@@ -124,7 +123,7 @@ class CharacterSelect extends React.Component {
                 <li className='linked' key={result.membershipId}>
                   <a
                     onClick={e => {
-                      this.resultClick(result.membershipType, result.membershipId, false, result.displayName);
+                      this.resultClick(result.membershipType, result.membershipId, result.displayName);
                     }}
                   >
                     <span className={`destiny-platform_${destinyEnums.PLATFORMS[result.membershipType].toLowerCase()}`} />
