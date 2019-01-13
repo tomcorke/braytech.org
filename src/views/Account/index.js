@@ -343,8 +343,6 @@ class Account extends React.Component {
       return ranks;
     };
 
-    console.log(this);
-
     return (
       <div className={cx('view', this.props.theme.selected)} id='account'>
         <div className='module'>
