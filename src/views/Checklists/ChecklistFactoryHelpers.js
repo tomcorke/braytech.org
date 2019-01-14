@@ -51,7 +51,7 @@ class ChecklistFactoryHelpers {
     this.hideCompletedItems = hideCompletedItems;
   }
 
-  items(checklistId, isCharacterBound) {
+  checklistItems(checklistId, isCharacterBound) {
     const progressionSource = isCharacterBound
       ? this.profile.characterProgressions.data[this.characterId]
       : this.profile.profileProgression.data;
@@ -61,11 +61,11 @@ class ChecklistFactoryHelpers {
     return Object.entries(progression).map(([id, completed]) => {
       const item = find(checklist.entries, { hash: parseInt(id) });
 
-      return this.item(item, completed);
+      return this.checklistItem(item, completed);
     });
   }
 
-  item(item, completed) {
+  checklistItem(item, completed) {
     const manifest = this.manifest;
 
     const mapping = mappings.checklists[item.hash] || {};
@@ -109,6 +109,37 @@ class ChecklistFactoryHelpers {
     };
   }
 
+  presentationItems(presentationHash, dropFirst = true) {
+    const root = this.manifest.DestinyPresentationNodeDefinition[presentationHash];
+    let recordHashes = root.children.records.map(r => r.recordHash);
+    if (dropFirst) recordHashes = recordHashes.slice(1);
+
+    return recordHashes
+      .map(hash => {
+        const item = this.manifest.DestinyRecordDefinition[hash];
+        const profileRecord = this.profile.profileRecords.data.records[hash];
+        if (!profileRecord) return;
+        const completed = profileRecord.objectives[0].complete;
+
+        const mapping = mappings.records[hash];
+        const destinationHash = mapping.destinationHash;
+        const destination = this.manifest.DestinyDestinationDefinition[destinationHash];
+        const place = destination && this.manifest.DestinyPlaceDefinition[destination.placeHash];
+        const bubble = find(destination.bubbles, { hash: mapping.bubbleHash });
+
+        return {
+          place: place && place.displayProperties.name,
+          bubble: (bubble && bubble.displayProperties.name) || 'High Plains',
+          record: item.displayProperties.name,
+          hash,
+          destinationHash,
+          item,
+          completed
+        };
+      })
+      .filter(i => i);
+  }
+
   numberedChecklist(name, options = {}) {
     return this.checklist({
       sortBy: ['itemNumber'],
@@ -119,7 +150,6 @@ class ChecklistFactoryHelpers {
 
   checklist(options = {}) {
     const defaultOptions = {
-      sortBy: ['completed', 'place', 'bubble'],
       binding: this.t('Profile bound'),
       itemTitle: i => i.bubble || '???',
       itemSubtitle: i => i.place,
