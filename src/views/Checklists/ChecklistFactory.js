@@ -150,14 +150,29 @@ class ChecklistFactory {
   }
 
   ghostStories() {
-    return this.m.checklist({
+    return this.m.recordChecklist({
       name: this.t('Ghost Stories'),
-      icon: 'destiny-sleeper_nodes', // XXX
+      // icon: 'destiny-sleeper_nodes',
       items: this.m.presentationItems(1420597821),
-      progressDescription: this.t('Stories found'),
-      itemTitle: i => i.record,
-      itemSubtitle: i => `${i.bubble}, ${i.place}`,
-      mapPath: i => `destiny/maps/${i.destinationHash}/record/${i.hash}`
+      progressDescription: this.t('Stories found')
+    });
+  }
+
+  awokenOfTheReef() {
+    return this.m.recordChecklist({
+      name: this.t('Awoken of the Reef'),
+      // icon: 'destiny-sleeper_nodes',
+      items: this.m.presentationItems(3305936921),
+      progressDescription: this.t('Crystals scanned')
+    });
+  }
+
+  forsakenPrince() {
+    return this.m.recordChecklist({
+      name: this.t('Forsaken Prince'),
+      // icon: 'destiny-sleeper_nodes'
+      items: this.m.presentationItems(655926402),
+      progressDescription: this.t('Lore scanned') // I have no idea what these things are that we're scanning?
     });
   }
 }

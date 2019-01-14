@@ -33,14 +33,10 @@ Object.entries(input.data.checklists).forEach(([id, indices]) => {
   };
 });
 
-const recordsToMatch = ['The Forsaken Prince', 'Ghost Stories', 'Awoken of the Reef'];
-
 Object.entries(input.data.records).forEach(([id, indices]) => {
   if (!indices || indices.length === 0) return;
 
   const item = input.data.nodes[indices[0]];
-
-  if (!recordsToMatch.find(r => item.node.title.includes(r))) return;
 
   output.records[id] = {
     destinationId: item.destinationId,

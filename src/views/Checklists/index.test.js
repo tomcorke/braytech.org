@@ -51,7 +51,9 @@ const lists = [
   'ghostScans',
   'latentMemories',
   'caydesJournals',
-  'ghostStories'
+  'ghostStories',
+  'awokenOfTheReef',
+  'forsakenPrince'
 ];
 
 lists.forEach(l => {

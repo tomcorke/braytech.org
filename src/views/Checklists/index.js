@@ -63,7 +63,9 @@ export class Checklists extends React.Component {
       f.sleeperNodes(),
       f.ghostScans(),
       f.latentMemories(),
-      f.ghostStories()
+      f.ghostStories(),
+      f.awokenOfTheReef(),
+      f.forsakenPrince()
     ];
 
     if (
