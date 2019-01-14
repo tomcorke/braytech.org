@@ -12,6 +12,7 @@ import mappings from '../../data/mappings';
 // with https://docs.google.com/spreadsheets/d/1qgZtT1qbUFjyV8-ni73m6UCHTcuLmuLBx-zn_B7NFkY/edit#gid=1808601275
 const manualBubbleNames = {
   default: 'The Farm',
+  'high-plains': 'High Plains',
   erebus: 'The Shattered Throne',
   descent: 'The Shattered Throne',
   eleusinia: 'The Shattered Throne',
@@ -34,11 +35,6 @@ const itemOverrides = {
   // strike item.
   1370818869: {
     bubble: 'The Corrupted'
-  },
-
-  // No bubble on this region chest, but it's in the High Plains
-  1997430677: {
-    bubble: 'High Plains'
   }
 };
 
@@ -51,7 +47,7 @@ class ChecklistFactoryHelpers {
     this.hideCompletedItems = hideCompletedItems;
   }
 
-  items(checklistId, isCharacterBound) {
+  checklistItems(checklistId, isCharacterBound) {
     const progressionSource = isCharacterBound
       ? this.profile.characterProgressions.data[this.characterId]
       : this.profile.profileProgression.data;
@@ -61,11 +57,11 @@ class ChecklistFactoryHelpers {
     return Object.entries(progression).map(([id, completed]) => {
       const item = find(checklist.entries, { hash: parseInt(id) });
 
-      return this.item(item, completed);
+      return this.checklistItem(item, completed);
     });
   }
 
-  item(item, completed) {
+  checklistItem(item, completed) {
     const manifest = this.manifest;
 
     const mapping = mappings.checklists[item.hash] || {};
@@ -74,8 +70,8 @@ class ChecklistFactoryHelpers {
     const bubbleHash = item.bubbleHash || mapping.bubbleHash;
 
     // Try to find the destination, place and bubble by the hashes if we have them
-    const destination = destinationHash && find(manifest.DestinyDestinationDefinition, { hash: destinationHash });
-    const place = destination && find(manifest.DestinyPlaceDefinition, { hash: destination.placeHash });
+    const destination = destinationHash && manifest.DestinyDestinationDefinition[destinationHash];
+    const place = destination && manifest.DestinyPlaceDefinition[destination.placeHash];
     const bubble = bubbleHash && find(destination.bubbles, { hash: bubbleHash });
 
     // If the item has a name with a number in it, extract it so we can use it later
@@ -109,6 +105,44 @@ class ChecklistFactoryHelpers {
     };
   }
 
+  presentationItems(presentationHash, dropFirst = true) {
+    const root = this.manifest.DestinyPresentationNodeDefinition[presentationHash];
+    let recordHashes = root.children.records.map(r => r.recordHash);
+    if (dropFirst) recordHashes = recordHashes.slice(1);
+
+    return recordHashes
+      .map(hash => {
+        const item = this.manifest.DestinyRecordDefinition[hash];
+        const profileRecord = this.profile.profileRecords.data.records[hash];
+        if (!profileRecord) return;
+        const completed = profileRecord.objectives[0].complete;
+
+        const mapping = mappings.records[hash];
+        const destinationHash = mapping && mapping.destinationHash;
+        const destination = destinationHash && this.manifest.DestinyDestinationDefinition[destinationHash];
+        const place = destination && this.manifest.DestinyPlaceDefinition[destination.placeHash];
+        const bubble = destination && find(destination.bubbles, { hash: mapping.bubbleHash });
+
+        // If we don't have a bubble, see if we can infer one from the bubble ID
+        let bubbleName =
+          (bubble && bubble.displayProperties.name) ||
+          (mapping && mapping.bubbleId && manualBubbleNames[mapping.bubbleId]) ||
+          '';
+
+        return {
+          place: place && place.displayProperties.name,
+          bubble: bubbleName,
+          record: item.displayProperties.name,
+          hash,
+          destinationHash,
+          item,
+          completed,
+          ...itemOverrides[item.hash]
+        };
+      })
+      .filter(i => i);
+  }
+
   numberedChecklist(name, options = {}) {
     return this.checklist({
       sortBy: ['itemNumber'],
@@ -117,20 +151,27 @@ class ChecklistFactoryHelpers {
     });
   }
 
+  recordChecklist(options = {}) {
+    return this.checklist({
+      itemTitle: i => i.record,
+      itemSubtitle: i => (i.bubble && i.place ? `${i.bubble}, ${i.place}` : <em>Forsaken Campaign</em>),
+      mapPath: i => i.destinationHash && `destiny/maps/${i.destinationHash}/record/${i.hash}`,
+      ...options
+    });
+  }
+
   checklist(options = {}) {
     const defaultOptions = {
-      sortBy: ['completed', 'place', 'bubble'],
       binding: this.t('Profile bound'),
       itemTitle: i => i.bubble || '???',
-      itemSubtitle: i => i.place
+      itemSubtitle: i => i.place,
+      mapPath: i => i.destinationHash && `destiny/maps/${i.destinationHash}/${i.hash}`
     };
 
     options = { ...defaultOptions, ...options };
 
-    const items = sortBy(options.items, options.sortBy);
-
+    const items = options.sortBy ? sortBy(options.items, options.sortBy) : options.items;
     const visible = this.hideCompletedItems ? items.filter(i => !i.completed) : items;
-    const mapPath = i => i.destinationHash && `destiny/maps/${i.destinationHash}/${i.hash}`;
 
     const checklist = (
       <Checklist
@@ -141,7 +182,7 @@ class ChecklistFactoryHelpers {
         completedItems={items.filter(i => i.completed).length}
       >
         {visible.map(i => (
-          <ChecklistItem key={i.hash} completed={i.completed} mapPath={mapPath(i)}>
+          <ChecklistItem key={i.hash} completed={i.completed} mapPath={options.mapPath(i)}>
             <div className='text'>
               <p>{options.itemTitle(i)}</p>
               {options.itemSubtitle(i) && <p>{options.itemSubtitle(i)}</p>}

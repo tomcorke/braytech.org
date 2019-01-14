@@ -1762,6 +1762,705 @@ Array [
 ]
 `;
 
+exports[`Checklist awokenOfTheReef matches snapshot 1`] = `
+Array [
+  <div
+    className="head"
+  >
+    <h4>
+      Awoken of the Reef
+    </h4>
+    <div
+      className="binding"
+    >
+      <p>
+        Profile bound
+      </p>
+    </div>
+    <div
+      className="progress-bar chunky"
+    >
+      <div
+        className="bar full"
+      >
+        <div
+          className="text"
+        >
+          <div
+            className="description"
+          >
+            Crystals scanned
+          </div>
+          <div
+            className="fraction"
+          >
+            5
+            /
+            23
+          </div>
+        </div>
+        <div
+          className="fill"
+          style={
+            Object {
+              "width": "21.73913043478261%",
+            }
+          }
+        />
+      </div>
+    </div>
+  </div>,
+  <ul
+    className="list no-interaction"
+  >
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Revanche II
+        </p>
+        <p>
+          Gardens of Esila, The Dreaming City
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/2779202173/record/276019960?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Revanche III
+        </p>
+        <p>
+          The Strand, The Dreaming City
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/2779202173/record/276019963?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state completed"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Revanche IV
+        </p>
+        <p>
+          Rheasilvia, The Dreaming City
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/2779202173/record/276019962?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Revanche V
+        </p>
+        <p>
+          Rheasilvia, The Dreaming City
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/2779202173/record/276019965?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Telic I
+        </p>
+        <p>
+          Font of Starlight, The Dreaming City
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/2779202173/record/276019964?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state completed"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Telic II
+        </p>
+        <p>
+          Divalian Mists, The Dreaming City
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/2779202173/record/276019967?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Tyrannocide I
+        </p>
+        <p>
+          Harbinger's Seclude, The Dreaming City
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/2779202173/record/276019966?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state completed"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Tyrannocide II
+        </p>
+        <p>
+          Divalian Mists, The Dreaming City
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/2779202173/record/276019953?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Tyrannocide III
+        </p>
+        <p>
+          High Plains, The Tangled Shore
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/359854275/record/276019952?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state completed"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Tyrannocide IV
+        </p>
+        <p>
+          Spine of Keres, The Dreaming City
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/2779202173/record/259242246?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Tyrannocide V
+        </p>
+        <p>
+          Trapper's Cave, The Tangled Shore
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/359854275/record/259242247?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Regent
+        </p>
+        <p>
+          The Boil, The Tangled Shore
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/359854275/record/259242244?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Illyn
+        </p>
+        <p>
+          Shipyard AWO-43, The Tangled Shore
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/359854275/record/259242245?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Nitrogen
+        </p>
+        <p>
+          Hellrise Canyon, The Tangled Shore
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/359854275/record/259242242?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Refusal
+        </p>
+        <p>
+          Hall of the Exalted, The Tangled Shore
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/359854275/record/259242243?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Fleet
+        </p>
+        <p>
+          The Cobble, The Tangled Shore
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/359854275/record/259242240?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Of Earth and the Reef
+        </p>
+        <p>
+          Scavenger's Den, Earth
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/1199524104/record/259242241?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Pilgrimage
+        </p>
+        <p>
+          Sinking Docks, Titan, Moon of Saturn
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/2388758973/record/259242254?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Flayed
+        </p>
+        <p>
+          The Conflux, Nessus
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/126924919/record/259242255?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state completed"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Gensym Scribe
+        </p>
+        <p>
+          Grove of Ulan-Tan, Io
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/2218917881/record/242464659?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Exegesis
+        </p>
+        <p>
+          Pariah's Refuge, Mercury
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/1993421442/record/242464658?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          King's Wrath
+        </p>
+        <p>
+          Dark Monastery, The Dreaming City
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/2779202173/record/242464657?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Emissary
+        </p>
+        <p>
+          Ma'adim Subterrane, Mars
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/308080871/record/242464656?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+  </ul>,
+]
+`;
+
 exports[`Checklist catStatues matches snapshot 1`] = `
 Array [
   <div
@@ -3346,6 +4045,577 @@ Array [
       >
         <a
           href="https://lowlidev.com.au/destiny/maps/2779202173/1034141726?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+  </ul>,
+]
+`;
+
+exports[`Checklist forsakenPrince matches snapshot 1`] = `
+Array [
+  <div
+    className="head"
+  >
+    <h4>
+      Forsaken Prince
+    </h4>
+    <div
+      className="binding"
+    >
+      <p>
+        Profile bound
+      </p>
+    </div>
+    <div
+      className="progress-bar chunky"
+    >
+      <div
+        className="bar full"
+      >
+        <div
+          className="text"
+        >
+          <div
+            className="description"
+          >
+            Lore scanned
+          </div>
+          <div
+            className="fraction"
+          >
+            9
+            /
+            20
+          </div>
+        </div>
+        <div
+          className="fill"
+          style={
+            Object {
+              "width": "45%",
+            }
+          }
+        />
+      </div>
+    </div>
+  </div>,
+  <ul
+    className="list no-interaction"
+  >
+    <li>
+      <div
+        className="state completed"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          The Length of a Chain | Part I
+        </p>
+        <p>
+          <em>
+            Forsaken Campaign
+          </em>
+        </p>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state completed"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          The Length of a Chain | Part II
+        </p>
+        <p>
+          <em>
+            Forsaken Campaign
+          </em>
+        </p>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state completed"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          At the Gate | Part I
+        </p>
+        <p>
+          High Plains, The Tangled Shore
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/359854275/record/3448739526?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          At the Gate | Part II
+        </p>
+        <p>
+          High Plains, The Tangled Shore
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/359854275/record/3448739521?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state completed"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Through the Gate
+        </p>
+        <p>
+          High Plains, The Tangled Shore
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/359854275/record/3448739520?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state completed"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          In the Garden
+        </p>
+        <p>
+          <em>
+            Forsaken Campaign
+          </em>
+        </p>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          On the Hunt
+        </p>
+        <p>
+          Shipyard AWO-43, The Tangled Shore
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/359854275/record/3448739522?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state completed"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          After the Heart | Part I
+        </p>
+        <p>
+          <em>
+            Forsaken Campaign
+          </em>
+        </p>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          After the Heart | Part II
+        </p>
+        <p>
+          Hall of the Exalted, The Tangled Shore
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/359854275/record/3448739532?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Jolyon
+        </p>
+        <p>
+          The Drain, Earth
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/1199524104/record/3431961938?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          After the Fall
+        </p>
+        <p>
+          Flooded Chasm, Earth
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/1199524104/record/3431961939?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Kings
+        </p>
+        <p>
+          Excavation Site XII, Earth
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/1199524104/record/3431961936?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state completed"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Fanatic | Part I
+        </p>
+        <p>
+          Alton Dynamo, Mars
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/308080871/record/3431961937?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Fanatic | Part II
+        </p>
+        <p>
+          Olympus Descent, Mars
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/308080871/record/3431961942?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state completed"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          The Severance
+        </p>
+        <p>
+          Soriks's Cut, The Tangled Shore
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/359854275/record/3431961943?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Fikrul
+        </p>
+        <p>
+          Soriks's Cut, The Tangled Shore
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/359854275/record/3431961940?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Docking
+        </p>
+        <p>
+          Kingship Dock, The Tangled Shore
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/359854275/record/3431961941?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Petra
+        </p>
+        <p>
+          Trapper's Cave, The Tangled Shore
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/359854275/record/3431961946?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state completed"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Free | Part I
+        </p>
+        <p>
+          The Cobble, The Tangled Shore
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/359854275/record/3431961947?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Free | Part II
+        </p>
+        <p>
+          The Cobble, The Tangled Shore
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/359854275/record/3415184383?origin=BRAYTECH"
           rel="noopener noreferrer"
           target="_blank"
         >
@@ -7909,6 +9179,705 @@ Array [
       >
         <a
           href="https://lowlidev.com.au/destiny/maps/4188263703/3249685481?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+  </ul>,
+]
+`;
+
+exports[`Checklist ghostStories matches snapshot 1`] = `
+Array [
+  <div
+    className="head"
+  >
+    <h4>
+      Ghost Stories
+    </h4>
+    <div
+      className="binding"
+    >
+      <p>
+        Profile bound
+      </p>
+    </div>
+    <div
+      className="progress-bar chunky"
+    >
+      <div
+        className="bar full"
+      >
+        <div
+          className="text"
+        >
+          <div
+            className="description"
+          >
+            Stories found
+          </div>
+          <div
+            className="fraction"
+          >
+            12
+            /
+            23
+          </div>
+        </div>
+        <div
+          className="fill"
+          style={
+            Object {
+              "width": "52.17391304347826%",
+            }
+          }
+        />
+      </div>
+    </div>
+  </div>,
+  <ul
+    className="list no-interaction"
+  >
+    <li>
+      <div
+        className="state completed"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Pressure
+        </p>
+        <p>
+          High Plains, The Tangled Shore
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/359854275/record/2121305070?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state completed"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Ghost Hunter
+        </p>
+        <p>
+          Shipyard AWO-43, The Tangled Shore
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/359854275/record/2121305069?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state completed"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          The Chosen's Choice
+        </p>
+        <p>
+          The Boil, The Tangled Shore
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/359854275/record/2121305068?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state completed"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          The We Before Us
+        </p>
+        <p>
+          Hall of the Exalted, The Tangled Shore
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/359854275/record/2121305067?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Don't Call Me Ghost
+        </p>
+        <p>
+          Shaft 13, Earth
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/1199524104/record/2121305066?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Compliments
+        </p>
+        <p>
+          The Drain, Earth
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/1199524104/record/2121305065?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          No Rez for the Weary
+        </p>
+        <p>
+          The Quarry, Earth
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/1199524104/record/2121305064?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Confession of Hope | Part One
+        </p>
+        <p>
+          Arboretum, Titan, Moon of Saturn
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/2388758973/record/2121305063?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          The Watchful Eye
+        </p>
+        <p>
+          Siren's Watch, Titan, Moon of Saturn
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/2388758973/record/2121305062?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Into the Fray
+        </p>
+        <p>
+          DS Quarters-2, Titan, Moon of Saturn
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/2388758973/record/2104527484?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state completed"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Struck by Wonder
+        </p>
+        <p>
+          Watcher's Grave, Nessus
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/126924919/record/2104527485?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state completed"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Confession of Hope | Part Two
+        </p>
+        <p>
+          The Tangle, Nessus
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/126924919/record/2104527486?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state completed"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          A Hero's Requiem
+        </p>
+        <p>
+          The Rift, Nessus
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/126924919/record/2104527487?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          From Fallen Ground
+        </p>
+        <p>
+          Pariah's Refuge, Mercury
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/1993421442/record/2104527480?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Ghost Community Theater Presents
+        </p>
+        <p>
+          Aphix Conduit, Io
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/2218917881/record/2104527481?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Difference of Opinion
+        </p>
+        <p>
+          Sanctum of Bones, Io
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/2218917881/record/2104527482?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Protector of Ghosts
+        </p>
+        <p>
+          Terrabase Charon, Io
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/2218917881/record/2104527483?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state completed"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Savin
+        </p>
+        <p>
+          Core Terminus, Mars
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/308080871/record/2104527476?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state completed"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Pulled Pork
+        </p>
+        <p>
+          Alton Dynamo, Mars
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/308080871/record/2104527477?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Who Guards the Guardians?
+        </p>
+        <p>
+          Wolfship Turbine, The Tangled Shore
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/359854275/record/2154860341?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state completed"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Whether Windmills or Cranes
+        </p>
+        <p>
+          Kingship Dock, The Tangled Shore
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/359854275/record/2154860340?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state completed"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          Batteries Not Included
+        </p>
+        <p>
+          The Cobble, The Tangled Shore
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/359854275/record/2154860343?origin=BRAYTECH"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <i
+            className="uniE1C4"
+          />
+        </a>
+      </div>
+    </li>
+    <li>
+      <div
+        className="state completed"
+      />
+      <div
+        className="text"
+      >
+        <p>
+          To Map the Unknown
+        </p>
+        <p>
+          Spider's Safehouse, The Tangled Shore
+        </p>
+      </div>
+      <div
+        className="lowlines"
+      >
+        <a
+          href="https://lowlidev.com.au/destiny/maps/359854275/record/2154860342?origin=BRAYTECH"
           rel="noopener noreferrer"
           target="_blank"
         >
@@ -14555,6 +16524,57 @@ exports[`Checklists matches shallow snapshot 1`] = `
           </div>
         </a>
       </li>
+      <li
+        className="linked"
+      >
+        <a
+          className="active"
+          data-index={9}
+          href="/"
+          onClick={[Function]}
+        >
+          <div />
+          <div
+            className="name"
+          >
+            Ghost Stories
+          </div>
+        </a>
+      </li>
+      <li
+        className="linked"
+      >
+        <a
+          className="active"
+          data-index={10}
+          href="/"
+          onClick={[Function]}
+        >
+          <div />
+          <div
+            className="name"
+          >
+            Awoken of the Reef
+          </div>
+        </a>
+      </li>
+      <li
+        className="linked"
+      >
+        <a
+          className="active"
+          data-index={11}
+          href="/"
+          onClick={[Function]}
+        >
+          <div />
+          <div
+            className="name"
+          >
+            Forsaken Prince
+          </div>
+        </a>
+      </li>
     </ul>
   </div>
   <div
@@ -15242,6 +17262,183 @@ exports[`Checklists matches shallow snapshot 1`] = `
           </div>
         </li>
       </ul>
+    </div>
+    <div
+      className="col"
+    >
+      <div
+        className="head"
+      >
+        <h4>
+          Ghost Stories
+        </h4>
+        <div
+          className="binding"
+        >
+          <p>
+            Profile bound
+          </p>
+        </div>
+        <div
+          className="progress-bar chunky"
+        >
+          <div
+            className="bar full"
+          >
+            <div
+              className="text"
+            >
+              <div
+                className="description"
+              >
+                Stories found
+              </div>
+              <div
+                className="fraction"
+              >
+                0
+                /
+                0
+              </div>
+            </div>
+            <div
+              className="fill"
+              style={
+                Object {
+                  "width": "NaN%",
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        className="info"
+      >
+        <div
+          className="text"
+        >
+          You've completed this list.
+        </div>
+      </div>
+    </div>
+    <div
+      className="col"
+    >
+      <div
+        className="head"
+      >
+        <h4>
+          Awoken of the Reef
+        </h4>
+        <div
+          className="binding"
+        >
+          <p>
+            Profile bound
+          </p>
+        </div>
+        <div
+          className="progress-bar chunky"
+        >
+          <div
+            className="bar full"
+          >
+            <div
+              className="text"
+            >
+              <div
+                className="description"
+              >
+                Crystals scanned
+              </div>
+              <div
+                className="fraction"
+              >
+                0
+                /
+                0
+              </div>
+            </div>
+            <div
+              className="fill"
+              style={
+                Object {
+                  "width": "NaN%",
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        className="info"
+      >
+        <div
+          className="text"
+        >
+          You've completed this list.
+        </div>
+      </div>
+    </div>
+    <div
+      className="col"
+    >
+      <div
+        className="head"
+      >
+        <h4>
+          Forsaken Prince
+        </h4>
+        <div
+          className="binding"
+        >
+          <p>
+            Profile bound
+          </p>
+        </div>
+        <div
+          className="progress-bar chunky"
+        >
+          <div
+            className="bar full"
+          >
+            <div
+              className="text"
+            >
+              <div
+                className="description"
+              >
+                Lore scanned
+              </div>
+              <div
+                className="fraction"
+              >
+                0
+                /
+                0
+              </div>
+            </div>
+            <div
+              className="fill"
+              style={
+                Object {
+                  "width": "NaN%",
+                }
+              }
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        className="info"
+      >
+        <div
+          className="text"
+        >
+          You've completed this list.
+        </div>
+      </div>
     </div>
   </div>
 </div>

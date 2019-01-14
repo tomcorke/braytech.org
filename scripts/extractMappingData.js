@@ -15,7 +15,8 @@ if (process.argv.length !== 3) {
 const input = JSON.parse(fs.readFileSync(process.argv[2]));
 
 const output = {
-  checklists: {}
+  checklists: {},
+  records: {}
 };
 
 Object.entries(input.data.checklists).forEach(([id, indices]) => {
@@ -23,13 +24,25 @@ Object.entries(input.data.checklists).forEach(([id, indices]) => {
 
   const item = input.data.nodes[indices[0]];
 
-  const record = input.data;
   output.checklists[id] = {
     destinationId: item.destinationId,
     destinationHash: item.destinationHash,
     bubbleId: item.bubbleId,
     bubbleHash: item.bubbleHash,
     recordHash: item.node.recordHash
+  };
+});
+
+Object.entries(input.data.records).forEach(([id, indices]) => {
+  if (!indices || indices.length === 0) return;
+
+  const item = input.data.nodes[indices[0]];
+
+  output.records[id] = {
+    destinationId: item.destinationId,
+    destinationHash: item.destinationHash,
+    bubbleId: item.bubbleId,
+    bubbleHash: item.bubbleHash
   };
 });
 
