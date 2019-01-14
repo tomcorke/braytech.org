@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import history from './history';
 
-import store from './utils/reduxStore';
+import { configureStore } from './utils/reduxStore';
 
 class AppEntry extends React.Component {
   constructor(props) {
@@ -29,7 +30,7 @@ class AppEntry extends React.Component {
 
   render() {
     return (
-      <Provider store={store}>
+      <Provider store={configureStore(history)}>
         <App updateAvailable={this.state.updateAvailable} />
       </Provider>
     );

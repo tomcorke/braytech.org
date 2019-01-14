@@ -6,13 +6,13 @@ import backend from 'i18next-xhr-backend';
 let _defaultLanguage = 'en';
 let _currentLanguage;
 
-function getCurrentLanguage() {
+export function getCurrentLanguage() {
   if (_currentLanguage) return _currentLanguage;
   _currentLanguage = ls.get('setting.language');
   return _currentLanguage || _defaultLanguage;
 }
 
-function setCurrentLanguage(lang) {
+export function setCurrentLanguage(lang) {
   _currentLanguage = lang;
   ls.set('setting.language', lang);
 }

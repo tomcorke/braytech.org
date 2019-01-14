@@ -81,11 +81,11 @@ class RefreshService extends React.Component {
     } else {
       this.running = true;
     }
-  
+
     // just for the console.warn
     // let time = new Date();
     // console.log("refreshing profile data", time, this.props);
-    
+
     getProfile(membershipType, membershipId, this.props.profile.characterId, (callback) => {
 
       if (!callback.loading && callback.error) {

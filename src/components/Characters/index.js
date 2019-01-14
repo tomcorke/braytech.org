@@ -54,7 +54,7 @@ class Characters extends React.Component {
             />
           </div>
           <Link
-            to={this.props.location.pathname !== '/' ? this.props.location.pathname : '/account'}
+            to={`/account/${this.props.data.profile.profile.data.userInfo.displayName}/${character.membershipType}/${character.membershipId}/${character.characterId}`}
             onClick={e => {
               this.props.characterClick(character.characterId);
             }}

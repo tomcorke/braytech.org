@@ -1,8 +1,7 @@
 import assign from 'lodash/assign';
-import Globals from './globals';
+import Globals from '../globals';
 
-import store from './reduxStore';
-import * as responseUtils from './responseUtils';
+import * as responseUtils from '../responseUtils';
 
 async function apiRequest(membershipType, membershipId) {
   let requests = [
@@ -40,60 +39,61 @@ async function apiRequest(membershipType, membershipId) {
   }
 }
 
-async function getProfile(membershipType, membershipId, characterId = false, stateCallback) {
-  
-  const state = store.getState();
+function getProfile(membershipType, membershipId, characterId = false, stateCallback) {
 
-  // console.log('getProfile', state);
+  return async (dispatch, getState) => {
+    const state = getState();
 
-  stateCallback({
-    data: state.profile.data,
-    characterId: characterId,
-    loading: true,
-    error: false
-  });
-
-  let data = await apiRequest(membershipType, membershipId);
-
-  if (!data) {
     stateCallback({
       data: state.profile.data,
       characterId: characterId,
-      loading: false,
-      error: 'fetch'
+      loading: true,
+      error: false
     });
-    return;
-  }
-  
-  if (data.profile.ErrorCode !== 1) {
+
+    let data = await apiRequest(membershipType, membershipId);
+
+    if (!data) {
+      stateCallback({
+        data: state.profile.data,
+        characterId: characterId,
+        loading: false,
+        error: 'fetch'
+      });
+      return;
+    }
+
+    if (data.profile.ErrorCode !== 1) {
+      stateCallback({
+        data: state.profile.data,
+        characterId: characterId,
+        loading: false,
+        error: data.profile.ErrorCode
+      });
+      return;
+    }
+
+    if (!data.profile.Response.characterProgressions.data) {
+      stateCallback({
+        data: state.profile.data,
+        characterId: characterId,
+        loading: false,
+        error: 'privacy'
+      });
+      return;
+    }
+
+    data = responseUtils.profileScrubber(data);
+    data = responseUtils.groupScrubber(data);
+
     stateCallback({
-      data: state.profile.data,
+      data: data,
       characterId: characterId,
       loading: false,
-      error: data.profile.ErrorCode
+      error: false
     });
-    return;
-  }
 
-  if (!data.profile.Response.characterProgressions.data) {
-    stateCallback({
-      data: state.profile.data,
-      characterId: characterId,
-      loading: false,
-      error: 'privacy'
-    });
-    return;
   }
-
-  data = responseUtils.profileScrubber(data);
-  data = responseUtils.groupScrubber(data);
-  
-  stateCallback({
-    data: data,
-    characterId: characterId,
-    loading: false,
-    error: false
-  });
 }
 
 export default getProfile;

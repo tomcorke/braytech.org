@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 import cx from 'classnames';
 import { withNamespaces } from 'react-i18next';
 
-import getProfile from '../../utils/getProfile';
-import setProfile from '../../utils/setProfile';
+import getProfile from '../../utils/actions/getProfile';
+import setProfile from '../../utils/actions/setProfile';
 import Characters from '../../components/Characters';
 import Globals from '../../utils/globals';
 import * as destinyEnums from '../../utils/destinyEnums';
@@ -72,7 +72,7 @@ class CharacterSelect extends React.Component {
     let data = this.state.profile.data;
     let setAsDefaultProfile = true;
 
-    setProfile(membershipType, membershipId, characterId, data, setAsDefaultProfile);
+    this.props.setProfile(membershipType, membershipId, characterId, data, setAsDefaultProfile);
   };
 
   getProfileCallback = state => {
@@ -88,8 +88,7 @@ class CharacterSelect extends React.Component {
 
   resultClick = (membershipType, membershipId, displayName) => {
     window.scrollTo(0, 0);
-
-    getProfile(membershipType, membershipId, false, this.getProfileCallback);
+    this.props.getProfile(membershipType, membershipId, false, this.getProfileCallback);
 
     if (displayName) {
       ls.update('history.profiles', { membershipType: membershipType, membershipId: membershipId, displayName: displayName }, true, 6);
@@ -102,10 +101,11 @@ class CharacterSelect extends React.Component {
     if (this.props.user.data) {
       this.setState({ profile: { data: this.props.user.data }, loading: false });
     } else if (this.props.user.membershipId && !this.state.profile.data) {
-      getProfile(this.props.user.membershipType, this.props.user.membershipId, this.props.user.characterId, this.getProfileCallback);
+      this.props.getProfile(this.props.user.membershipType, this.props.user.membershipId, this.props.user.characterId, this.getProfileCallback);
     } else {
       this.setState({ loading: false });
     }
+
   }
 
   render() {
@@ -241,13 +241,25 @@ class CharacterSelect extends React.Component {
 function mapStateToProps(state, ownProps) {
   return {
     profile: state.profile,
-    theme: state.theme
+    theme: state.theme,
   };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    getProfile: (membershipType, membershipId, characterId, callback) => dispatch(
+      getProfile(membershipType, membershipId, characterId, callback)
+    ),
+    setProfile: (membershipType, membershipId, characterId, data, setAsDefaultProfile) => dispatch(
+      setProfile(membershipType, membershipId, characterId, data, setAsDefaultProfile)
+    ),
+  }
 }
 
 export default compose(
   connect(
-    mapStateToProps
+    mapStateToProps,
+    mapDispatchToProps
   ),
   withNamespaces()
 )(CharacterSelect);
