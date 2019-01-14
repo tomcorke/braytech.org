@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
@@ -19,7 +19,8 @@ import Loading from './components/Loading';
 import Header from './components/Header';
 import Tooltip from './components/Tooltip';
 import Footer from './components/Footer';
-import Notifications from './components/Notifications';
+import NotificationApp from './components/NotificationApp';
+import NotificationProgress from './components/NotificationProgress';
 
 import Index from './views/Index';
 import CharacterSelect from './views/CharacterSelect';
@@ -37,7 +38,7 @@ import Credits from './views/Credits';
 import Tools from './views/Tools';
 import ClanBannerBuilder from './views/Tools/ClanBannerBuilder';
 
-class App extends Component {
+class App extends React.Component {
   constructor(props) {
     super();
 
@@ -241,7 +242,8 @@ class App extends Component {
             <Route
               render={route => (
                 <div className={cx('wrapper', this.props.theme.selected, { 'profile-route': isProfileRoute(route.location.pathname) })}>
-                  <Route path='/' render={route => <Notifications updateAvailable={this.props.updateAvailable} />} />
+                  <Route path='/' render={route => <NotificationApp updateAvailable={this.props.updateAvailable} />} />
+                  <Route path='/' render={route => <NotificationProgress manifest={this.manifest} />} />
                   <GoogleAnalytics.RouteTracker />
                   <div className='main'>
                     <Route path='/' render={route => <Header route={route} {...this.state} {...this.props} manifest={this.manifest} />} />
@@ -301,7 +303,7 @@ class App extends Component {
             <Route
               render={route => (
                 <div className={cx('wrapper', this.props.theme.selected, { 'profile-route': isProfileRoute(route.location.pathname) })}>
-                  <Route path='/' render={route => <Notifications updateAvailable={this.props.updateAvailable} />} />
+                  <Route path='/' render={route => <NotificationApp updateAvailable={this.props.updateAvailable} />} />
                   <GoogleAnalytics.RouteTracker />
                   <div className='main'>
                     <Route path='/' render={route => <Header route={route} {...this.state} {...this.props} manifest={this.manifest} />} />

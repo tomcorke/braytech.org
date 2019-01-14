@@ -1,4 +1,4 @@
-#notifications {
+#notification-app {
   position: relative;
   z-index: 19;
   width: 100%;
@@ -13,32 +13,32 @@
   font-size: 14px;
 }
 
-#notifications div strong {
+#notification-app div strong {
   margin: 0 1rem 0 0;
 }
 
-#notifications div div {
+#notification-app div div {
   display: inline-block;
 }
 
 @media screen and (max-width: 1200px) {
-  #notifications {
+  #notification-app {
     font-size: 12px;
   }
 }
 
 @media screen and (max-width: 768px) {
-  #notifications {
+  #notification-app {
     height: unset;
     padding: 1rem 2rem;
   }
 
-  #notifications div strong {
+  #notification-app div strong {
     margin: 0 0 0.5rem 0;
     display: block;
   }
 
-  #notifications div div {
+  #notification-app div div {
     display: block;
   }
 }

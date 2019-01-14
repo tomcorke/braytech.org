@@ -1,5 +1,3 @@
-import { connect } from 'react-redux';
-
 import * as ls from './localStorage';
 import store from './reduxStore';
 
@@ -13,20 +11,14 @@ const setProfile = (membershipType, membershipId, characterId = false, data, set
     });
   }
 
-  // console.log('setProfile', membershipType, membershipId, characterId, data, setAsDefaultProfile);
-
-  // this.props.setProfile({
-  //   membershipType: membershipType,
-  //   membershipId: membershipId,
-  //   characterId: characterId,
-  //   data: data
-  // });
+  const state = store.getState();
   
   let value = {
     membershipType: membershipType,
     membershipId: membershipId,
     characterId: characterId,
-    data: data
+    data: data,
+    prevData: state.profile.data
   }
 
   store.dispatch({ type: 'SET_PROFILE', payload: value });

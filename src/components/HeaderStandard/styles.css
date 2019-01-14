@@ -1,5 +1,5 @@
 #header.isIndex {
-  position: sticky;
+  position: fixed;
 }
 
 @media screen and (max-width: 1200px) {

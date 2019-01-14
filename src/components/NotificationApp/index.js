@@ -1,10 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { withNamespaces } from 'react-i18next';
 
 import './styles.css';
 
-class Notifications extends React.Component {
+class NotificationApp extends React.Component {
   constructor(props) {
     super(props);
 
@@ -26,7 +25,7 @@ class Notifications extends React.Component {
 
     if (this.state.update) {
       return (
-        <div id='notifications'>
+        <div id='notification-app'>
           <div>
             <strong>{t('Update available')}</strong>
             <div>{t('An update is available. You can activate it by closing all instances of Braytech.')}</div>
@@ -39,4 +38,4 @@ class Notifications extends React.Component {
   }
 }
 
-export default withNamespaces()(Notifications);
+export default withNamespaces()(NotificationApp);
