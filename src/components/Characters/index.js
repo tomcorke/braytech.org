@@ -9,6 +9,7 @@ import ObservedImage from '../../components/ObservedImage';
 import * as utils from '../../utils/destinyUtils';
 
 import './styles.css';
+import { getAccountUrl } from '../../utils/urls';
 
 class Characters extends React.Component {
   constructor(props) {
@@ -54,7 +55,7 @@ class Characters extends React.Component {
             />
           </div>
           <Link
-            to={`/account/${this.props.data.profile.profile.data.userInfo.displayName}/${character.membershipType}/${character.membershipId}/${character.characterId}`}
+            to={getAccountUrl(this.props.data.profile.profile.data.userInfo, character.characterId)}
             onClick={e => {
               this.props.characterClick(character.characterId);
             }}

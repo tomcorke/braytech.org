@@ -1,13 +1,14 @@
 import { createStore, combineReducers, compose, applyMiddleware } from 'redux';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
 import thunk from 'redux-thunk'
+import { History } from 'history'
 
-import profile from './reducers/profile';
+import profile, { ProfileState } from './reducers/profile';
 import theme from './reducers/theme';
 import collectibles from './reducers/collectibles';
 import refreshService from './reducers/refreshService';
 
-const createRootReducer = (history) => combineReducers({
+const createRootReducer = (history: History) => combineReducers({
   router: connectRouter(history),
   profile,
   theme,
@@ -15,9 +16,13 @@ const createRootReducer = (history) => combineReducers({
   refreshService
 })
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+const composeEnhancers = ((window as any)['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__'] as <R>(a: R) => R) || compose
 
-export const configureStore = (history, initialState = {}) => {
+export interface ApplicationState {
+  profile?: ProfileState
+}
+
+export const configureStore = (history: History, initialState: ApplicationState = {}) => {
   return createStore(
     createRootReducer(history),
     initialState,

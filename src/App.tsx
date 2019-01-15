@@ -292,7 +292,6 @@ class App extends React.Component<AppProps & WithNamespaces, AppState> {
                 <Route path='/character-select' render={route => <CharacterSelect location={route.location} user={this.props.profile} viewport={this.state.viewport} manifest={this.manifest} />} />
                 <Route
                   path='/account'
-                  exact
                   render={route => (
                     <Redirect
                       to={{

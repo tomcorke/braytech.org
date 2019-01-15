@@ -7,6 +7,7 @@ import './styles.css';
 
 import HeaderStandard from '../HeaderStandard';
 import HeaderProfile from '../HeaderProfile';
+import { getAccountUrl } from '../../utils/urls';
 
 class Header extends React.Component {
   constructor(props) {
@@ -16,6 +17,9 @@ class Header extends React.Component {
   }
   render() {
     const { t } = this.props;
+
+    const accountUrl = getAccountUrl(this.props.profile, this.props.profile.characterId);
+
     let views = [
       {
         name: t('Clan'),
@@ -45,7 +49,7 @@ class Header extends React.Component {
       {
         name: t('Account'),
         desc: t("Bird's eye view of your overall progress"),
-        slug: '/account',
+        slug: accountUrl,
         exact: true
       },
       {
@@ -83,9 +87,24 @@ class Header extends React.Component {
     views = process.env.NODE_ENV !== 'development' ? views.filter(view => !view.dev) : views;
 
     if (this.props.profile.data && this.props.profile.characterId && isProfileRoute(this.props.route.location.pathname)) {
-      return <HeaderProfile {...this.props.route} {...this.props.profile} viewport={this.props.viewport} manifest={this.props.manifest} views={views} />;
+      return (
+        <HeaderProfile
+          {...this.props.route}
+          {...this.props.profile}
+          viewport={this.props.viewport}
+          manifest={this.props.manifest}
+          views={views}
+        />
+      );
     } else {
-      return <HeaderStandard {...this.props.profile} viewport={this.props.viewport} views={views} isIndex={this.props.route.location.pathname === '/' ? true : false} />;
+      return (
+        <HeaderStandard
+          {...this.props.profile}
+          viewport={this.props.viewport}
+          views={views}
+          isIndex={this.props.route.location.pathname === '/' ? true : false}
+        />
+      );
     }
   }
 }
