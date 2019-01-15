@@ -37,6 +37,7 @@ class NotificationProgress extends React.Component {
       progress: {
         type: false,
         hash: false,
+        number: 0,
         timedOut: true
       }
     };
@@ -85,6 +86,7 @@ class NotificationProgress extends React.Component {
     let progress = {
       type: false,
       hash: false,
+      number: 0,
       timedOut: false
     };
 
@@ -95,9 +97,14 @@ class NotificationProgress extends React.Component {
         }
         let state = enumerateRecordState(profileRecords[key].state);
         console.log(state);
-        if (!state.objectiveNotCompleted && !state.recordRedeemed) {
+        if (!state.objectiveNotCompleted) { //  && !state.recordRedeemed
+          if (progress.hash) {
+            progress.number = progress.number + 1;
+            return;
+          }
           progress.type = 'record';
           progress.hash = key;
+          progress.number = progress.number + 1;
         }
       });
 
@@ -161,6 +168,7 @@ class NotificationProgress extends React.Component {
               <ObservedImage className={cx('image', 'icon')} src={`https://www.bungie.net${record.displayProperties.icon}`} noConstraints />
               <div className='description'>{description}</div>
             </div>
+            { this.state.progress.number > 1 ? <div className='more'>And {this.state.progress.number - 1} more</div> : null }
           </div>
           {link ? <Link to={link} /> : null}
         </div>

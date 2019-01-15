@@ -78,7 +78,10 @@
 #notification-progress .item {
   border-top: 2px solid rgba(255, 255, 255, 0.4);
   background: radial-gradient(ellipse farthest-corner at 50% 100%, rgba(165, 165, 165, 1) 0%, rgba(135, 135, 135, 0) 100%);
-  padding: 1rem 3rem;
+  padding: 1rem 3rem;  
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
   flex-basis: 100%;
 }
 
@@ -113,6 +116,17 @@ html.backdropfilter #notification-progress .item {
   display: grid;
   align-items: center;
   font-size: 18px;
+  max-width: 600px;
+}
+
+#notification-progress .item .more {
+  margin: 1rem 0 0;
+  padding: 7px 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 16px;
+  flex-basis: 7rem;
+  text-align: center;
 }
 
 
@@ -160,5 +174,10 @@ html.backdropfilter #notification-progress .item {
 
   #notification-progress .item .properties .description {
     font-size: 14px;
+    max-width: unset;
+  }
+
+  #notification-progress .item .more {
+    font-size: 12px;
   }
 }
