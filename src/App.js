@@ -13,7 +13,6 @@ import './utils/i18n';
 import { Globals, isProfileRoute } from './utils/globals';
 import dexie from './utils/dexie';
 import GoogleAnalytics from './components/GoogleAnalytics';
-import refreshService from './utils/refreshService';
 
 import Loading from './components/Loading';
 import Header from './components/Header';
@@ -21,6 +20,7 @@ import Tooltip from './components/Tooltip';
 import Footer from './components/Footer';
 import NotificationApp from './components/NotificationApp';
 import NotificationProgress from './components/NotificationProgress';
+import RefreshService from './components/RefreshService';
 
 import Index from './views/Index';
 import CharacterSelect from './views/CharacterSelect';
@@ -70,10 +70,10 @@ class App extends React.Component {
   };
 
   componentDidUpdate() {
-    if (this.props.refreshService.config.enabled && this.props.profile.data && !window.refreshActive) {
-      window.refreshTimer = false;
-      refreshService(this.props.profile.membershipType, this.props.profile.membershipId);
-    }
+    // if (this.props.refreshService.config.enabled && this.props.profile.data && !window.refreshActive) {
+    //   window.refreshTimer = false;
+    //   refreshService(this.props.profile.membershipType, this.props.profile.membershipId);
+    // }
   }
 
   getVersionAndSettings = () => {
@@ -244,6 +244,7 @@ class App extends React.Component {
                 <div className={cx('wrapper', this.props.theme.selected, { 'profile-route': isProfileRoute(route.location.pathname) })}>
                   <Route path='/' render={route => <NotificationApp updateAvailable={this.props.updateAvailable} />} />
                   <Route path='/' render={route => <NotificationProgress manifest={this.manifest} />} />
+                  <Route path='/' render={route => <RefreshService {...this.props} />} />
                   <GoogleAnalytics.RouteTracker />
                   <div className='main'>
                     <Route path='/' render={route => <Header route={route} {...this.state} {...this.props} manifest={this.manifest} />} />

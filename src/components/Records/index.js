@@ -87,6 +87,10 @@ class Records extends React.Component {
           return;
         }
 
+        // if (recordDefinition.hash === 4160670554) {
+        //   console.log(recordDefinition, objectives, state)
+        // }
+
         // eslint-disable-next-line eqeqeq
         let ref = highlight == recordDefinition.hash ? this.scrollToRecordRef : null;
 

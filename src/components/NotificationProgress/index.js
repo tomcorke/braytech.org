@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import _ from 'lodash';
@@ -94,7 +95,7 @@ class NotificationProgress extends React.Component {
         }
         let state = enumerateRecordState(profileRecords[key].state);
         console.log(state);
-        if (!state.objectiveNotCompleted) { //  && !state.recordRedeemed
+        if (!state.objectiveNotCompleted && !state.recordRedeemed) {
           progress.type = 'record';
           progress.hash = key;
         }
@@ -110,13 +111,45 @@ class NotificationProgress extends React.Component {
 
   render() {
     const { t, manifest } = this.props;
-    
-    const fresh = this.props.profile.data;
-    const stale = this.props.profile.prevData ? this.props.profile.prevData : this.props.profile.data;
-    const characterId = this.props.profile.characterId;
 
     if (this.state.progress.type === 'record') {
       let record = manifest.DestinyRecordDefinition[this.state.progress.hash];
+
+      let link = false;
+      try {
+        let reverse1;
+        let reverse2;
+        let reverse3;
+
+        manifest.DestinyRecordDefinition[record.hash].presentationInfo.parentPresentationNodeHashes.forEach(element => {
+          if (manifest.DestinyPresentationNodeDefinition[1652422747].children.presentationNodes.filter(el => el.presentationNodeHash === element).length > 0) {
+            return; // if hash is a child of seals, skip it
+          }
+          if (reverse1) {
+            return;
+          }
+          reverse1 = manifest.DestinyPresentationNodeDefinition[element];
+        });
+
+        let iteratees = reverse1.presentationInfo ? reverse1.presentationInfo.parentPresentationNodeHashes : reverse1.parentNodeHashes;
+        iteratees.forEach(element => {
+          if (reverse2) {
+            return;
+          }
+          reverse2 = manifest.DestinyPresentationNodeDefinition[element];
+        });
+
+        if (reverse2 && reverse2.parentNodeHashes) {
+          reverse3 = manifest.DestinyPresentationNodeDefinition[reverse2.parentNodeHashes[0]];
+        }
+
+        link = `/triumphs/${reverse3.hash}/${reverse2.hash}/${reverse1.hash}/${record.hash}`;
+      } catch (e) {
+        // console.log(e);
+      }
+
+      let description = record.displayProperties.description !== '' ? record.displayProperties.description : false;
+          description = !description && record.loreHash ? manifest.DestinyLoreDefinition[record.loreHash].displayProperties.description.slice(0, 117).trim() + '...' : description;
       return (
         <div id='notification-progress' className={cx('record', { timedOut: this.state.progress.timedOut })}>
           <div className='type'>
@@ -125,10 +158,11 @@ class NotificationProgress extends React.Component {
           <div className='item'>
             <div className='properties'>
               <div className='name'>{record.displayProperties.name}</div>
-              <ObservedImage className={cx('image', 'icon')} src={`https://www.bungie.net${record.displayProperties.icon}`} />
-              <div className='description'>{record.displayProperties.description}</div>
+              <ObservedImage className={cx('image', 'icon')} src={`https://www.bungie.net${record.displayProperties.icon}`} noConstraints />
+              <div className='description'>{description}</div>
             </div>
           </div>
+          {link ? <Link to={link} /> : null}
         </div>
       );
     } else {

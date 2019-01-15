@@ -28,7 +28,7 @@ class ObservedImage extends React.Component {
       entries.forEach(entry => {
         const { isIntersecting } = entry;
 
-        if (isIntersecting) {
+        if (isIntersecting || this.props.noConstraints) {
           this.image = new window.Image();
           this.image.onload = bmp => {
             let ratio = bmp.target.height / bmp.target.width;
@@ -88,13 +88,13 @@ class ObservedImage extends React.Component {
   }
 
   render() {
-    const classNames = this.props.className;
+    const { className, noConstraints, ...attributes } = this.props;
 
     return (
       <div
-        {...this.props}
+        {...attributes}
         ref={el => (this.element = el)}
-        className={cx(classNames, {
+        className={cx(className, {
           dl: this.state.downloaded
         })}
         style={this.state.styles}

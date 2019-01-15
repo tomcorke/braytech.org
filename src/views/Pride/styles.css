@@ -28,7 +28,6 @@
 @media screen and (max-width: 500px) {
   #pride {
     padding: 2rem;
-    width: calc(100% - 4rem);
   }
   #pride .message {
     margin: 0 0 3rem;

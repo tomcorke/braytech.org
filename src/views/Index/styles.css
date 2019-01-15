@@ -88,6 +88,16 @@
   margin: 0;
 }
 
+#index .changelog .content p a::before {
+  content: ' ';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 100%;
+  border-bottom: 1px solid;
+  opacity: 0.2;
+}
+
 #index .changelog .content h2 {
   margin: 0 0 0.5rem;
   font-size: 14px;
@@ -123,6 +133,10 @@
     grid-gap: 2rem;
     grid-template-columns: 1fr;
     height: unset;
+  }
+
+  #index .image.bg {
+    background-position: 60% center;
   }
 
   #index .logo-feature {

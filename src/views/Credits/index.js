@@ -58,10 +58,10 @@ class Credits extends React.Component {
                 <strong>{t('Index')}</strong>
                 <ul>
                   <li>
-                    <a href='https://www.artstation.com/artwork/nP22e' target='_blank' rel='noopener noreferrer'>
+                    <a href='https://www.artstation.com/artwork/33PaD' target='_blank' rel='noopener noreferrer'>
                       Image
                     </a>{' '}
-                    by Dorje Bellbrook / Bungie
+                    by Jesse van Dijk / Bungie
                   </li>
                 </ul>
               </li>
