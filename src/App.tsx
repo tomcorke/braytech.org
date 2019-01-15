@@ -130,18 +130,29 @@ class App extends React.Component<AppProps & WithNamespaces, AppState> {
     }
   };
 
+<<<<<<< HEAD:src/App.tsx
   getManifest = async ({ settings, version }: { settings: any, version: string }) => {
+=======
+  getManifest = version => {
+    console.log('getManifest', version);
+>>>>>>> Typescript is spreading, and characters are no longer an array:src/App.js
     let state = this.state;
 
     state.status.code = 'fetchManifest';
     state.manifest.version = version;
     this.setState(state);
 
+<<<<<<< HEAD:src/App.tsx
     const getManifestContent = async () => {
+=======
+    let manifest = async () => {
+      console.log('fetch manifest', `https://www.bungie.net${version}`);
+>>>>>>> Typescript is spreading, and characters are no longer an array:src/App.js
       const request = await fetch(`https://www.bungie.net${version}`);
       return request.json();
     };
 
+<<<<<<< HEAD:src/App.tsx
     const manifestContent = await getManifestContent()
 
     state.status.code = 'setManifest';
@@ -163,6 +174,40 @@ class App extends React.Component<AppProps & WithNamespaces, AppState> {
 
     state.status.code = 'ready';
     this.setState(state);
+=======
+    manifest()
+      .then(manifest => {
+        console.log('raw manifest', manifest);
+        let state = this.state;
+        state.status.code = 'setManifest';
+        this.setState(state);
+        dexie
+          .table('manifest')
+          .clear()
+          .then(() => {
+            dexie.table('manifest').add({
+              version: version,
+              value: manifest
+            });
+          })
+          .then(() => {
+            dexie
+              .table('manifest')
+              .toArray()
+              .then(manifest => {
+                this.manifest = manifest[0].value;
+                console.log('manifest', this.manifest)
+                this.manifest.settings = this.bungieSettings;
+                let state = this.state;
+                state.status.code = 'ready';
+                this.setState(state);
+              });
+          });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+>>>>>>> Typescript is spreading, and characters are no longer an array:src/App.js
   };
 
   componentDidMount() {
@@ -236,7 +281,7 @@ class App extends React.Component<AppProps & WithNamespaces, AppState> {
             <div className='main'>
               <Header {...this.state} {...this.props} manifest={this.manifest} />
               <Switch>
-                <Route path='/character-select' render={route => <CharacterSelect location={route.location} user={this.props.profile} viewport={this.state.viewport} manifest={this.manifest} />} />
+                <Route path='/character-select' render={route => <CharacterSelect viewport={this.state.viewport} manifest={this.manifest} />} />
                 <Route
                   path='/account'
                   render={() => (
@@ -289,7 +334,7 @@ class App extends React.Component<AppProps & WithNamespaces, AppState> {
             <div className='main'>
               <Header {...this.state} {...this.props} manifest={this.manifest} />
               <Switch>
-                <Route path='/character-select' render={route => <CharacterSelect location={route.location} user={this.props.profile} viewport={this.state.viewport} manifest={this.manifest} />} />
+                <Route path='/character-select' render={route => <CharacterSelect viewport={this.state.viewport} manifest={this.manifest} />} />
                 <Route
                   path='/account'
                   render={route => (

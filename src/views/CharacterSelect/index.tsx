@@ -2,13 +2,23 @@
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { ThunkDispatch } from 'redux-thunk';
 import cx from 'classnames';
-import { withNamespaces } from 'react-i18next';
+import { withNamespaces, WithNamespaces } from 'react-i18next';
+import { DestinyManifest } from 'bungie-api-ts/destiny2/interfaces';
+import { searchDestinyPlayer as apiSearchDestinyPlayer } from 'bungie-api-ts/destiny2/api';
+import { UserInfoCard } from 'bungie-api-ts/user/interfaces';
+import { PlatformErrorCodes } from 'bungie-api-ts/common';
+import { Location } from 'history';
+import objectValues from 'lodash';
 
-import getProfile from '../../utils/actions/getProfile';
-import setProfile from '../../utils/actions/setProfile';
+import { ProfileData, ProfileState } from '../../utils/reducers/profile';
+import { ApplicationState } from '../../utils/reduxStore';
+import { ThemeState } from '../../utils/reducers/theme';
+import fetcher from '../../utils/fetcher';
+import getProfile, { GetProfileResponse } from '../../utils/actions/getProfile';
+import setProfile, { SetProfileActions } from '../../utils/actions/setProfile';
 import Characters from '../../components/Characters';
-import Globals from '../../utils/globals';
 import * as destinyEnums from '../../utils/destinyEnums';
 import * as ls from '../../utils/localStorage';
 import errorHandler from '../../utils/errorHandler';
@@ -16,56 +26,90 @@ import Spinner from '../../components/Spinner';
 
 import './styles.css';
 
-class CharacterSelect extends React.Component {
-  constructor(props) {
+interface CharacterSelectProps {
+  user: ProfileState
+  theme: ThemeState
+  manifest: DestinyManifest
+  location: Location
+  viewport: { width: number, height: number }
+
+  getProfile: (membershipType: number, membershipId: string, characterId: string | undefined, callback: (response: GetProfileResponse) => any) => any
+  setProfile: (membershipType: number, membershipId: string, characterId: string, data: ProfileData, setAsDefaultProfile: boolean) => any
+}
+
+interface CharacterSelectState {
+  search: {
+    results?: UserInfoCard[]
+  }
+  profile: {
+    data?: ProfileData
+  }
+  error?: PlatformErrorCodes
+  loading: boolean
+}
+
+interface ProfileHistoryItem {
+  membershipType: number,
+  membershipId: string,
+  displayName: string
+}
+
+class CharacterSelect extends React.Component<CharacterSelectProps & WithNamespaces, CharacterSelectState> {
+
+  inputTimeout?: number
+  mounted: boolean
+
+  constructor(props: CharacterSelectProps & WithNamespaces) {
     super(props);
+
+    this.mounted = false;
 
     this.state = {
       search: {
-        results: false
+        results: undefined
       },
       profile: {
-        data: false
+        data: undefined
       },
-      error: false,
+      error: undefined,
       loading: true
     };
   }
 
-  searchDestinyPlayer = e => {
-    let membershipType = '-1';
+  searchDestinyPlayer = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let membershipType = -1;
     let displayName = e.target.value;
 
     clearTimeout(this.inputTimeout);
-    this.inputTimeout = setTimeout(() => {
-      fetch(`https://www.bungie.net/Platform/Destiny2/SearchDestinyPlayer/${membershipType}/${encodeURIComponent(displayName)}/`, {
-        headers: {
-          'X-API-Key': Globals.key.bungie
-        }
-      })
-        .then(response => {
-          return response.json();
-        })
-        .then(SearchResponse => {
-          if (SearchResponse.ErrorCode !== 1) {
-            console.log(SearchResponse);
-            this.setState({ error: SearchResponse.ErrorCode });
-            return;
-          }
+    this.inputTimeout = window.setTimeout(async () => {
+
+      try {
+        const searchResponse = await apiSearchDestinyPlayer(fetcher, { membershipType, displayName })
+
+        if (!this.mounted) return
+
+        if (searchResponse.ErrorCode !== 1) {
+          console.log(searchResponse);
           this.setState({
-            search: {
-              results: SearchResponse.Response
-            },
-            error: false
+            error: searchResponse.ErrorCode
           });
-        })
-        .catch(error => {
-          console.log(error);
+          return;
+        }
+        this.setState({
+          search: {
+            results: searchResponse.Response
+          },
+          error: undefined
         });
+      } catch (error) {
+        console.error(error);
+      }
+
     }, 1000);
   };
 
-  characterClick = characterId => {
+  characterClick = (characterId: string) => {
+    if (!this.state.profile.data) return
 
     let membershipType = this.state.profile.data.profile.profile.data.userInfo.membershipType;
     let membershipId = this.state.profile.data.profile.profile.data.userInfo.membershipId;
@@ -75,7 +119,8 @@ class CharacterSelect extends React.Component {
     this.props.setProfile(membershipType, membershipId, characterId, data, setAsDefaultProfile);
   };
 
-  getProfileCallback = state => {
+  getProfileCallback = (state: GetProfileResponse) => {
+    if (!this.mounted) return
     this.setState(prev => ({
       search: { ...prev.search },
       profile: {
@@ -86,21 +131,23 @@ class CharacterSelect extends React.Component {
     }));
   };
 
-  resultClick = (membershipType, membershipId, displayName) => {
+  resultClick = (membershipType: number, membershipId: string, displayName: string) => {
     window.scrollTo(0, 0);
-    this.props.getProfile(membershipType, membershipId, false, this.getProfileCallback);
+    this.props.getProfile(membershipType, membershipId, undefined, this.getProfileCallback);
 
     if (displayName) {
-      ls.update('history.profiles', { membershipType: membershipType, membershipId: membershipId, displayName: displayName }, true, 6);
+      ls.update('history.profiles', { membershipType, membershipId, displayName }, true, 6);
     }
   };
 
   componentDidMount() {
     window.scrollTo(0, 0);
 
+    this.mounted = true;
+
     if (this.props.user.data) {
       this.setState({ profile: { data: this.props.user.data }, loading: false });
-    } else if (this.props.user.membershipId && !this.state.profile.data) {
+    } else if (this.props.user.membershipType && this.props.user.membershipId && !this.state.profile.data) {
       this.props.getProfile(this.props.user.membershipType, this.props.user.membershipId, this.props.user.characterId, this.getProfileCallback);
     } else {
       this.setState({ loading: false });
@@ -108,11 +155,17 @@ class CharacterSelect extends React.Component {
 
   }
 
+  componentWillUnmount() {
+    this.mounted = false;
+  }
+
   render() {
     const { t } = this.props;
-    let profileHistory = ls.get('history.profiles') ? ls.get('history.profiles') : [];
+    const profileHistory: ProfileHistoryItem[] = ls.get('history.profiles') ? ls.get('history.profiles') : [];
     let resultsElement = null;
     let profileElement = null;
+
+    type StringMap = { [key: string]: string }
 
     if (this.state.search.results) {
       resultsElement = (
@@ -126,7 +179,7 @@ class CharacterSelect extends React.Component {
                       this.resultClick(result.membershipType, result.membershipId, result.displayName);
                     }}
                   >
-                    <span className={`destiny-platform_${destinyEnums.PLATFORMS[result.membershipType].toLowerCase()}`} />
+                    <span className={`destiny-platform_${(destinyEnums.PLATFORMS as StringMap)[result.membershipType].toLowerCase()}`} />
                     {result.displayName}
                   </a>
                 </li>
@@ -149,16 +202,17 @@ class CharacterSelect extends React.Component {
         clan = <div className='clan'>{this.state.profile.data.groups.results[0].group.name}</div>;
       }
 
-      let timePlayed = (
-        <div className='timePlayed'>
-          {Math.floor(
-            Object.keys(this.state.profile.data.profile.characters.data).reduce((sum, key) => {
-              return sum + parseInt(this.state.profile.data.profile.characters.data[key].minutesPlayedTotal);
-            }, 0) / 1440
-          )}{' '}
-          {t('days on the grind')}
-        </div>
-      );
+      const timePlayed = this.state.profile.data
+        && (
+          <div className='timePlayed'>
+            {Math.floor(
+              objectValues(this.state.profile.data.profile.characters.data).reduce((sum, characterData) => {
+                return sum + parseInt(characterData.minutesPlayedTotal);
+              }, 0) / 1440
+            )}{' '}
+            {t('days on the grind')}
+          </div>
+        );
 
       profileElement = (
         <>
@@ -168,7 +222,7 @@ class CharacterSelect extends React.Component {
               {clan}
               {timePlayed}
             </div>
-            <Characters data={this.state.profile.data} manifest={this.props.manifest} location={{ ...from }} characterClick={this.characterClick} />
+            <Characters from={from} manifest={this.props.manifest} profileData={this.state.profile.data} characterClick={this.characterClick} />
           </div>
         </>
       );
@@ -199,7 +253,7 @@ class CharacterSelect extends React.Component {
           </div>
           <div className='form'>
             <div className='field'>
-              <input onInput={this.searchDestinyPlayer} type='text' placeholder={t('insert gamertag')} spellCheck='false' />
+              <input onChange={this.searchDestinyPlayer} type='text' placeholder={t('insert gamertag')} spellCheck={false} />
             </div>
           </div>
           <div className='results'>{resultsElement}</div>
@@ -217,7 +271,7 @@ class CharacterSelect extends React.Component {
                           this.resultClick(result.membershipType, result.membershipId, result.displayName);
                         }}
                       >
-                        <span className={`destiny-platform_${destinyEnums.PLATFORMS[result.membershipType].toLowerCase()}`} />
+                        <span className={`destiny-platform_${(destinyEnums.PLATFORMS as StringMap)[result.membershipType].toLowerCase()}`} />
                         {result.displayName}
                       </a>
                     </li>
@@ -238,19 +292,32 @@ class CharacterSelect extends React.Component {
   }
 }
 
-function mapStateToProps(state, ownProps) {
+// Properties expected to be passed to <CharacterSelect />
+interface CharacterSelectOwnProps {
+  manifest: DestinyManifest
+  viewport: {
+    width: number
+    height: number
+  }
+}
+
+function mapStateToProps(state: ApplicationState, ownProps: CharacterSelectOwnProps) {
   return {
-    profile: state.profile,
+    ...ownProps,
+    user: state.profile,
     theme: state.theme,
+    location: state.router.location,
   };
 }
 
-function mapDispatchToProps(dispatch) {
+type Dispatch = ThunkDispatch<ApplicationState, null, SetProfileActions>
+
+function mapDispatchToProps(dispatch: Dispatch) {
   return {
-    getProfile: (membershipType, membershipId, characterId, callback) => dispatch(
+    getProfile: (membershipType: number, membershipId: string, characterId: string | undefined, callback: (state: GetProfileResponse) => any) => dispatch(
       getProfile(membershipType, membershipId, characterId, callback)
     ),
-    setProfile: (membershipType, membershipId, characterId, data, setAsDefaultProfile) => dispatch(
+    setProfile: (membershipType: number, membershipId: string, characterId: string, data: ProfileData, setAsDefaultProfile: boolean) => dispatch(
       setProfile(membershipType, membershipId, characterId, data, setAsDefaultProfile)
     ),
   }

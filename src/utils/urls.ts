@@ -1,7 +1,8 @@
+import { UserInfoCard } from "bungie-api-ts/user/interfaces";
+
 export const ACCOUNT_URL_PATH = '/account/:name/:membershipType/:membershipId/:characterId'
 
-export const getAccountUrl = (userInfo, characterId) => {
-  console.log('getAccountUrl', userInfo, characterId);
+export const getAccountUrl = (userInfo?: UserInfoCard, characterId?: string) => {
   if (!userInfo || !characterId) {
     return '/account'
   }

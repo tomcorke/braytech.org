@@ -1,21 +1,13 @@
 
 import entities from 'entities';
-import { DestinyProfileResponse } from 'bungie-api-ts/destiny2/interfaces';
+import { DestinyProfileResponse, DestinyCharacterComponent } from 'bungie-api-ts/destiny2/interfaces';
 import { ServerResponse } from 'bungie-api-ts/common';
 import * as _ from 'lodash';
 import { GroupMembershipSearchResponse } from 'bungie-api-ts/groupv2/interfaces';
 
-
 export const profileScrubber = (serverResponse: ServerResponse<DestinyProfileResponse>): DestinyProfileResponse => {
 
   const response = serverResponse.Response;
-
-  // convert character response to an array
-  // cast to any to get round readonly property assignment
-  // naughty, but it works
-  (response.characters as any).data = _.values(response.characters.data).sort(function(a, b) {
-    return parseInt(b.minutesPlayedTotal) - parseInt(a.minutesPlayedTotal);
-  });
 
   // remove dud ghost scans
   delete response.profileProgression.data.checklists[2360931290][1116662180];

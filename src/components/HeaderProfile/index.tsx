@@ -3,18 +3,47 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
 import cx from 'classnames';
+import { Location } from 'history'
+
 import packageJSON from '../../../package.json';
 
+import { MergedManifestData } from '../../utils/manifest'
 import ObservedImage from '../../components/ObservedImage';
 import ProgressBar from '../../components/ProgressBar';
 import { classHashToString } from '../../utils/destinyUtils';
+import { ProfileData } from '../../utils/reducers/profile/index.js';
+import { ApplicationState } from '../../utils/reduxStore.js';
+import { ThemeState } from '../../utils/reducers/theme/index.js';
 
 import './styles.css';
 
-class HeaderProfile extends React.Component {
-  constructor(props) {
+interface HeaderProfileProps {
+  manifest: MergedManifestData
+  characterId?: string
+  data?: ProfileData
+  theme: ThemeState
+  viewport: {
+    width: number
+    height: number
+  }
+  views: {
+    name: string
+    desc: string
+    slug: string
+    exact: boolean
+  }[]
+  location: Location
+}
+
+interface HeaderProfileState {
+  mobileNavOpen: boolean
+}
+
+class HeaderProfile extends React.Component<HeaderProfileProps, HeaderProfileState> {
+
+  constructor(props: HeaderProfileProps) {
     super(props);
-    this.manifest = props.manifest;
+
     this.state = {
       mobileNavOpen: false
     };
@@ -38,6 +67,9 @@ class HeaderProfile extends React.Component {
   };
 
   render() {
+
+    if (!this.props.data || !this.props.characterId) return null;
+
     const manifest = this.props.manifest;
     const characterId = this.props.characterId;
 
@@ -45,7 +77,7 @@ class HeaderProfile extends React.Component {
     let characters = this.props.data.profile.characters.data;
     let characterProgressions = this.props.data.profile.characterProgressions.data;
 
-    let character = characters.find(character => character.characterId === characterId);
+    let character = characters[characterId];
 
     let capped = characterProgressions[character.characterId].progressions[1716568313].level === characterProgressions[character.characterId].progressions[1716568313].levelCap ? true : false;
 
@@ -138,7 +170,7 @@ class HeaderProfile extends React.Component {
                   />
                   <div className='displayName'>{profile.userInfo.displayName}</div>
                   <div className='basics'>
-                    {character.baseCharacterLevel} / {classHashToString(character.classHash, this.manifest, character.genderType)} / <span className='light'>{character.light}</span>
+                    {character.baseCharacterLevel} / {classHashToString(character.classHash, this.props.manifest, character.genderType)} / <span className='light'>{character.light}</span>
                   </div>
                   <ProgressBar
                     classNames={{
@@ -170,9 +202,12 @@ class HeaderProfile extends React.Component {
   }
 }
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state: ApplicationState) {
   return {
-    theme: state.theme
+    characterId: state.profile.characterId,
+    data: state.profile.data,
+    theme: state.theme,
+    location: state.router.location,
   };
 }
 

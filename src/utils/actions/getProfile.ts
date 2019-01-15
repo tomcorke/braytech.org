@@ -1,27 +1,21 @@
-import assign from 'lodash/assign';
-import Globals from '../globals';
-import * as _ from 'lodash';
-
-import * as responseUtils from '../responseUtils';
 import { getProfile as getDestinyProfile, getPublicMilestones } from 'bungie-api-ts/destiny2/api'
 import { getGroupsForMember } from 'bungie-api-ts/groupv2/api'
-import { HttpClient, HttpClientConfig } from 'bungie-api-ts/http';
+import { DestinyProfileResponse,  DestinyPublicMilestone } from 'bungie-api-ts/destiny2/interfaces';
+import { GroupMembershipSearchResponse } from 'bungie-api-ts/groupv2/interfaces';
+
+import fetcher from '../fetcher';
+import * as responseUtils from '../responseUtils';
 import { ApplicationState } from '../reduxStore';
+import { ProfileState, ProfileData } from '../reducers/profile';
+
+export interface GetProfileResponse {
+  data?: ProfileData
+  characterId?: string
+  loading: boolean
+  error: any
+}
 
 async function apiRequest(membershipType: number, membershipId: string) {
-
-  const fetcher: HttpClient = async (config: HttpClientConfig) => {
-    const url = (config.method === 'GET' && config.params && Object.keys(config.params).length > 0)
-      ? `${config.url}?${_.entries(config.params).map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value.toString())}`).join('&')}`
-      : config.url;
-    const get = await fetch(url, {
-      method: config.method,
-      headers: {
-        'X-API-Key': Globals.key.bungie || ''
-      }
-    })
-    return get.json()
-  }
 
   const [profile, milestones, groups] = await Promise.all([
     getDestinyProfile(fetcher,
@@ -51,7 +45,7 @@ function getProfile(
   membershipType: number,
   membershipId: string,
   characterId?: string,
-  stateCallback?: (data: any) => void
+  stateCallback?: (data: GetProfileResponse) => void
 ) {
 
   return async (dispatch: unknown, getState: () => ApplicationState) => {
@@ -96,7 +90,7 @@ function getProfile(
       return;
     }
 
-    const scrubbedData = {
+    const scrubbedData: ProfileData = {
       profile: responseUtils.profileScrubber(data.profile),
       milestones: data.milestones.Response,
       groups: responseUtils.groupScrubber(data.groups),

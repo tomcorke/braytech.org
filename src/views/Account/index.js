@@ -30,7 +30,7 @@ class Account extends React.Component {
     const characterProgressions = this.props.profile.data.profile.characterProgressions.data;
     const profileRecords = this.props.profile.data.profile.profileRecords.data.records;
     const characterRecords = this.props.profile.data.profile.characterRecords.data;
-    const genderHash = characters.find(character => character.characterId === characterId).genderHash;
+    const genderHash = characters[characterId].genderHash;
 
     const Characters = () => {
       let charactersEl = [];

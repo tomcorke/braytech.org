@@ -1,6 +1,7 @@
 import * as ls from '../../localStorage';
-import { DestinyProfileResponse } from 'bungie-api-ts/destiny2/interfaces'
+import { DestinyProfileResponse, DestinyCharacterComponent, DestinyPublicMilestone } from 'bungie-api-ts/destiny2/interfaces'
 import { SetProfileActions } from '../../actions/setProfile';
+import { GroupMembershipSearchResponse } from 'bungie-api-ts/groupv2/interfaces';
 
 // Define a limited type for our profile data
 // which only contains the properties we request from
@@ -27,6 +28,10 @@ export type LimitedDestinyProfileResponse = Pick<
 
 export interface ProfileData {
   profile: LimitedDestinyProfileResponse
+  milestones: {
+    [key: number]: DestinyPublicMilestone
+  }
+  groups: GroupMembershipSearchResponse
 }
 
 export interface ProfileState {
