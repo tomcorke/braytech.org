@@ -1,15 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'redux';
 import { connect } from 'react-redux';
-import _ from 'lodash';
-import { withNamespaces } from 'react-i18next';
+import transform from 'lodash/transform';
+import isEqual from 'lodash/isEqual'
+import isObject from 'lodash/isObject'
+import { withNamespaces, WithNamespaces } from 'react-i18next';
 import cx from 'classnames';
+import { DestinyRecordComponent, DestinyRecordDefinition, DestinyPresentationNodeDefinition } from 'bungie-api-ts/destiny2/interfaces';
+import { diff } from 'deep-object-diff'
 
 import ObservedImage from '../ObservedImage';
 import { enumerateRecordState } from '../../utils/destinyEnums';
+import { ProfileState } from '../../utils/reducers/profile';
 
 import './styles.css';
+import { ApplicationState } from '../../utils/reduxStore';
+import { DestinyManifestJsonContent } from '../../utils/reducers/manifest';
 
 /**
  * Deep diff between two object, using lodash
@@ -18,36 +24,56 @@ import './styles.css';
  * @return {Object}        Return a new object who represent the diff
  */
 
+/*
 function difference(object, base) {
   function changes(object, base) {
-    return _.transform(object, function(result, value, key) {
-      if (!_.isEqual(value, base[key])) {
-        result[key] = _.isObject(value) && _.isObject(base[key]) ? changes(value, base[key]) : value;
+    return transform(object, function(result, value, key) {
+      if (!isEqual(value, base[key])) {
+        result[key] = isObject(value) && isObject(base[key]) ? changes(value, base[key]) : value;
       }
     });
   }
   return changes(object, base);
 }
+*/
 
-class NotificationProgress extends React.Component {
-  constructor(props) {
+function difference<T extends object>(a: T, b: T): Partial<T> {
+  return diff(a, b);
+}
+
+interface NotificationProgressProps {
+  profile: ProfileState
+  manifest?: DestinyManifestJsonContent
+}
+
+interface NotificationProgressState {
+  progress: {
+    type?: string
+    hash?: string
+    number?: number
+    timedOut?: boolean
+  }
+}
+
+class NotificationProgress extends React.Component<NotificationProgressProps & WithNamespaces, NotificationProgressState> {
+
+  timer?: number
+
+  constructor(props: NotificationProgressProps & WithNamespaces) {
     super(props);
 
     this.state = {
       progress: {
-        type: false,
-        hash: false,
         number: 0,
         timedOut: true
       }
     };
-    this.timer = false;
   }
 
   timeOut = () => {
     if (!this.timer && !this.state.progress.timedOut && this.state.progress.hash) {
-      this.timer = setTimeout((prevState = this.state) => {
-        this.timer = false;
+      this.timer = window.setTimeout((prevState = this.state) => {
+        this.timer = undefined;
         console.log('timed out')
         this.setState({
           progress: {
@@ -60,13 +86,16 @@ class NotificationProgress extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: NotificationProgressProps & WithNamespaces) {
 
     console.log(this)
     this.timeOut();
 
     const fresh = this.props.profile.data;
     const stale = this.props.profile.prevData ? this.props.profile.prevData : this.props.profile.data;
+
+    if (!fresh || !stale) return
+
     const characterId = this.props.profile.characterId;
 
     // console.log('characters', difference(fresh.profile.characters, stale.profile.characters));
@@ -83,28 +112,29 @@ class NotificationProgress extends React.Component {
 
     let profileRecords = difference(fresh.profile.profileRecords.data.records, stale.profile.profileRecords.data.records);
 
-    let progress = {
-      type: false,
-      hash: false,
-      number: 0,
-      timedOut: false
-    };
+    let progress: {
+      type?: string
+      hash?: string
+      number?: number
+    } = {};
 
     if (Object.keys(profileRecords).length > 0) {
       Object.keys(profileRecords).forEach(key => {
-        if (profileRecords[key].state === undefined) {
-          return;
-        }
-        let state = enumerateRecordState(profileRecords[key].state);
+
+        const record = profileRecords[+key];
+
+        if (!record || record.state === undefined) return
+
+        let state = enumerateRecordState(record.state);
         console.log(state);
         if (!state.objectiveNotCompleted) { //  && !state.recordRedeemed
           if (progress.hash) {
-            progress.number = progress.number + 1;
+            progress.number = (progress.number || 0) + 1;
             return;
           }
           progress.type = 'record';
           progress.hash = key;
-          progress.number = progress.number + 1;
+          progress.number = (progress.number || 0) + 1;
         }
       });
 
@@ -119,14 +149,17 @@ class NotificationProgress extends React.Component {
   render() {
     const { t, manifest } = this.props;
 
-    if (this.state.progress.type === 'record') {
-      let record = manifest.DestinyRecordDefinition[this.state.progress.hash];
+    if (!manifest) return
 
-      let link = false;
+    if (this.state.progress.type === 'record' && this.state.progress.hash) {
+      let record = manifest.DestinyRecordDefinition[+this.state.progress.hash];
+
+      let link: string | undefined;
+
       try {
-        let reverse1;
-        let reverse2;
-        let reverse3;
+        let reverse1: DestinyPresentationNodeDefinition | undefined;
+        let reverse2: DestinyPresentationNodeDefinition | undefined;
+        let reverse3: DestinyPresentationNodeDefinition | undefined;
 
         manifest.DestinyRecordDefinition[record.hash].presentationInfo.parentPresentationNodeHashes.forEach(element => {
           if (manifest.DestinyPresentationNodeDefinition[1652422747].children.presentationNodes.filter(el => el.presentationNodeHash === element).length > 0) {
@@ -138,7 +171,7 @@ class NotificationProgress extends React.Component {
           reverse1 = manifest.DestinyPresentationNodeDefinition[element];
         });
 
-        let iteratees = reverse1.presentationInfo ? reverse1.presentationInfo.parentPresentationNodeHashes : reverse1.parentNodeHashes;
+        let iteratees = reverse1 ? reverse1.parentNodeHashes : [];
         iteratees.forEach(element => {
           if (reverse2) {
             return;
@@ -150,7 +183,9 @@ class NotificationProgress extends React.Component {
           reverse3 = manifest.DestinyPresentationNodeDefinition[reverse2.parentNodeHashes[0]];
         }
 
-        link = `/triumphs/${reverse3.hash}/${reverse2.hash}/${reverse1.hash}/${record.hash}`;
+        if (reverse1 && reverse2 && reverse3) {
+          link = `/triumphs/${reverse3.hash}/${reverse2.hash}/${reverse1.hash}/${record.hash}`;
+        }
       } catch (e) {
         // console.log(e);
       }
@@ -168,7 +203,7 @@ class NotificationProgress extends React.Component {
               <ObservedImage className={cx('image', 'icon')} src={`https://www.bungie.net${record.displayProperties.icon}`} noConstraints />
               <div className='description'>{description}</div>
             </div>
-            { this.state.progress.number > 1 ? <div className='more'>And {this.state.progress.number - 1} more</div> : null }
+            { this.state.progress.number && this.state.progress.number > 1 ? <div className='more'>And {this.state.progress.number - 1} more</div> : null }
           </div>
           {link ? <Link to={link} /> : null}
         </div>
@@ -179,16 +214,16 @@ class NotificationProgress extends React.Component {
   }
 }
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state: ApplicationState) {
   return {
     profile: state.profile,
-    theme: state.theme
+    theme: state.theme,
+    manifest: state.manifest.manifestContent
   };
 }
 
-export default compose(
+export default withNamespaces()(
   connect(
     mapStateToProps
-  ),
-  withNamespaces()
-)(NotificationProgress);
+  )(NotificationProgress)
+);

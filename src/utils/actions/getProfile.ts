@@ -1,12 +1,11 @@
 import { getProfile as getDestinyProfile, getPublicMilestones } from 'bungie-api-ts/destiny2/api'
 import { getGroupsForMember } from 'bungie-api-ts/groupv2/api'
-import { DestinyProfileResponse,  DestinyPublicMilestone } from 'bungie-api-ts/destiny2/interfaces';
-import { GroupMembershipSearchResponse } from 'bungie-api-ts/groupv2/interfaces';
+import { action } from 'typesafe-actions'
 
 import fetcher from '../fetcher';
 import * as responseUtils from '../responseUtils';
-import { ApplicationState } from '../reduxStore';
-import { ProfileState, ProfileData } from '../reducers/profile';
+import { ApplicationState, Dispatch } from '../reduxStore';
+import { ProfileData } from '../reducers/profile';
 
 export interface GetProfileResponse {
   data?: ProfileData
@@ -41,6 +40,8 @@ async function apiRequest(membershipType: number, membershipId: string) {
   }
 }
 
+const setProfileLoading = (loading: boolean) => action('PROFILE_LOADING', loading);
+
 function getProfile(
   membershipType: number,
   membershipId: string,
@@ -48,19 +49,15 @@ function getProfile(
   stateCallback?: (data: GetProfileResponse) => void
 ) {
 
-  return async (dispatch: unknown, getState: () => ApplicationState) => {
+  return async (dispatch: Dispatch, getState: () => ApplicationState) => {
     const state = getState();
 
-    stateCallback && stateCallback({
-      data: state.profile && state.profile.data,
-      characterId: characterId,
-      loading: true,
-      error: false
-    });
+    dispatch(setProfileLoading(true));
 
     let data = await apiRequest(membershipType, membershipId);
 
     if (!data) {
+      dispatch(setProfileLoading(false));
       stateCallback && stateCallback({
         data: state.profile && state.profile.data,
         characterId: characterId,
@@ -107,3 +104,7 @@ function getProfile(
 }
 
 export default getProfile;
+
+export type GetProfileActions = ReturnType<
+  typeof setProfileLoading
+>

@@ -2,52 +2,73 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import orderBy from 'lodash/orderBy';
 import cx from 'classnames';
+import { connect } from 'react-redux';
+import { DestinyPresentationNodeDefinition, DestinyObjectiveProgress } from 'bungie-api-ts/destiny2/interfaces';
 
 import ObservedImage from '../ObservedImage';
 import ProgressBar from '../ProgressBar';
 import { enumerateRecordState } from '../../utils/destinyEnums';
+import { DestinyManifestJsonContent, DestinySettings } from '../../utils/reducers/manifest';
+import { ProfileState } from '../../utils/reducers/profile';
+import { CollectiblesState } from '../../utils/reducers/collectibles';
 
 import './styles.css';
+import { ApplicationState } from '../../utils/reduxStore';
 
-class Records extends React.Component {
-  constructor(props) {
-    super(props);
+interface RecordsProps {
+  manifest?: DestinyManifestJsonContent
+  settings?: DestinySettings
+  profile: ProfileState
+  collectibles: CollectiblesState
 
-    this.scrollToRecordRef = React.createRef();
-  }
+  highlight?: number
+  node?: number
+  hashes: number[]
+  selfLink: string
+  selfLinkFrom?: string
+  ordered?: boolean
+}
+
+class Records extends React.Component<RecordsProps> {
+
+  private scrollToRecordRef: HTMLLIElement | undefined
 
   componentDidMount() {
-    if (this.props.highlight && this.scrollToRecordRef.current !== null) {
+    if (this.props.highlight && this.scrollToRecordRef) {
       window.scrollTo({
-        top: this.scrollToRecordRef.current.offsetTop + this.scrollToRecordRef.current.offsetHeight / 2 - window.innerHeight / 2
+        top: this.scrollToRecordRef.offsetTop + this.scrollToRecordRef.offsetHeight / 2 - window.innerHeight / 2
       });
     }
   }
 
   render() {
-    const manifest = this.props.manifest;
+    const { manifest, settings, profile, highlight } = this.props
 
-    const characterRecords = this.props.profile.data.profile.characterRecords.data;
-    const profileRecords = this.props.profile.data.profile.profileRecords.data.records;
-    const characterId = this.props.profile.characterId;
+    if (!manifest || !settings || !profile.data) return
 
-    const highlight = this.props.highlight;
+    const characterRecords = profile.data.profile.characterRecords.data;
+    const profileRecords = profile.data.profile.profileRecords.data.records;
+    const characterId = profile.characterId;
 
-    let records = [];
+    let records: {
+      completed?: boolean
+      hash?: number
+      element: JSX.Element
+    }[] = [];
 
-    if (this.props.node) {
+    if (this.props.node && characterId) {
       let tertiaryDefinition = manifest.DestinyPresentationNodeDefinition[this.props.node];
 
       tertiaryDefinition.children.records.forEach(child => {
         let recordDefinition = manifest.DestinyRecordDefinition[child.recordHash];
 
-        let objectives = [];
+        let objectives: JSX.Element[] = [];
         if (recordDefinition.objectiveHashes) {
           recordDefinition.objectiveHashes.forEach(hash => {
             let objectiveDefinition = manifest.DestinyObjectiveDefinition[hash];
 
             if (profileRecords[recordDefinition.hash]) {
-              let playerProgress = null;
+              let playerProgress: DestinyObjectiveProgress | undefined;
               profileRecords[recordDefinition.hash].objectives.forEach(objective => {
                 if (objective.objectiveHash === hash) {
                   playerProgress = objective;
@@ -56,7 +77,7 @@ class Records extends React.Component {
 
               objectives.push(<ProgressBar key={objectiveDefinition.hash} objectiveDefinition={objectiveDefinition} playerProgress={playerProgress} />);
             } else if (characterRecords[characterId].records[recordDefinition.hash]) {
-              let playerProgress = null;
+              let playerProgress: DestinyObjectiveProgress | undefined;
               characterRecords[characterId].records[recordDefinition.hash].objectives.forEach(objective => {
                 if (objective.objectiveHash === hash) {
                   playerProgress = objective;
@@ -64,8 +85,6 @@ class Records extends React.Component {
               });
 
               objectives.push(<ProgressBar key={objectiveDefinition.hash} objectiveDefinition={objectiveDefinition} playerProgress={playerProgress} />);
-            } else {
-              objectives.push(null);
             }
           });
         }
@@ -87,12 +106,10 @@ class Records extends React.Component {
           return;
         }
 
-        // if (recordDefinition.hash === 4160670554) {
-        //   console.log(recordDefinition, objectives, state)
-        // }
-
-        // eslint-disable-next-line eqeqeq
-        let ref = highlight == recordDefinition.hash ? this.scrollToRecordRef : null;
+        const setScrollToRecordRef = (element: HTMLLIElement) => {
+          this.scrollToRecordRef = undefined
+          if (highlight === recordDefinition.hash) { return this.scrollToRecordRef = element }
+        }
 
         if (recordDefinition.redacted) {
           records.push({
@@ -101,7 +118,7 @@ class Records extends React.Component {
             element: (
               <li
                 key={recordDefinition.hash}
-                ref={ref}
+                ref={setScrollToRecordRef}
                 className={cx('redacted', {
                   // eslint-disable-next-line eqeqeq
                   highlight: highlight && highlight == recordDefinition.hash
@@ -129,7 +146,7 @@ class Records extends React.Component {
             element: (
               <li
                 key={recordDefinition.hash}
-                ref={ref}
+                ref={setScrollToRecordRef}
                 className={cx({
                   // eslint-disable-next-line eqeqeq
                   highlight: highlight && highlight == recordDefinition.hash,
@@ -158,15 +175,15 @@ class Records extends React.Component {
       recordsRequested.forEach(hash => {
         const recordDefinition = manifest.DestinyRecordDefinition[hash];
 
-        let objectives = [];
-        let link = false;
+        let objectives: JSX.Element[] = [];
+        let link: string | undefined
 
         // selfLink
 
         try {
-          let reverse1;
-          let reverse2;
-          let reverse3;
+          let reverse1: DestinyPresentationNodeDefinition | undefined;
+          let reverse2: DestinyPresentationNodeDefinition | undefined;
+          let reverse3: DestinyPresentationNodeDefinition | undefined;
 
           manifest.DestinyRecordDefinition[hash].presentationInfo.parentPresentationNodeHashes.forEach(element => {
             if (manifest.DestinyPresentationNodeDefinition[1652422747].children.presentationNodes.filter(el => el.presentationNodeHash === element).length > 0) {
@@ -178,7 +195,7 @@ class Records extends React.Component {
             reverse1 = manifest.DestinyPresentationNodeDefinition[element];
           });
 
-          let iteratees = reverse1.presentationInfo ? reverse1.presentationInfo.parentPresentationNodeHashes : reverse1.parentNodeHashes;
+          let iteratees = reverse1 ? reverse1.parentNodeHashes : [];
           iteratees.forEach(element => {
             if (reverse2) {
               return;
@@ -190,7 +207,9 @@ class Records extends React.Component {
             reverse3 = manifest.DestinyPresentationNodeDefinition[reverse2.parentNodeHashes[0]];
           }
 
-          link = `/triumphs/${reverse3.hash}/${reverse2.hash}/${reverse1.hash}/${hash}`;
+          if (reverse1 && reverse2 && reverse3) {
+            link = `/triumphs/${reverse3.hash}/${reverse2.hash}/${reverse1.hash}/${hash}`;
+          }
         } catch (e) {
           // console.log(e);
         }
@@ -200,7 +219,7 @@ class Records extends React.Component {
             let objectiveDefinition = manifest.DestinyObjectiveDefinition[hash];
 
             if (profileRecords[recordDefinition.hash]) {
-              let playerProgress = null;
+              let playerProgress: DestinyObjectiveProgress | undefined;
               profileRecords[recordDefinition.hash].objectives.forEach(objective => {
                 if (objective.objectiveHash === hash) {
                   playerProgress = objective;
@@ -208,13 +227,13 @@ class Records extends React.Component {
               });
 
               // override
-              if (hash === 1278866930 && playerProgress.complete) {
-                playerProgress.progress = 16;
+              if (hash === 1278866930 && playerProgress && playerProgress.complete) {
+                playerProgress  = { ...playerProgress, progress: 16 };
               }
 
               objectives.push(<ProgressBar key={objectiveDefinition.hash} objectiveDefinition={objectiveDefinition} playerProgress={playerProgress} />);
-            } else if (characterRecords[characterId].records[recordDefinition.hash]) {
-              let playerProgress = null;
+            } else if (characterId && characterRecords[characterId].records[recordDefinition.hash]) {
+              let playerProgress: DestinyObjectiveProgress | undefined;
               characterRecords[characterId].records[recordDefinition.hash].objectives.forEach(objective => {
                 if (objective.objectiveHash === hash) {
                   playerProgress = objective;
@@ -222,8 +241,6 @@ class Records extends React.Component {
               });
 
               objectives.push(<ProgressBar key={objectiveDefinition.hash} objectiveDefinition={objectiveDefinition} playerProgress={playerProgress} />);
-            } else {
-              objectives.push(null);
             }
           });
         }
@@ -231,7 +248,7 @@ class Records extends React.Component {
         let state;
         if (profileRecords[recordDefinition.hash]) {
           state = profileRecords[recordDefinition.hash] ? profileRecords[recordDefinition.hash].state : 0;
-        } else if (characterRecords[characterId].records[recordDefinition.hash]) {
+        } else if (characterId && characterRecords[characterId].records[recordDefinition.hash]) {
           state = characterRecords[characterId].records[recordDefinition.hash] ? characterRecords[characterId].records[recordDefinition.hash].state : 0;
         } else {
           state = 0;
@@ -245,8 +262,10 @@ class Records extends React.Component {
           return;
         }
 
-        // eslint-disable-next-line eqeqeq
-        let ref = highlight == recordDefinition.hash ? this.scrollToRecordRef : null;
+        const setScrollToRecordRef = (element: HTMLLIElement) => {
+          this.scrollToRecordRef = undefined
+          if (highlight === recordDefinition.hash) { return this.scrollToRecordRef = element }
+        }
 
         if (recordDefinition.redacted) {
           records.push({
@@ -255,7 +274,7 @@ class Records extends React.Component {
             element: (
               <li
                 key={recordDefinition.hash}
-                ref={ref}
+                ref={setScrollToRecordRef}
                 className={cx('redacted', {
                   // eslint-disable-next-line eqeqeq
                   highlight: highlight && highlight == recordDefinition.hash
@@ -263,7 +282,7 @@ class Records extends React.Component {
               >
                 <div className='properties'>
                   <div className='icon'>
-                    <ObservedImage className={cx('image', 'icon')} src={`https://www.bungie.net${manifest.settings.destiny2CoreSettings.undiscoveredCollectibleImage}`} />
+                    <ObservedImage className={cx('image', 'icon')} src={`https://www.bungie.net${settings.destiny2CoreSettings.undiscoveredCollectibleImage}`} />
                   </div>
                   <div className='text'>
                     <div className='name'>Classified record</div>
@@ -286,7 +305,7 @@ class Records extends React.Component {
             element: (
               <li
                 key={recordDefinition.hash}
-                ref={ref}
+                ref={setScrollToRecordRef}
                 className={cx({
                   linked: link && this.props.selfLink,
                   // eslint-disable-next-line eqeqeq
@@ -336,4 +355,12 @@ class Records extends React.Component {
   }
 }
 
-export default Records;
+const mapStateToProps = (state: ApplicationState) => ({
+  profile: state.profile,
+  manifest: state.manifest.manifestContent,
+  collectibles: state.collectibles
+})
+
+export default connect(
+  mapStateToProps
+)(Records);

@@ -14,7 +14,7 @@
     "noEmit": true,
     "jsx": "preserve",
     "lib": ["es2017", "dom"],
-    "strictNullChecks": true
+    "strictNullChecks": true,
   },
   "include": [
     "src"

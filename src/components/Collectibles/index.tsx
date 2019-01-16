@@ -6,26 +6,45 @@ import cx from 'classnames';
 
 import ObservedImage from '../../components/ObservedImage';
 import { enumerateCollectibleState } from '../../utils/destinyEnums';
+import { ApplicationState } from '../../utils/reduxStore';
 
 import './styles.css';
+import { DestinyManifestJsonContent, DestinySettings } from '../../utils/reducers/manifest';
+import { ProfileState } from '../../utils/reducers/profile';
+import { DestinyCollectibleState, DestinyPresentationNodeDefinition } from 'bungie-api-ts/destiny2/interfaces';
 
-class Collectibles extends React.Component {
-  constructor(props) {
-    super(props);
+interface CollectiblesProps {
+  quaternaryHash?: string
+  manifest?: DestinyManifestJsonContent
+  settings?: DestinySettings
+  profile: ProfileState
+  highlight?: number
+  node?: number
+  hashes: number[]
+  selfLink?: string
+}
 
-    this.scrollToRecordRef = React.createRef();
-  }
+class Collectibles extends React.Component<CollectiblesProps> {
+
+  scrollToRecordRef?: HTMLElement;
 
   componentDidMount() {
-    if (this.props.quaternaryHash && this.scrollToRecordRef.current !== null) {
+    if (this.props.quaternaryHash && this.scrollToRecordRef) {
       window.scrollTo({
-        top: this.scrollToRecordRef.current.offsetTop + this.scrollToRecordRef.current.offsetHeight / 2 - window.innerHeight / 2
+        top: this.scrollToRecordRef.offsetTop + this.scrollToRecordRef.offsetHeight / 2 - window.innerHeight / 2
       });
     }
   }
 
   render() {
+
+    if (!this.props.profile.characterId
+      || !this.props.profile.data
+      || !this.props.manifest
+      || !this.props.settings) return null
+
     const manifest = this.props.manifest;
+    const settings = this.props.settings;
     const characterId = this.props.profile.characterId;
 
     const characterCollectibles = this.props.profile.data.profile.characterCollectibles.data;
@@ -33,7 +52,7 @@ class Collectibles extends React.Component {
 
     const highlight = this.props.highlight;
 
-    let collectibles = [];
+    let collectibles: JSX.Element[] = [];
 
     if (this.props.node) {
       let tertiaryDefinition = manifest.DestinyPresentationNodeDefinition[this.props.node];
@@ -42,14 +61,16 @@ class Collectibles extends React.Component {
         tertiaryDefinition.children.presentationNodes.forEach(node => {
           let nodeDefinition = manifest.DestinyPresentationNodeDefinition[node.presentationNodeHash];
 
-          let row = [];
-          let rowState = [];
+          let row: JSX.Element[] = [];
+          let rowState: DestinyCollectibleState[] = [];
 
           nodeDefinition.children.collectibles.forEach(child => {
             let collectibleDefinition = manifest.DestinyCollectibleDefinition[child.collectibleHash];
 
             let state = 0;
-            let scope = profileCollectibles.collectibles[child.collectibleHash] ? profileCollectibles.collectibles[child.collectibleHash] : characterCollectibles[characterId].collectibles[child.collectibleHash];
+            let scope = profileCollectibles.collectibles[child.collectibleHash]
+              ? profileCollectibles.collectibles[child.collectibleHash]
+              : characterCollectibles[characterId].collectibles[child.collectibleHash];
             if (scope) {
               state = scope.state;
             }
@@ -100,14 +121,18 @@ class Collectibles extends React.Component {
           if (enumerateCollectibleState(state).invisible) {
             return;
           }
-          // eslint-disable-next-line eqeqeq
-          let ref = highlight == collectibleDefinition.hash ? this.scrollToRecordRef : null;
+
+          const setRefIfHighlighted = (element: HTMLLIElement) => {
+            if (highlight === collectibleDefinition.hash) {
+              this.scrollToRecordRef = element
+            }
+          }
 
           if (collectibleDefinition.redacted) {
             collectibles.push(
               <li
                 key={collectibleDefinition.hash}
-                ref={ref}
+                ref={setRefIfHighlighted}
                 className={cx('redacted', 'tooltip', {
                   // eslint-disable-next-line eqeqeq
                   highlight: highlight && highlight == collectibleDefinition.hash
@@ -115,7 +140,7 @@ class Collectibles extends React.Component {
                 data-itemhash='343'
               >
                 <div className='icon'>
-                  <ObservedImage className={cx('image', 'icon')} src={`https://www.bungie.net${manifest.settings.destiny2CoreSettings.undiscoveredCollectibleImage}`} />
+                  <ObservedImage className={cx('image', 'icon')} src={`https://www.bungie.net${settings.destiny2CoreSettings.undiscoveredCollectibleImage}`} />
                 </div>
                 <div className='text'>
                   <div className='name'>Classified</div>
@@ -126,7 +151,7 @@ class Collectibles extends React.Component {
             collectibles.push(
               <li
                 key={collectibleDefinition.hash}
-                ref={ref}
+                ref={setRefIfHighlighted}
                 className={cx('tooltip', {
                   completed: !enumerateCollectibleState(state).notAcquired,
                   // eslint-disable-next-line eqeqeq
@@ -151,14 +176,14 @@ class Collectibles extends React.Component {
       collectiblesRequested.forEach(hash => {
         let collectibleDefinition = manifest.DestinyCollectibleDefinition[hash];
 
-        let link = false;
+        let link: string | undefined;
 
         // selfLink
 
         try {
-          let reverse1;
-          let reverse2;
-          let reverse3;
+          let reverse1: DestinyPresentationNodeDefinition | undefined;
+          let reverse2: DestinyPresentationNodeDefinition | undefined;
+          let reverse3: DestinyPresentationNodeDefinition | undefined;
 
           manifest.DestinyCollectibleDefinition[hash].presentationInfo.parentPresentationNodeHashes.forEach(element => {
             let skip = false;
@@ -175,7 +200,7 @@ class Collectibles extends React.Component {
             reverse1 = manifest.DestinyPresentationNodeDefinition[element];
           });
 
-          let iteratees = reverse1.presentationInfo ? reverse1.presentationInfo.parentPresentationNodeHashes : reverse1.parentNodeHashes;
+          let iteratees: number[] = reverse1 ? reverse1.parentNodeHashes : [];
           iteratees.forEach(element => {
             if (reverse2) {
               return;
@@ -187,7 +212,9 @@ class Collectibles extends React.Component {
             reverse3 = manifest.DestinyPresentationNodeDefinition[reverse2.parentNodeHashes[0]];
           }
 
-          link = `/collections/${reverse3.hash}/${reverse2.hash}/${reverse1.hash}/${hash}`;
+          if (reverse1 && reverse2 && reverse3) {
+            link = `/collections/${reverse3.hash}/${reverse2.hash}/${reverse1.hash}/${hash}`;
+          }
         } catch (e) {
           console.log(e);
         }
@@ -228,12 +255,14 @@ class Collectibles extends React.Component {
   }
 }
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state: ApplicationState) {
   return {
-    profile: state.profile
+    profile: state.profile,
+    manifest: state.manifest.manifestContent,
+    settings: state.manifest.settings
   };
 }
 
-export default compose(
-  connect(mapStateToProps)
+export default connect(
+  mapStateToProps
 )(Collectibles);

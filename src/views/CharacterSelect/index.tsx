@@ -2,7 +2,6 @@
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { ThunkDispatch } from 'redux-thunk';
 import cx from 'classnames';
 import { withNamespaces, WithNamespaces } from 'react-i18next';
 import { DestinyManifest } from 'bungie-api-ts/destiny2/interfaces';
@@ -13,7 +12,7 @@ import { Location } from 'history';
 import objectValues from 'lodash';
 
 import { ProfileData, ProfileState } from '../../utils/reducers/profile';
-import { ApplicationState } from '../../utils/reduxStore';
+import { ApplicationState, Dispatch } from '../../utils/reduxStore';
 import { ThemeState } from '../../utils/reducers/theme';
 import fetcher from '../../utils/fetcher';
 import getProfile, { GetProfileResponse } from '../../utils/actions/getProfile';
@@ -23,15 +22,15 @@ import * as destinyEnums from '../../utils/destinyEnums';
 import * as ls from '../../utils/localStorage';
 import errorHandler from '../../utils/errorHandler';
 import Spinner from '../../components/Spinner';
+import { ViewportDimensions } from '../../App';
 
 import './styles.css';
 
 interface CharacterSelectProps {
   user: ProfileState
   theme: ThemeState
-  manifest: DestinyManifest
   location: Location
-  viewport: { width: number, height: number }
+  viewport: ViewportDimensions
 
   getProfile: (membershipType: number, membershipId: string, characterId: string | undefined, callback: (response: GetProfileResponse) => any) => any
   setProfile: (membershipType: number, membershipId: string, characterId: string, data: ProfileData, setAsDefaultProfile: boolean) => any
@@ -222,7 +221,7 @@ class CharacterSelect extends React.Component<CharacterSelectProps & WithNamespa
               {clan}
               {timePlayed}
             </div>
-            <Characters from={from} manifest={this.props.manifest} profileData={this.state.profile.data} characterClick={this.characterClick} />
+            <Characters from={from} characterClick={this.characterClick} />
           </div>
         </>
       );
@@ -292,25 +291,13 @@ class CharacterSelect extends React.Component<CharacterSelectProps & WithNamespa
   }
 }
 
-// Properties expected to be passed to <CharacterSelect />
-interface CharacterSelectOwnProps {
-  manifest: DestinyManifest
-  viewport: {
-    width: number
-    height: number
-  }
-}
-
-function mapStateToProps(state: ApplicationState, ownProps: CharacterSelectOwnProps) {
+function mapStateToProps(state: ApplicationState) {
   return {
-    ...ownProps,
     user: state.profile,
     theme: state.theme,
-    location: state.router.location,
+    location: state.router.location
   };
 }
-
-type Dispatch = ThunkDispatch<ApplicationState, null, SetProfileActions>
 
 function mapDispatchToProps(dispatch: Dispatch) {
   return {
@@ -323,10 +310,9 @@ function mapDispatchToProps(dispatch: Dispatch) {
   }
 }
 
-export default compose(
+export default withNamespaces()(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  ),
-  withNamespaces()
-)(CharacterSelect);
+  )(CharacterSelect)
+);

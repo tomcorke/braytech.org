@@ -5,33 +5,27 @@ import { Link, NavLink } from 'react-router-dom';
 import cx from 'classnames';
 import { Location } from 'history'
 
-import packageJSON from '../../../package.json';
-
-import { MergedManifestData } from '../../utils/manifest'
 import ObservedImage from '../../components/ObservedImage';
 import ProgressBar from '../../components/ProgressBar';
 import { classHashToString } from '../../utils/destinyUtils';
-import { ProfileData } from '../../utils/reducers/profile/index.js';
-import { ApplicationState } from '../../utils/reduxStore.js';
-import { ThemeState } from '../../utils/reducers/theme/index.js';
+import { ProfileData } from '../../utils/reducers/profile';
+import { ApplicationState } from '../../utils/reduxStore';
+import { ThemeState } from '../../utils/reducers/theme';
+import { DestinyManifestJsonContent } from '../../utils/reducers/manifest';
+import { ViewDefinition } from '../Header';
+import { ViewportDimensions } from '../../App';
+
+import packageJSON from '../../../package.json';
 
 import './styles.css';
 
 interface HeaderProfileProps {
-  manifest: MergedManifestData
+  manifestData?: DestinyManifestJsonContent
   characterId?: string
-  data?: ProfileData
+  profileData?: ProfileData
   theme: ThemeState
-  viewport: {
-    width: number
-    height: number
-  }
-  views: {
-    name: string
-    desc: string
-    slug: string
-    exact: boolean
-  }[]
+  viewport: ViewportDimensions
+  views: ViewDefinition[]
   location: Location
 }
 
@@ -67,15 +61,15 @@ class HeaderProfile extends React.Component<HeaderProfileProps, HeaderProfileSta
   };
 
   render() {
+    // Null checks here allow for typescript to assume these props are not null later
+    if (!this.props.manifestData || !this.props.profileData || !this.props.characterId) return null;
 
-    if (!this.props.data || !this.props.characterId) return null;
-
-    const manifest = this.props.manifest;
+    const manifest = this.props.manifestData;
     const characterId = this.props.characterId;
 
-    let profile = this.props.data.profile.profile.data;
-    let characters = this.props.data.profile.characters.data;
-    let characterProgressions = this.props.data.profile.characterProgressions.data;
+    let profile = this.props.profileData.profile.profile.data;
+    let characters = this.props.profileData.profile.characters.data;
+    let characterProgressions = this.props.profileData.profile.characterProgressions.data;
 
     let character = characters[characterId];
 
@@ -170,7 +164,7 @@ class HeaderProfile extends React.Component<HeaderProfileProps, HeaderProfileSta
                   />
                   <div className='displayName'>{profile.userInfo.displayName}</div>
                   <div className='basics'>
-                    {character.baseCharacterLevel} / {classHashToString(character.classHash, this.props.manifest, character.genderType)} / <span className='light'>{character.light}</span>
+                    {character.baseCharacterLevel} / {classHashToString(character.classHash, manifest, character.genderType)} / <span className='light'>{character.light}</span>
                   </div>
                   <ProgressBar
                     classNames={{

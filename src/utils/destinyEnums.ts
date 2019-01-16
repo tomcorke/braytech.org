@@ -96,9 +96,9 @@ export const CLASSES = {
   [HUNTER]: 'Hunter'
 };
 
-const flagEnum = (state, value) => !!(state & value);
+const flagEnum = (state: number, value: number) => !!(state & value);
 
-export const enumerateRecordState = state => ({
+export const enumerateRecordState = (state: number) => ({
   none: flagEnum(state, 0),
   recordRedeemed: flagEnum(state, 1),
   rewardUnavailable: flagEnum(state, 2),
@@ -109,7 +109,7 @@ export const enumerateRecordState = state => ({
   canEquipTitle: flagEnum(state, 64)
 });
 
-export const enumerateCollectibleState = state => ({
+export const enumerateCollectibleState = (state: number) => ({
   none: flagEnum(state, 0),
   notAcquired: flagEnum(state, 1),
   obscured: flagEnum(state, 2),
@@ -120,7 +120,7 @@ export const enumerateCollectibleState = state => ({
   purchaseDisabled: flagEnum(state, 64)
 });
 
-export const enumerateItemState = state => ({
+export const enumerateItemState = (state: number) => ({
   none: flagEnum(state, 0),
   locked: flagEnum(state, 1),
   tracked: flagEnum(state, 2),

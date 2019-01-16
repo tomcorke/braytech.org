@@ -4,16 +4,13 @@ import { ConnectedRouter } from 'connected-react-router'
 import { Route, Redirect, Switch } from 'react-router-dom';
 import { withNamespaces, WithNamespaces } from 'react-i18next';
 import cx from 'classnames';
-import assign from 'lodash/assign';
-import { getDestinyManifest } from 'bungie-api-ts/destiny2/api'
 
 import './Core.css';
 import './App.css';
 
 import './utils/i18n';
 import { getCurrentLanguage } from './utils/i18n'
-import { Globals, isProfileRoute } from './utils/globals';
-import dexie from './utils/dexie';
+import { isProfileRoute } from './utils/globals';
 import GoogleAnalytics from './components/GoogleAnalytics';
 import history from './history';
 
@@ -40,222 +37,65 @@ import Pride from './views/Pride';
 import Credits from './views/Credits';
 import Tools from './views/Tools';
 import ClanBannerBuilder from './views/Tools/ClanBannerBuilder';
-import { HttpClient, HttpClientConfig } from 'bungie-api-ts/http';
-import { DestinyManifest } from 'bungie-api-ts/destiny2/interfaces';
-import { ServerResponse } from 'bungie-api-ts/common';
+
+import { ApplicationState, Dispatch } from './utils/reduxStore';
+import { getManifestContent } from './utils/actions/manifest';
+import { ThemeState } from './utils/reducers/theme';
+import { ProfileState } from './utils/reducers/profile';
+import { Location } from 'history';
 
 interface AppProps {
+  theme: ThemeState
+  profile: ProfileState
+  location: Location
+  statusCode?: string
+
+  updateAvailable: boolean
+
+  getManifestContent: (language: string) => any
+}
+
+export interface ViewportDimensions {
+  width: number
+  height: number
 }
 
 interface AppState {
-  status: {
-    code?: string
-    detail?: string
-  }
-  manifest: {
-    version?: string
-    settings?: any
-  }
-  viewport?: {
-    width: number
-    height: number
-  }
+  viewport: ViewportDimensions
 }
 
 class App extends React.Component<AppProps & WithNamespaces, AppState> {
 
-  currentLanguage: any
-  availableLanguages: string[]
+  currentLanguage: string
 
   constructor(props: AppProps & WithNamespaces) {
     super(props);
 
     this.state = {
-      status: {
-        code: undefined,
-        detail: undefined
-      },
-      manifest: {
-        version: undefined,
-        settings: undefined
-      }
-    };
+      viewport: this.getViewport()
+    }
 
     this.currentLanguage = getCurrentLanguage();
-    this.availableLanguages = [];
   }
 
-  updateViewport = () => {
-    let width = window.innerWidth;
-    let height = window.innerHeight;
-    this.setState({
-      viewport: {
-        width,
-        height
-      }
-    });
-  };
-
-  getVersionAndSettings = async () => {
-    let state = this.state;
-    state.status.code = 'checkManifest';
-    this.setState(state);
-
-    const fetcher: HttpClient = async (config: HttpClientConfig) => {
-      const get = await fetch(config.url, {
-        headers: {
-          'X-API-Key': (Globals.key.bungie as string)
-        }
-      })
-      return get.json()
-    }
-
-    const getManifest = getDestinyManifest(fetcher)
-    const getSettings = fetcher({ url: 'https://www.bungie.net/Platform/Settings/', method: 'GET' })
-
-    const [ manifestServerResponse, settingsServerResponse ]: [ServerResponse<DestinyManifest>, ServerResponse<any>] = await Promise.all([ getManifest, getSettings ]);
-
-    const manifest = manifestServerResponse.Response;
-
-    let availableLanguages = [];
-    for (var i in manifest.jsonWorldContentPaths) {
-      availableLanguages.push(i);
-    }
-
-    this.availableLanguages = availableLanguages;
+  getViewport(): ViewportDimensions {
     return {
-      manifest,
-      settings: settingsServerResponse.Response,
-      version: manifest.jsonWorldContentPaths[this.currentLanguage]
+      width: window.innerWidth,
+      height: window.innerHeight,
     }
-  };
+  }
 
-<<<<<<< HEAD:src/App.tsx
-  getManifest = async ({ settings, version }: { settings: any, version: string }) => {
-=======
-  getManifest = version => {
-    console.log('getManifest', version);
->>>>>>> Typescript is spreading, and characters are no longer an array:src/App.js
-    let state = this.state;
-
-    state.status.code = 'fetchManifest';
-    state.manifest.version = version;
-    this.setState(state);
-
-<<<<<<< HEAD:src/App.tsx
-    const getManifestContent = async () => {
-=======
-    let manifest = async () => {
-      console.log('fetch manifest', `https://www.bungie.net${version}`);
->>>>>>> Typescript is spreading, and characters are no longer an array:src/App.js
-      const request = await fetch(`https://www.bungie.net${version}`);
-      return request.json();
-    };
-
-<<<<<<< HEAD:src/App.tsx
-    const manifestContent = await getManifestContent()
-
-    state.status.code = 'setManifest';
-    this.setState(state);
-
-    await dexie.table('manifest').clear()
-
-    await dexie.table('manifest').add({
-      version: version,
-      value: manifestContent
+  updateViewport() {
+    this.setState({
+      viewport: this.getViewport()
     });
-
-    await dexie.table('manifest').toArray()
-
-    const mergedManifestContent = {
-      ...manifestContent,
-      settings
-    }
-
-    state.status.code = 'ready';
-    this.setState(state);
-=======
-    manifest()
-      .then(manifest => {
-        console.log('raw manifest', manifest);
-        let state = this.state;
-        state.status.code = 'setManifest';
-        this.setState(state);
-        dexie
-          .table('manifest')
-          .clear()
-          .then(() => {
-            dexie.table('manifest').add({
-              version: version,
-              value: manifest
-            });
-          })
-          .then(() => {
-            dexie
-              .table('manifest')
-              .toArray()
-              .then(manifest => {
-                this.manifest = manifest[0].value;
-                console.log('manifest', this.manifest)
-                this.manifest.settings = this.bungieSettings;
-                let state = this.state;
-                state.status.code = 'ready';
-                this.setState(state);
-              });
-          });
-      })
-      .catch(error => {
-        console.log(error);
-      });
->>>>>>> Typescript is spreading, and characters are no longer an array:src/App.js
   };
+
 
   componentDidMount() {
     this.updateViewport();
     window.addEventListener('resize', this.updateViewport);
-
-    dexie
-      .table('manifest')
-      .toArray()
-      .then(manifest => {
-        if (manifest.length > 0) {
-          let state = this.state;
-          state.manifest.version = manifest[0].version;
-          this.setState(state);
-        }
-      })
-      .then(() => {
-        this.getVersionAndSettings()
-          .then(version => {
-            if (version !== this.state.manifest.version) {
-              this.getManifest(version);
-            } else {
-              dexie
-                .table('manifest')
-                .toArray()
-                .then(manifest => {
-                  if (manifest.length > 0) {
-                    this.manifest = manifest[0].value;
-                    this.manifest.settings = this.bungieSettings;
-                    let state = this.state;
-                    state.status.code = 'ready';
-                    this.setState(state);
-                  } else {
-                    let state = this.state;
-                    state.status.code = 'error';
-                    state.status.detail = 'Failure to access IndexedDB manifest';
-                    this.setState(state);
-                  }
-                });
-            }
-          })
-          .catch(error => {
-            let state = this.state;
-            state.status.code = 'error';
-            state.status.detail = error;
-            this.setState(state);
-          });
-      });
+    this.props.getManifestContent(this.currentLanguage);
   }
 
   componentWillUnmount() {
@@ -263,59 +103,60 @@ class App extends React.Component<AppProps & WithNamespaces, AppState> {
   }
 
   render() {
-    if (!window.ga) {
+
+    if (!(window as any).ga) {
       GoogleAnalytics.init();
     }
 
     let content = null;
-    if (this.state.status.code !== 'ready') {
-      content = <Loading state={this.state.status} theme={this.props.theme.selected} />;
+    if (this.props.statusCode !== 'ready') {
+      content = <Loading />;
     } else {
       if (this.props.profile.data && this.props.profile.characterId) {
         content = (
-          <div className={cx('wrapper', this.props.theme.selected, { 'profile-route': isProfileRoute(this.props.router.location.pathname) })}>
+          <div className={cx('wrapper', this.props.theme.selected, { 'profile-route': isProfileRoute(this.props.location.pathname) })}>
             <NotificationApp updateAvailable={this.props.updateAvailable} />
-            <NotificationProgress manifest={this.manifest} />
-            <RefreshService {...this.props} />
+            <NotificationProgress />
+            <RefreshService />
             <GoogleAnalytics.RouteTracker />
             <div className='main'>
-              <Header {...this.state} {...this.props} manifest={this.manifest} />
+              <Header viewport={this.state.viewport} />
               <Switch>
-                <Route path='/character-select' render={route => <CharacterSelect viewport={this.state.viewport} manifest={this.manifest} />} />
+                <Route path='/character-select' render={route => <CharacterSelect viewport={this.state.viewport} />} />
                 <Route
                   path='/account'
                   render={() => (
                     <>
-                      <Account manifest={this.manifest} />
-                      <Tooltip manifest={this.manifest} />
+                      <Account />
+                      <Tooltip />
                     </>
                   )}
                 />
-                <Route path='/clan/:view?/:subView?' exact render={route => <Clan manifest={this.manifest} view={route.match.params.view} subView={route.match.params.subView} />} />
-                <Route path='/character' exact render={() => <Character viewport={this.state.viewport} manifest={this.manifest} />} />
-                <Route path='/checklists' exact render={() => <Checklists viewport={this.state.viewport} manifest={this.manifest} />} />
+                <Route path='/clan/:view?/:subView?' exact render={route => <Clan view={route.match.params.view} subView={route.match.params.subView} />} />
+                <Route path='/character' exact render={() => <Character viewport={this.state.viewport} />} />
+                <Route path='/checklists' exact render={() => <Checklists viewport={this.state.viewport} />} />
                 <Route
                   path='/collections/:primary?/:secondary?/:tertiary?/:quaternary?'
                   render={route => (
                     <>
-                      <Collections {...route} manifest={this.manifest} />
-                      <Tooltip manifest={this.manifest} />
+                      <Collections {...route} />
+                      <Tooltip />
                     </>
                   )}
                 />
-                <Route path='/triumphs/:primary?/:secondary?/:tertiary?/:quaternary?' render={route => <Triumphs {...route} manifest={this.manifest} />} />
+                <Route path='/triumphs/:primary?/:secondary?/:tertiary?/:quaternary?' render={route => <Triumphs {...route} />} />
                 <Route
                   path='/this-week'
                   exact
                   render={() => (
                     <>
-                      <ThisWeek manifest={this.manifest} />
-                      <Tooltip manifest={this.manifest} />
+                      <ThisWeek />
+                      <Tooltip />
                     </>
                   )}
                 />
-                <Route path='/vendors/:hash?' exact render={route => <Vendors vendorHash={route.match.params.hash} manifest={this.manifest} />} />
-                <Route path='/settings' exact render={() => <Settings manifest={this.manifest} availableLanguages={this.availableLanguages} />} />
+                <Route path='/vendors/:hash?' exact render={route => <Vendors vendorHash={route.match.params.hash} />} />
+                <Route path='/settings' exact render={() => <Settings />} />
                 <Route path='/pride' exact render={() => <Pride />} />
                 <Route path='/credits' exact render={() => <Credits />} />
                 <Route path='/tools' exact render={() => <Tools />} />
@@ -328,13 +169,13 @@ class App extends React.Component<AppProps & WithNamespaces, AppState> {
         );
       } else {
         content = (
-          <div className={cx('wrapper', this.props.theme.selected, { 'profile-route': isProfileRoute(this.props.router.location.pathname) })}>
+          <div className={cx('wrapper', this.props.theme.selected, { 'profile-route': isProfileRoute(location.pathname) })}>
             <NotificationApp updateAvailable={this.props.updateAvailable} />
             <GoogleAnalytics.RouteTracker />
             <div className='main'>
-              <Header {...this.state} {...this.props} manifest={this.manifest} />
+              <Header viewport={this.state.viewport} />
               <Switch>
-                <Route path='/character-select' render={route => <CharacterSelect viewport={this.state.viewport} manifest={this.manifest} />} />
+                <Route path='/character-select' render={route => <CharacterSelect viewport={this.state.viewport} />} />
                 <Route
                   path='/account'
                   render={route => (
@@ -416,8 +257,8 @@ class App extends React.Component<AppProps & WithNamespaces, AppState> {
                     />
                   )}
                 />
-                <Route path='/vendors/:hash?' exact render={route => <Vendors vendorHash={route.match.params.hash} manifest={this.manifest} />} />
-                <Route path='/settings' exact render={() => <Settings manifest={this.manifest} availableLanguages={this.availableLanguages} />} />
+                <Route path='/vendors/:hash?' exact render={route => <Vendors vendorHash={route.match.params.hash} />} />
+                <Route path='/settings' exact render={() => <Settings />} />
                 <Route path='/pride' exact render={() => <Pride />} />
                 <Route path='/credits' exact render={() => <Credits />} />
                 <Route path='/tools' exact render={() => <Tools />} />
@@ -441,17 +282,25 @@ class App extends React.Component<AppProps & WithNamespaces, AppState> {
 
 }
 
-function mapStateToProps(state: ApplicationState, ownProps) {
+function mapStateToProps(state: ApplicationState) {
   return {
     profile: state.profile,
     theme: state.theme,
     refreshService: state.refreshService,
-    router: state.router
+    location: state.router.location,
+    statusCode: state.appStatus.code,
   };
+}
+
+function mapDispatchToProps(dispatch: Dispatch) {
+  return {
+    getManifestContent: (language: string) => dispatch(getManifestContent(language))
+  }
 }
 
 export default withNamespaces()(
   connect(
     mapStateToProps,
+    mapDispatchToProps,
   )(App)
 );

@@ -39,7 +39,7 @@ class PresentationNode extends React.Component {
     let secondaryDefinition = manifest.DestinyPresentationNodeDefinition[secondaryHash];
 
     let tertiaryHash = this.props.match.params.tertiary ? this.props.match.params.tertiary : secondaryDefinition.children.presentationNodes[0].presentationNodeHash;
-    let quaternaryHash = this.props.match.params.quaternary ? this.props.match.params.quaternary : false;
+    let quaternaryHash = this.props.match.params.quaternary ? this.props.match.params.quaternary : undefined;
 
     let primaryChildren = [];
     primaryDefinition.children.presentationNodes.forEach(child => {

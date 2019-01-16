@@ -13,7 +13,7 @@ export const Globals = {
   }
 }
 
-export const isProfileRoute = (pathname) => {
+export const isProfileRoute = (pathname: string) => {
   return pathname !== '/' && !Globals.routes.standard.includes(pathname.split('/')[1]) ? true : false;
 }
 

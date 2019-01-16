@@ -3,23 +3,41 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Link, NavLink } from 'react-router-dom';
 import cx from 'classnames';
+
+import { ApplicationState } from '../../utils/reduxStore';
+import { ViewDefinition } from '../Header';
+import { ThemeState } from '../../utils/reducers/theme';
+import { ViewportDimensions } from '../../App';
+
 import packageJSON from '../../../package.json';
 
 import './styles.css';
 
-class HeaderStandard extends React.Component {
-  constructor(props) {
+interface HeaderStandardProps {
+  views: ViewDefinition[]
+  viewport: ViewportDimensions
+  isIndex: boolean
+
+  theme: ThemeState
+}
+
+interface HeaderStandardState {
+  mobileNavOpen: boolean
+}
+
+class HeaderStandard extends React.Component<HeaderStandardProps, HeaderStandardState> {
+  constructor(props: HeaderStandardProps) {
     super(props);
 
     this.state = {
       mobileNavOpen: false
     };
 
-    this.TriggerClickHandler = this.TriggerClickHandler.bind(this);
-    this.NavlinkClickHandler = this.NavlinkClickHandler.bind(this);
+    this.triggerClickHandler = this.triggerClickHandler.bind(this);
+    this.navlinkClickHandler = this.navlinkClickHandler.bind(this);
   }
 
-  TriggerClickHandler = () => {
+  triggerClickHandler = () => {
     if (!this.state.mobileNavOpen) {
       this.setState({ mobileNavOpen: true });
     } else {
@@ -27,7 +45,7 @@ class HeaderStandard extends React.Component {
     }
   };
 
-  NavlinkClickHandler = () => {
+  navlinkClickHandler = () => {
     if (this.state.mobileNavOpen) {
       this.setState({ mobileNavOpen: false });
     }
@@ -41,7 +59,7 @@ class HeaderStandard extends React.Component {
             let to = view.slug;
             return (
               <li key={view.slug}>
-                <NavLink to={to} exact={view.exact} onClick={this.NavlinkClickHandler}>
+                <NavLink to={to} exact={view.exact} onClick={this.navlinkClickHandler}>
                   {view.name}
                 </NavLink>
                 <div className='description'>{view.desc}</div>
@@ -64,7 +82,7 @@ class HeaderStandard extends React.Component {
             let to = view.slug;
             return (
               <li key={view.slug}>
-                <NavLink to={to} exact={view.exact} onClick={this.NavlinkClickHandler}>
+                <NavLink to={to} exact={view.exact} onClick={this.navlinkClickHandler}>
                   {view.name}
                 </NavLink>
                 <div className='description'>{view.desc}</div>
@@ -86,12 +104,12 @@ class HeaderStandard extends React.Component {
           </div>
           {!viewsInline ? (
             this.state.mobileNavOpen ? (
-              <div className='trigger' onClick={this.TriggerClickHandler}>
+              <div className='trigger' onClick={this.triggerClickHandler}>
                 <i className='uniE106' />
                 Exit
               </div>
             ) : (
-              <div className='trigger' onClick={this.TriggerClickHandler}>
+              <div className='trigger' onClick={this.triggerClickHandler}>
                 <i className='uniEA55' />
                 Views
               </div>
@@ -106,7 +124,7 @@ class HeaderStandard extends React.Component {
   }
 }
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state: ApplicationState) {
   return {
     theme: state.theme
   };

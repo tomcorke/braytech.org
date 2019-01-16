@@ -12,20 +12,16 @@ import { getAccountUrl } from '../../utils/urls';
 import { ApplicationState } from '../../utils/reduxStore';
 import { UserInfoCard } from 'bungie-api-ts/user/interfaces';
 import { Location } from 'history';
-import { MergedManifestData } from '../../utils/manifest';
+import { ViewportDimensions } from '../../App';
 
 interface HeaderProps {
   userInfo?: UserInfoCard
   characterId?: string
   location: Location
-  viewport: {
-    width: number
-    height: number
-  }
-  manifest: MergedManifestData
+  viewport: ViewportDimensions
 }
 
-interface ViewDefinition {
+export interface ViewDefinition {
   name: string
   desc: string
   slug: string
@@ -33,7 +29,7 @@ interface ViewDefinition {
   dev?: true
 }
 
-const Header = ({ t, userInfo, characterId, location, viewport, manifest }: HeaderProps & WithNamespaces) => {
+const Header = ({ t, userInfo, characterId, location, viewport }: HeaderProps & WithNamespaces) => {
 
   const accountUrl = getAccountUrl(userInfo, characterId);
 
@@ -107,7 +103,6 @@ const Header = ({ t, userInfo, characterId, location, viewport, manifest }: Head
     return (
       <HeaderProfile
         viewport={viewport}
-        manifest={manifest}
         views={views}
       />
     );
@@ -125,7 +120,7 @@ const Header = ({ t, userInfo, characterId, location, viewport, manifest }: Head
 const mapStateToProps = (state: ApplicationState) => ({
   userInfo: state.profile.data && state.profile.data.profile.profile.data.userInfo,
   characterId: state.profile.characterId,
-  location: state.router.location
+  location: state.router.location,
 })
 
 export default withNamespaces()(

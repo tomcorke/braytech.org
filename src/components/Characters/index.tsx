@@ -14,10 +14,11 @@ import './styles.css';
 import { getAccountUrl } from '../../utils/urls';
 import { ProfileData } from '../../utils/reducers/profile';
 import { ApplicationState } from '../../utils/reduxStore';
+import { DestinyManifestJsonContent } from '../../utils/reducers/manifest';
 
 interface CharactersProps {
   from: string
-  manifest: DestinyManifest
+  manifest?: DestinyManifestJsonContent
   profileData?: ProfileData
   theme: any
   characterClick: (characterId: string) => any
@@ -87,17 +88,12 @@ const Characters = ({ t, from, manifest, profileData, theme, characterClick }: C
   );
 }
 
-interface CharactersOwnProps {
-  from: string
-  manifest: DestinyManifest
-  profileData: ProfileData
-  characterClick: (characterId: string) => any
-}
 
-function mapStateToProps(state: ApplicationState, ownProps: CharactersOwnProps) {
+function mapStateToProps(state: ApplicationState) {
   return {
-    ...ownProps,
     theme: state.theme,
+    manifest: state.manifest.manifestContent,
+    profileData: state.profile.data
   };
 }
 

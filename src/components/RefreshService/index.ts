@@ -1,15 +1,25 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import getProfile from '../../utils/getProfile';
-import setProfile from '../../utils/setProfile';
+import getProfile from '../../utils/actions/getProfile';
+import setProfile from '../../utils/actions/setProfile';
+import { ApplicationState } from '../../utils/reduxStore';
+import { RefreshServiceState } from '../../utils/reducers/refreshService';
+import { ProfileState } from '../../utils/reducers/profile';
 
 const AUTO_REFRESH_INTERVAL = 20 * 1000;
 const ONE_HOUR = 60 * 60 * 1000;
 
-class RefreshService extends React.Component {
+interface RefreshServiceProps {
+  refreshService: RefreshServiceState
+  profile: ProfileState
+}
 
-  running = false;
+class RefreshService extends React.Component<RefreshServiceProps> {
+
+  running: boolean = false;
+  lastActivityTimestamp: number = 0
+  refreshAccountDataInterval: number = -1
 
   componentDidMount() {
     if (this.props.refreshService.config.enabled) {
@@ -21,7 +31,7 @@ class RefreshService extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: RefreshServiceProps) {
     if (prevProps.profile.data !== this.props.profile.data) {
       this.clearTimer();
       this.startTimer();
@@ -42,7 +52,7 @@ class RefreshService extends React.Component {
     this.lastActivityTimestamp = Date.now();
   }
 
-  activeWithinTimespan(timespan) {
+  activeWithinTimespan(timespan: number) {
     return Date.now() - this.lastActivityTimestamp <= timespan;
   }
 
@@ -86,6 +96,8 @@ class RefreshService extends React.Component {
     // let time = new Date();
     // console.log("refreshing profile data", time, this.props);
 
+    if (!membershipType || !membershipId) return
+
     getProfile(membershipType, membershipId, this.props.profile.characterId, (callback) => {
 
       if (!callback.loading && callback.error) {
@@ -108,7 +120,7 @@ class RefreshService extends React.Component {
   }
 }
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state: ApplicationState) {
   return {
     profile: state.profile,
     refreshService: state.refreshService

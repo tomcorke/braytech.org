@@ -1,6 +1,6 @@
-import * as ls from '../../localStorage';
-import { DestinyProfileResponse, DestinyCharacterComponent, DestinyPublicMilestone } from 'bungie-api-ts/destiny2/interfaces'
-import { SetProfileActions } from '../../actions/setProfile';
+import * as ls from '../localStorage';
+import { DestinyProfileResponse, DestinyPublicMilestone } from 'bungie-api-ts/destiny2/interfaces'
+import { SetProfileActions } from '../actions/setProfile';
 import { GroupMembershipSearchResponse } from 'bungie-api-ts/groupv2/interfaces';
 
 // Define a limited type for our profile data

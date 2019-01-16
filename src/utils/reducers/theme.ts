@@ -1,4 +1,4 @@
-import * as ls from '../../localStorage';
+import * as ls from '../localStorage';
 
 export interface ThemeState {
   selected: string
