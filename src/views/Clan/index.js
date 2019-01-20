@@ -1,9 +1,9 @@
 import React from 'react';
 
 import './styles.css';
-import AboutView from './about.js';
-import RosterView from './roster.js';
-import StatsView from './stats.js';
+import AboutView from './about';
+import RosterView from './roster';
+import StatsView from './stats';
 
 class Clan extends React.Component {
   constructor(props) {

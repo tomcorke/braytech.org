@@ -26,7 +26,7 @@ class Index extends React.Component {
   render() {
     return (
       <div className={cx('view', this.props.theme.selected)} id='index'>
-        <ObservedImage className='image bg' src='/static/images/db_edz_airport_01_b.jpg' />
+        <ObservedImage className='image bg' src='/static/images/jesse-van-dijk-i-010.jpg' />
         <div className='logo-feature'>
           <div className='device'>
             <span className='destiny-clovis_bray_device' />

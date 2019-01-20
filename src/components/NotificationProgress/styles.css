@@ -10,6 +10,44 @@
   justify-content: space-between;
   color: #fff;
   font-size: 14px;
+  user-select: none;
+  opacity: 0;
+  animation: animation-notification-progress-in 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+#notification-progress > a {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@keyframes animation-notification-progress-in {
+  from {
+    opacity: 0;
+    transform: scale(2) translateY(200px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes animation-notification-progress-out {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2) translateY(200px);
+  }
+}
+
+#notification-progress.timedOut {
+  animation: animation-notification-progress-out 2.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  pointer-events: none;
 }
 
 #notification-progress .type {
@@ -40,7 +78,10 @@
 #notification-progress .item {
   border-top: 2px solid rgba(255, 255, 255, 0.4);
   background: radial-gradient(ellipse farthest-corner at 50% 100%, rgba(165, 165, 165, 1) 0%, rgba(135, 135, 135, 0) 100%);
-  padding: 1rem 3rem;
+  padding: 1rem 3rem;  
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
   flex-basis: 100%;
 }
 
@@ -75,6 +116,17 @@ html.backdropfilter #notification-progress .item {
   display: grid;
   align-items: center;
   font-size: 18px;
+  max-width: 600px;
+}
+
+#notification-progress .item .more {
+  margin: 1rem 0 0;
+  padding: 7px 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 16px;
+  flex-basis: 7rem;
+  text-align: center;
 }
 
 
@@ -122,5 +174,10 @@ html.backdropfilter #notification-progress .item {
 
   #notification-progress .item .properties .description {
     font-size: 14px;
+    max-width: unset;
+  }
+
+  #notification-progress .item .more {
+    font-size: 12px;
   }
 }

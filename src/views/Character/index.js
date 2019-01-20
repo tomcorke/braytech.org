@@ -15,7 +15,6 @@ class Character extends React.Component {
   }
 
   render() {
-    const { t } = this.props;
     const manifest = this.props.manifest;
     const characterId = this.props.characterId;
 

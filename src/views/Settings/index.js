@@ -194,7 +194,6 @@ class Settings extends React.Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  console.log(state, ownProps);
   return {
     profile: state.profile,
     theme: state.theme,

@@ -16,7 +16,7 @@ class Root extends React.Component {
     const characterId = this.props.profile.characterId;
 
     const characters = this.props.profile.data.profile.characters.data;
-    const genderHash = characters.find(character => character.characterId === characterId).genderHash;
+    const genderHash = characters[characterId].genderHash;
     const profileRecords = this.props.profile.data.profile.profileRecords.data.records;
     const characterRecords = this.props.profile.data.profile.characterRecords.data;
 

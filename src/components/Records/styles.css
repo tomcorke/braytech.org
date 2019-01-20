@@ -112,11 +112,15 @@
   background-color: rgba(90, 163, 102, 0);
 }
 
-.list.record-items li.highlight {
-  animation: highlight 1s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+.list.record-items li.highlight::after {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  animation: animation-backround-highlight 1s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
 }
 
-@keyframes highlight {
+@keyframes animation-backround-highlight {
   0% {
     background-color: rgba(255, 255, 255, 0);
   }
