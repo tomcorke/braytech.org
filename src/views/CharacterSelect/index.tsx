@@ -1,10 +1,8 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
-import { compose } from 'redux';
 import { connect } from 'react-redux';
 import cx from 'classnames';
 import { withNamespaces, WithNamespaces } from 'react-i18next';
-import { DestinyManifest } from 'bungie-api-ts/destiny2/interfaces';
 import { searchDestinyPlayer as apiSearchDestinyPlayer } from 'bungie-api-ts/destiny2/api';
 import { UserInfoCard } from 'bungie-api-ts/user/interfaces';
 import { PlatformErrorCodes } from 'bungie-api-ts/common';
@@ -15,8 +13,8 @@ import { ProfileData, ProfileState } from '../../utils/reducers/profile';
 import { ApplicationState, Dispatch } from '../../utils/reduxStore';
 import { ThemeState } from '../../utils/reducers/theme';
 import fetcher from '../../utils/fetcher';
-import getProfile, { GetProfileResponse } from '../../utils/actions/getProfile';
-import setProfile, { SetProfileActions } from '../../utils/actions/setProfile';
+import { getProfile } from '../../utils/profile';
+import { setProfile, GetProfileResponse } from '../../utils/actions/profile';
 import Characters from '../../components/Characters';
 import * as destinyEnums from '../../utils/destinyEnums';
 import * as ls from '../../utils/localStorage';
@@ -32,7 +30,6 @@ interface CharacterSelectProps {
   location: Location
   viewport: ViewportDimensions
 
-  getProfile: (membershipType: number, membershipId: string, characterId: string | undefined, callback: (response: GetProfileResponse) => any) => any
   setProfile: (membershipType: number, membershipId: string, characterId: string, data: ProfileData, setAsDefaultProfile: boolean) => any
 }
 
@@ -83,7 +80,7 @@ class CharacterSelect extends React.Component<CharacterSelectProps & WithNamespa
     this.inputTimeout = window.setTimeout(async () => {
 
       try {
-        const searchResponse = await apiSearchDestinyPlayer(fetcher, { membershipType, displayName })
+        const searchResponse = await apiSearchDestinyPlayer(fetcher, { membershipType, displayName: encodeURIComponent(displayName) })
 
         if (!this.mounted) return
 
@@ -118,25 +115,23 @@ class CharacterSelect extends React.Component<CharacterSelectProps & WithNamespa
     this.props.setProfile(membershipType, membershipId, characterId, data, setAsDefaultProfile);
   };
 
-  getProfileCallback = (state: GetProfileResponse) => {
-    if (!this.mounted) return
+  private async getProfile(membershipType: number, membershipId: string, displayName?: string) {
+    const profile = await getProfile(membershipType, membershipId);
     this.setState(prev => ({
       search: { ...prev.search },
       profile: {
-        data: state.data
-      },
-      error: state.error,
-      loading: state.loading
+        data: profile
+      }
     }));
-  };
-
-  resultClick = (membershipType: number, membershipId: string, displayName: string) => {
-    window.scrollTo(0, 0);
-    this.props.getProfile(membershipType, membershipId, undefined, this.getProfileCallback);
 
     if (displayName) {
-      ls.update('history.profiles', { membershipType, membershipId, displayName }, true, 6);
+      ls.updateProfileHistory({ membershipType, membershipId, displayName });
     }
+  }
+
+  async resultClick (membershipType: number, membershipId: string, displayName: string) {
+    window.scrollTo(0, 0);
+    this.getProfile(membershipType, membershipId, displayName);
   };
 
   componentDidMount() {
@@ -147,7 +142,7 @@ class CharacterSelect extends React.Component<CharacterSelectProps & WithNamespa
     if (this.props.user.data) {
       this.setState({ profile: { data: this.props.user.data }, loading: false });
     } else if (this.props.user.membershipType && this.props.user.membershipId && !this.state.profile.data) {
-      this.props.getProfile(this.props.user.membershipType, this.props.user.membershipId, this.props.user.characterId, this.getProfileCallback);
+      this.getProfile(this.props.user.membershipType, this.props.user.membershipId);
     } else {
       this.setState({ loading: false });
     }
@@ -160,7 +155,7 @@ class CharacterSelect extends React.Component<CharacterSelectProps & WithNamespa
 
   render() {
     const { t } = this.props;
-    const profileHistory: ProfileHistoryItem[] = ls.get('history.profiles') ? ls.get('history.profiles') : [];
+    const profileHistory = ls.getProfileHistory();
     let resultsElement = null;
     let profileElement = null;
 
@@ -241,7 +236,7 @@ class CharacterSelect extends React.Component<CharacterSelectProps & WithNamespa
       <div className={cx('view', this.props.theme.selected, { loading: this.state.loading })} id='get-profile'>
         {reverse ? (
           <div className='profile'>
-            {this.state.loading ? <Spinner dark /> : null}
+            {this.state.loading ? <Spinner /> : null}
             {profileElement}
           </div>
         ) : null}
@@ -282,7 +277,7 @@ class CharacterSelect extends React.Component<CharacterSelectProps & WithNamespa
         </div>
         {!reverse ? (
           <div className='profile'>
-            {this.state.loading ? <Spinner dark /> : null}
+            {this.state.loading ? <Spinner /> : null}
             {profileElement}
           </div>
         ) : null}
@@ -301,9 +296,6 @@ function mapStateToProps(state: ApplicationState) {
 
 function mapDispatchToProps(dispatch: Dispatch) {
   return {
-    getProfile: (membershipType: number, membershipId: string, characterId: string | undefined, callback: (state: GetProfileResponse) => any) => dispatch(
-      getProfile(membershipType, membershipId, characterId, callback)
-    ),
     setProfile: (membershipType: number, membershipId: string, characterId: string, data: ProfileData, setAsDefaultProfile: boolean) => dispatch(
       setProfile(membershipType, membershipId, characterId, data, setAsDefaultProfile)
     ),

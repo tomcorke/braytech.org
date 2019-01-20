@@ -76,6 +76,7 @@ class App extends React.Component<AppProps & WithNamespaces, AppState> {
     }
 
     this.currentLanguage = getCurrentLanguage();
+    this.updateViewport = this.updateViewport.bind(this);
   }
 
   getViewport(): ViewportDimensions {

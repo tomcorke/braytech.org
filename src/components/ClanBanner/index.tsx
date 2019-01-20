@@ -33,7 +33,6 @@ interface ClanBannerData {
 
 interface ClanBannerProps {
   bannerData: ClanBannerData
-  dark: boolean
 }
 
 interface ClanBannerState {
@@ -244,7 +243,7 @@ class ClanBanner extends React.Component<ClanBannerProps, ClanBannerState> {
 
     return (
       <div className='canvas'>
-        {this.state.loaded !== 6 ? <Spinner dark={this.props.dark} /> : null}
+        {this.state.loaded !== 6 ? <Spinner /> : null}
         <canvas ref={this.canvas} width={canvasWidth} height='900' />
       </div>
     );

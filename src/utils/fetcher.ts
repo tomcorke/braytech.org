@@ -3,13 +3,19 @@ import { HttpClient, HttpClientConfig } from 'bungie-api-ts/http';
 
 import Globals from './globals';
 
-const fetcher: HttpClient = async (config: HttpClientConfig) => {
+interface FetcherConfig {
+  noHeaders?: boolean
+}
+
+type FetcherHttpClientConfig = HttpClientConfig & FetcherConfig
+
+const fetcher = async (config: FetcherHttpClientConfig) => {
   const url = (config.method === 'GET' && config.params && Object.keys(config.params).length > 0)
     ? `${config.url}?${objectEntries(config.params).map(([key, value]) => `${key}=${value}`).join('&')}`
     : config.url;
   const get = await fetch(url, {
     method: config.method,
-    headers: {
+    headers: config.noHeaders ? {} : {
       'X-API-Key': Globals.key.bungie || ''
     }
   })

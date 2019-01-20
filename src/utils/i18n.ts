@@ -1,20 +1,16 @@
-import * as ls from './localStorage';
+import { getSettings } from './localStorage';
 import i18n from 'i18next';
 import { reactI18nextModule } from 'react-i18next';
 import backend from 'i18next-xhr-backend';
 
 let _defaultLanguage = 'en';
-let _currentLanguage;
+let _currentLanguage: string | undefined;
 
 export function getCurrentLanguage() {
   if (_currentLanguage) return _currentLanguage;
-  _currentLanguage = ls.get('setting.language');
+  const settings = getSettings()
+  _currentLanguage = settings && settings.language
   return _currentLanguage || _defaultLanguage;
-}
-
-export function setCurrentLanguage(lang) {
-  _currentLanguage = lang;
-  ls.set('setting.language', lang);
 }
 
 i18n
@@ -37,8 +33,5 @@ i18n
       wait: true
     }
   });
-
-i18n.getCurrentLanguage = getCurrentLanguage;
-i18n.setCurrentLanguage = setCurrentLanguage;
 
 export default i18n;

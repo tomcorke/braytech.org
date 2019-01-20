@@ -14,10 +14,11 @@ import { ProfileState } from '../../utils/reducers/profile';
 import { DestinyCollectibleState, DestinyPresentationNodeDefinition } from 'bungie-api-ts/destiny2/interfaces';
 
 interface CollectiblesProps {
-  quaternaryHash?: string
   manifest?: DestinyManifestJsonContent
   settings?: DestinySettings
   profile: ProfileState
+
+  quaternaryHash?: string
   highlight?: number
   node?: number
   hashes: number[]

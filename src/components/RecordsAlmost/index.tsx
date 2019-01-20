@@ -7,40 +7,62 @@ import orderBy from 'lodash/orderBy';
 
 import Records from '../Records';
 import { enumerateRecordState } from '../../utils/destinyEnums';
+import { DestinyManifestJsonContent } from '../../utils/reducers/manifest';
+import { ProfileState } from '../../utils/reducers/profile';
+import { Location } from 'history';
+import { ApplicationState } from '../../utils/reduxStore';
 
-class RecordsAlmost extends React.Component {
-  constructor(props) {
-    super(props);
+interface RecordsAlmostProps {
+  manifest?: DestinyManifestJsonContent
+  profile: ProfileState
+  location: Location
 
-    this.scrollToRecordRef = React.createRef();
-  }
+  selfLinkFrom?: string
+  limit?: number
+  pageLink?: string
+}
+
+class RecordsAlmost extends React.Component<RecordsAlmostProps> {
+
+  private scrollToRecordRef = React.createRef<HTMLElement>();
 
   render() {
-    const manifest = this.props.manifest;
+    const { manifest, profile } = this.props;
+
+    if (!manifest || !profile.data) return
+
     const characterId = this.props.profile.characterId;
 
-    const characterRecords = this.props.profile.data.profile.characterRecords.data;
-    const profileRecords = this.props.profile.data.profile.profileRecords.data.records;
+    const characterRecords = profile.data.profile.characterRecords.data;
+    const profileRecords = profile.data.profile.profileRecords.data.records;
 
-    let almost = [];
-    let ignores = [];
+    let almost: {
+      distance?: number,
+      item: JSX.Element
+    }[] = [];
+    let ignores: number[] = [];
 
     // ignore collections badges
     manifest.DestinyPresentationNodeDefinition[498211331].children.presentationNodes.forEach(child => {
-      ignores.push(manifest.DestinyPresentationNodeDefinition[child.presentationNodeHash].completionRecordHash);
-      manifest.DestinyPresentationNodeDefinition[child.presentationNodeHash].children.presentationNodes.forEach(subchild => {
-        ignores.push(manifest.DestinyPresentationNodeDefinition[subchild.presentationNodeHash].completionRecordHash);
+      const childDefinition = manifest.DestinyPresentationNodeDefinition[child.presentationNodeHash]
+      if (childDefinition.completionRecordHash) ignores.push(childDefinition.completionRecordHash);
+
+      childDefinition.children.presentationNodes.forEach(subchild => {
+        const subChildDefinition = manifest.DestinyPresentationNodeDefinition[subchild.presentationNodeHash]
+        if (subChildDefinition.completionRecordHash) ignores.push(subChildDefinition.completionRecordHash);
       });
+
     });
 
     // ignore triumph seals
     manifest.DestinyPresentationNodeDefinition[1652422747].children.presentationNodes.forEach(child => {
-      ignores.push(manifest.DestinyPresentationNodeDefinition[child.presentationNodeHash].completionRecordHash);
+      const childDefinition = manifest.DestinyPresentationNodeDefinition[child.presentationNodeHash]
+      if (childDefinition.completionRecordHash) ignores.push(childDefinition.completionRecordHash);
     });
 
     Object.entries(profileRecords).forEach(([key, record]) => {
 
-      if (manifest.DestinyRecordDefinition[key].redacted) {
+      if (manifest.DestinyRecordDefinition[+key].redacted) {
         return;
       }
 
@@ -57,8 +79,8 @@ class RecordsAlmost extends React.Component {
       let progressValueTotal = 0;
 
       record.objectives.forEach(obj => {
-        let v = parseInt(obj.completionValue, 10);
-        let p = parseInt(obj.progress, 10);
+        let v = obj.completionValue;
+        let p = obj.progress || 0;
 
         completionValueTotal = completionValueTotal + v;
         progressValueTotal = progressValueTotal + (p > v ? v : p); // prevents progress values that are greater than the completion value from affecting the average
@@ -75,7 +97,7 @@ class RecordsAlmost extends React.Component {
         return;
       }
 
-      let objectives = [];
+      let objectives: JSX.Element[] = [];
 
       record.objectives.forEach(obj => {
         let objDef = manifest.DestinyObjectiveDefinition[obj.objectiveHash];
@@ -84,7 +106,7 @@ class RecordsAlmost extends React.Component {
           <li key={objDef.hash}>
             <div
               className={cx('progress', {
-                complete: obj.progress >= obj.completionValue ? true : false
+                complete: obj.progress && obj.progress >= obj.completionValue ? true : false
               })}
             >
               <div className='title'>{objDef.progressDescription}</div>
@@ -94,7 +116,7 @@ class RecordsAlmost extends React.Component {
               <div
                 className='bar'
                 style={{
-                  width: `${(obj.progress / obj.completionValue) * 100}%`
+                  width: `${((obj.progress || 0) / obj.completionValue) * 100}%`
                 }}
               />
             </div>
@@ -102,11 +124,11 @@ class RecordsAlmost extends React.Component {
         );
       });
 
-      let selfLinkFrom = this.props.selfLinkFrom ? this.props.location.pathname : false;
+      let selfLinkFrom = this.props.selfLinkFrom ? this.props.location.pathname : undefined;
 
       almost.push({
-        distance: distance,
-        item: <Records key={key} {...this.props} selfLink selfLinkFrom={selfLinkFrom} hashes={[key]} />
+        distance,
+        item: <Records key={key} {...this.props} selfLink selfLinkFrom={selfLinkFrom} hashes={[+key]} />
       });
     });
 
@@ -132,9 +154,11 @@ class RecordsAlmost extends React.Component {
   }
 }
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state: ApplicationState) {
   return {
-    profile: state.profile
+    manifest: state.manifest.manifestContent,
+    profile: state.profile,
+    location: state.router.location
   };
 }
 

@@ -5,17 +5,17 @@ import './styles.css';
 import { DestinyObjectiveDefinition, DestinyObjectiveProgress } from 'bungie-api-ts/destiny2/interfaces';
 
 interface ProgressBarProps {
-  objectiveDefinition: DestinyObjectiveDefinition
-  playerProgress?: DestinyObjectiveProgress
+  objectiveDefinition: Partial<DestinyObjectiveDefinition>
+  playerProgress?: Partial<DestinyObjectiveProgress>
 
-  classNames?: string[]
+  classNames?: { [className: string]: boolean }
   hideCheck?: boolean
   chunky?: boolean
 }
 
 const ProgressBar = (props: ProgressBarProps) => {
 
-  let { progressDescription, completionValue, allowOvercompletion = true, hash: objectiveHash } = props.objectiveDefinition;
+  let { progressDescription = '', completionValue = 0, allowOvercompletion = true, hash: objectiveHash } = props.objectiveDefinition;
   let { complete = false, progress = 0 } = (props.playerProgress || {});
 
   let { classNames, hideCheck, chunky } = props

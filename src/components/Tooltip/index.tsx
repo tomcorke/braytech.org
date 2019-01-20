@@ -1,6 +1,9 @@
 import React from 'react';
 import cx from 'classnames';
+import { connect } from 'react-redux';
 
+import { ApplicationState } from '../../utils/reduxStore';
+import { DestinyManifestJsonContent } from '../../utils/reducers/manifest';
 import '../../utils/destinyEnums';
 
 import './styles.css';
@@ -10,28 +13,38 @@ import armour from './armour';
 import emblem from './emblem';
 import bounty from './bounty';
 import mod from './mod';
+import { DestinyInventoryItemDefinition } from 'bungie-api-ts/destiny2/interfaces';
 
-class Tooltip extends React.Component {
-  constructor(props) {
+interface TooltipProps {
+  manifest?: DestinyManifestJsonContent
+}
+
+interface TooltipState {
+  hash?: number
+}
+
+class Tooltip extends React.Component<TooltipProps, TooltipState> {
+
+  private tooltipElement: HTMLDivElement | null = null
+  private touchMovement: boolean
+
+  constructor(props: TooltipProps) {
     super(props);
-
-    this.state = {
-      hash: false
-    };
-
-    this.tooltip = React.createRef();
 
     this.bindings = this.bindings.bind(this);
     this.mouseMove = this.mouseMove.bind(this);
     this.touchMovement = false;
   }
 
-  mouseMove = e => {
+  mouseMove = (e: MouseEvent) => {
+
+    if (!this.tooltipElement) return
+
     let x = 0;
     let y = 0;
     let offset = 0;
     let tooltipWidth = 384;
-    let tooltipHeight = this.state.hash ? this.tooltip.current.clientHeight : 0;
+    let tooltipHeight = this.state.hash ? this.tooltipElement.clientHeight : 0;
     let scrollbarAllowance = 24;
 
     x = e.clientX;
@@ -49,63 +62,71 @@ class Tooltip extends React.Component {
     y = y < 0 ? 0 : y;
 
     if (this.state.hash) {
-      this.tooltip.current.style.cssText = `top: ${y}px; left: ${x}px`;
+      this.tooltipElement.style.cssText = `top: ${y}px; left: ${x}px`;
     }
   };
 
   bindings = () => {
-    let toolTipples = document.querySelectorAll('.tooltip');
-    toolTipples.forEach(item => {
-      item.addEventListener('mouseenter', e => {
-        if (e.currentTarget.dataset.itemhash) {
+    let toolTipples: NodeListOf<HTMLElement> = document.querySelectorAll('.tooltip');
+    toolTipples.forEach((item) => {
+
+      item.addEventListener('mouseenter', (e: MouseEvent) => {
+        const target = e.currentTarget as HTMLElement
+        if (target.dataset.itemhash) {
           this.setState({
-            hash: parseInt(e.currentTarget.dataset.itemhash, 10)
+            hash: parseInt(target.dataset.itemhash, 10)
           });
         }
       });
+
       item.addEventListener('mouseleave', e => {
         this.setState({
-          hash: false
+          hash: undefined
         });
       });
+
       item.addEventListener('touchstart', e => {
         this.touchMovement = false;
       });
+
       item.addEventListener('touchmove', e => {
         this.touchMovement = true;
       });
-      item.addEventListener('touchend', e => {
+
+      item.addEventListener('touchend', (e: TouchEvent) => {
+        const target = e.currentTarget as HTMLElement
         if (!this.touchMovement) {
-          if (e.currentTarget.dataset.itemhash) {
+          if (target.dataset.itemhash) {
             this.setState({
-              hash: parseInt(e.currentTarget.dataset.itemhash, 10)
+              hash: parseInt(target.dataset.itemhash, 10)
             });
           }
         }
       });
+
     });
   };
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: TooltipProps) {
     if (prevProps !== this.props) {
       this.setState({
-        hash: false
+        hash: undefined
       });
       this.bindings();
     }
 
-    if (this.state.hash) {
-      this.tooltip.current.addEventListener('touchstart', e => {
+    if (this.state.hash && this.tooltipElement) {
+      this.tooltipElement.addEventListener('touchstart', e => {
         this.touchMovement = false;
       });
-      this.tooltip.current.addEventListener('touchmove', e => {
+      this.tooltipElement.addEventListener('touchmove', e => {
         this.touchMovement = true;
       });
-      this.tooltip.current.addEventListener('touchend', e => {
+      this.tooltipElement.addEventListener('touchend', e => {
         e.preventDefault();
         if (!this.touchMovement) {
           this.setState({
-            hash: false
+            hash: undefined
           });
         }
       });
@@ -124,40 +145,52 @@ class Tooltip extends React.Component {
 
   render() {
     let manifest = this.props.manifest;
-    if (this.state.hash) {
-      let item;
-      if (this.state.hash === 343) {
-        item = {
-          redacted: true
-        };
-      } else {
-        item = manifest.DestinyInventoryItemDefinition[this.state.hash];
-      }
 
-      if (item.redacted) {
-        return (
-          <div id='tooltip' ref={this.tooltip}>
-            <div className='acrylic' />
-            <div className='frame common'>
-              <div className='header'>
-                <div className='name'>Classified</div>
-                <div>
-                  <div className='kind'>Insufficient clearance</div>
-                </div>
+    if (!manifest) return
+
+    if (!this.state.hash) {
+      return
+    }
+
+    let item;
+    if (this.state.hash === 343) {
+      item = {
+        redacted: true
+      };
+    } else {
+      item = manifest.DestinyInventoryItemDefinition[this.state.hash];
+    }
+
+    if (item.redacted) {
+      return (
+        <div id='tooltip' ref={(e) => this.tooltipElement = e}>
+          <div className='acrylic' />
+          <div className='frame common'>
+            <div className='header'>
+              <div className='name'>Classified</div>
+              <div>
+                <div className='kind'>Insufficient clearance</div>
               </div>
-              <div className='black'>
-                <div className='description'>
-                  <pre>Keep it clean.</pre>
-                </div>
+            </div>
+            <div className='black'>
+              <div className='description'>
+                <pre>Keep it clean.</pre>
               </div>
             </div>
           </div>
-        );
-      }
+        </div>
+      );
+    }
 
-      let kind;
-      let tier;
-      let render;
+    let kind;
+    let tier;
+    let render;
+
+    const itemIsNotRedacted = (item: { redacted: boolean } | DestinyInventoryItemDefinition): item is DestinyInventoryItemDefinition => {
+      return !item.redacted
+    }
+
+    if (itemIsNotRedacted(item)) {
 
       switch (item.itemType) {
         case 3:
@@ -206,7 +239,7 @@ class Tooltip extends React.Component {
       }
 
       return (
-        <div id='tooltip' ref={this.tooltip}>
+        <div id='tooltip' ref={e => this.tooltipElement = e}>
           <div className='acrylic' />
           <div className={cx('frame', tier, kind)}>
             <div className='header'>
@@ -220,10 +253,15 @@ class Tooltip extends React.Component {
           </div>
         </div>
       );
-    } else {
-      return null;
+
     }
   }
 }
 
-export default Tooltip;
+const mapStateToProps = (state: ApplicationState) => ({
+  manifest: state.manifest.manifestContent
+})
+
+export default connect(
+  mapStateToProps
+)(Tooltip);

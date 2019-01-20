@@ -16,13 +16,19 @@ const setManifestState = (version: string, manifestContent: DestinyManifestJsonC
 const setSettingsState = (settings: DestinySettings) => action('SET_SETTINGS_STATE', settings);
 
 const loadManifestData = async (dispatch: Dispatch): Promise<{ version: string, manifestContent: DestinyManifestJsonContent } | undefined> => {
-  const manifestVersion = await db.versionString.get(0)
-  if (!manifestVersion) return undefined
+  const manifestVersion = await db.versionString.get(1)
+  if (!manifestVersion) {
+    console.warn('Manifest version not found in IndexedDB')
+    return undefined
+  }
 
-  const manifestContent = await db.manifestContent.get(manifestVersion)
-  if (!manifestContent) return undefined
+  const manifestContent = await db.manifestContent.get(manifestVersion.version)
+  if (!manifestContent) {
+    console.warn(`Manifest content not found in IndexedDB for version ${manifestVersion.version}`)
+    return undefined
+  }
 
-  return { version: manifestVersion, manifestContent }
+  return { version: manifestVersion.version, manifestContent }
 }
 
 const fetchManifestContent = async (versionPath: string) => {
@@ -30,6 +36,7 @@ const fetchManifestContent = async (versionPath: string) => {
   const manifestContent: DestinyManifestJsonContent = await fetcher({
     url: manifestContentPath,
     method: 'GET',
+    noHeaders: true
   })
   if (manifestContent) {
     return manifestContent;
@@ -85,6 +92,7 @@ export const getManifestContent = (language: string) => {
     const versionPath = manifest.jsonWorldContentPaths[language];
     const manifestContent = await fetchManifestContent(versionPath);
 
+    console.log('Saving manifest version and content to IndexedDB');
     await db.addAllData(manifest.version, manifestContent);
 
     dispatch(setManifestState(manifest.version, manifestContent))

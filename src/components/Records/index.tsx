@@ -24,7 +24,7 @@ interface RecordsProps {
   highlight?: number
   node?: number
   hashes: number[]
-  selfLink: string
+  selfLink?: boolean
   selfLinkFrom?: string
   ordered?: boolean
 }

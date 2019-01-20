@@ -1,19 +1,21 @@
 import Dexie from 'dexie';
-import { DestinyManifestJsonContent } from './actions/manifest';
+import { DestinyManifestJsonContent } from './reducers/manifest';
+
+type DestinyManifestJsonContentWithVersion = DestinyManifestJsonContent & { manifestVersion: string }
 
 class BraytechDatabase extends Dexie {
 
   // @ts-ignore: Property not initialised
-  versionString: Dexie.Table<string, number>
+  versionString: Dexie.Table<{ version: string }, number>
   // @ts-ignore: Property not initialised
-  manifestContent: Dexie.Table<DestinyManifestJsonContent, string>
+  manifestContent: Dexie.Table<DestinyManifestJsonContentWithVersion, string>
 
   constructor() {
     super('braytech')
 
     this.version(1).stores({
-      versionString: '++id',
-      manifestContent: ''
+      versionString: '++id,version',
+      manifestContent: 'manifestVersion'
     })
   }
 
@@ -25,7 +27,6 @@ class BraytechDatabase extends Dexie {
   }
 
   async addAllData(version: string, newManifestContent: DestinyManifestJsonContent) {
-
     return this.transaction(
       'rw',
       [
@@ -34,8 +35,11 @@ class BraytechDatabase extends Dexie {
       ],
       async () => {
         await this.clearAll();
-        this.versionString.add(version);
-        this.manifestContent.add(newManifestContent, version);
+        this.versionString.add({ version });
+        this.manifestContent.add({
+          ...newManifestContent,
+          manifestVersion: version
+        }, version);
       }
     );
   }

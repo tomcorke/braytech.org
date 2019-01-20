@@ -1,6 +1,6 @@
-import * as ls from '../localStorage';
+import { getDefaultProfile } from '../localStorage';
 import { DestinyProfileResponse, DestinyPublicMilestone } from 'bungie-api-ts/destiny2/interfaces'
-import { SetProfileActions } from '../actions/setProfile';
+import { ProfileActions } from '../actions/profile';
 import { GroupMembershipSearchResponse } from 'bungie-api-ts/groupv2/interfaces';
 
 // Define a limited type for our profile data
@@ -42,21 +42,19 @@ export interface ProfileState {
   prevData?: ProfileData
 }
 
-const savedProfile: ProfileState = ls.get('setting.profile') ? ls.get('setting.profile') : undefined;
+const savedProfile = getDefaultProfile()
 const defaultState: ProfileState = {
-  membershipType: savedProfile ? savedProfile.membershipType : undefined,
-  membershipId: savedProfile ? savedProfile.membershipId : undefined,
-  characterId: undefined,
+  ...savedProfile,
   data: undefined,
   prevData: undefined
 }
 
 export default function profileReducer(
   state: ProfileState = defaultState,
-  action: SetProfileActions) {
+  action: ProfileActions) {
 
   switch (action.type) {
-    case 'SET_PROFILE':
+    case 'SET_PROFILE_DATA':
       return action.payload
     default:
       return state
